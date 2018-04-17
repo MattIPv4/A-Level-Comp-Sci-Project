@@ -1,4 +1,4 @@
-app/venv/
+slst-rota/venv/
 .DS_Store
 .idea/
-doc/~$*.*
+documentation/~$*.*
