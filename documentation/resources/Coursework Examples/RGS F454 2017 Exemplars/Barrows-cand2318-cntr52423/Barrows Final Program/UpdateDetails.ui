@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>600</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Enter Details</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>PizzaIcon.png</normaloff>PizzaIcon.png</iconset>
+  </property>
+  <property name="inputMethodHints">
+   <set>Qt::ImhDialableCharactersOnly</set>
+  </property>
+  <widget class="QPushButton" name="submitbutton">
+   <property name="geometry">
+    <rect>
+     <x>191</x>
+     <y>430</y>
+     <width>131</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Submit Details</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cancelbutton">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>430</y>
+     <width>112</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>150</y>
+     <width>151</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Edit Details:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="housenumnew">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>180</y>
+     <width>191</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <strikeout>false</strikeout>
+    </font>
+   </property>
+   <property name="maxLength">
+    <number>15</number>
+   </property>
+   <property name="dragEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="readOnly">
+    <bool>false</bool>
+   </property>
+   <property name="placeholderText">
+    <string/>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>170</y>
+     <width>20</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="postcodenew">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>220</y>
+     <width>191</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="maxLength">
+    <number>8</number>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="mobilenumnew">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>260</y>
+     <width>191</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="maxLength">
+    <number>11</number>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="paymentmethodnew">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>300</y>
+     <width>191</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string/>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Debit Card</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Credit Card</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLineEdit" name="passwordnew">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>380</y>
+     <width>191</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::Normal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>260</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Mobile Number:</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="postcode">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>161</x>
+     <y>214</y>
+     <width>179</width>
+     <height>32</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="surname">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>161</x>
+     <y>132</y>
+     <width>179</width>
+     <height>32</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="payment">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>161</x>
+     <y>296</y>
+     <width>179</width>
+     <height>32</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>10</y>
+     <width>361</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Customer Details</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>220</y>
+     <width>131</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Postcode:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>100</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>First Name:</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="password">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>161</x>
+     <y>378</y>
+     <width>179</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Password Hidden&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="overwriteMode">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="firstname">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>161</x>
+     <y>91</y>
+     <width>179</width>
+     <height>32</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="housenum">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>161</x>
+     <y>173</y>
+     <width>179</width>
+     <height>32</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>380</y>
+     <width>141</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Password:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>180</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>House Number:</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="username">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>161</x>
+     <y>337</y>
+     <width>179</width>
+     <height>32</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>300</y>
+     <width>141</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Payment Method:</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="mobilenum">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>161</x>
+     <y>255</y>
+     <width>179</width>
+     <height>32</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>140</y>
+     <width>111</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Surname:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>340</y>
+     <width>141</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Username:</string>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>housenumnew</tabstop>
+  <tabstop>postcodenew</tabstop>
+  <tabstop>mobilenumnew</tabstop>
+  <tabstop>paymentmethodnew</tabstop>
+  <tabstop>passwordnew</tabstop>
+  <tabstop>submitbutton</tabstop>
+  <tabstop>cancelbutton</tabstop>
+  <tabstop>postcode</tabstop>
+  <tabstop>surname</tabstop>
+  <tabstop>payment</tabstop>
+  <tabstop>password</tabstop>
+  <tabstop>firstname</tabstop>
+  <tabstop>housenum</tabstop>
+  <tabstop>username</tabstop>
+  <tabstop>mobilenum</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

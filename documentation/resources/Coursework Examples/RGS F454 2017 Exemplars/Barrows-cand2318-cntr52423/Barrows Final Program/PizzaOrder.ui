@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>500</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>500</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Order Pizza</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>PizzaIcon.png</normaloff>PizzaIcon.png</iconset>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>20</y>
+     <width>361</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Pizza Order</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>120</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Size:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>300</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Drink:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>260</y>
+     <width>131</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Extras:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>200</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Topping:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>160</y>
+     <width>111</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Stuffed Crust:</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="Size">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>120</y>
+     <width>231</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Choose Size</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>9&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>12&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>15&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>18&quot;</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="Extras">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>260</y>
+     <width>231</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Choose Extras       (£3.99)</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Potato Wedges</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Garlic Bread</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="Topping">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>200</y>
+     <width>231</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Choose Topping     (£7.99)</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Margherita</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Pepperoni</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Chicken</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Meat Feast</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Vegetable</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Hawaiian</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="StuffedCrust">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>160</y>
+     <width>231</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Choose Yes/No</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Yes     (+ £2.99)</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>No</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="Drink">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>300</y>
+     <width>231</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Choose Drink         (£2.99)</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Coca Cola</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Lemonade</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Pepsi</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Fanta</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QPushButton" name="POAddAnother">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>430</y>
+     <width>112</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add Another</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="POOrderDone">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>430</y>
+     <width>112</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Order Done</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="POCancel">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>430</y>
+     <width>112</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>40</y>
+     <width>68</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Welcome,</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="NameBox">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>60</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>240</y>
+     <width>331</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
