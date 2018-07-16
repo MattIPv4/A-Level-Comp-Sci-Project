@@ -1,14 +1,9 @@
-# Import Form
-from flask.ext.wtf import Form
-
-# Form elements
-from wtforms import StringField, PasswordField  # BooleanField
-
-# Form validators
-from wtforms.validators import DataRequired
+from flask.ext.wtf import Form  # Form
+from wtforms import StringField, PasswordField  # Form: Elements
+from wtforms.validators import DataRequired  # Form: Validation
 
 
-# Define the login form (using WTForms)
+# Login (using WTForms)
 class LoginForm(Form):
     username = StringField('Username', [DataRequired(message='Please enter your username.')])
     password = PasswordField('Password', [DataRequired(message='Please enter your password.')])

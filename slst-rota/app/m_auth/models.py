@@ -1,5 +1,4 @@
-# Get the database
-from app import db
+from app import db  # DB
 
 
 # Base model for other database tables to inherit
