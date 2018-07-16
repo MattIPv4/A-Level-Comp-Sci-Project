@@ -1,0 +1,254 @@
+{
+    "100": {
+        "description": "The server has received the request headers, and the client should proceed to send the request body",
+        "message": "Continue"
+    },
+    "101": {
+        "description": "The requester has asked the server to switch protocols",
+        "message": "Switching Protocols"
+    },
+    "103": {
+        "description": "Used in the resumable requests proposal to resume aborted PUT or POST requests",
+        "message": "Checkpoint"
+    },
+    "1xx": {
+        "description": "",
+        "message": "Information"
+    },
+    "200": {
+        "description": "The request is OK (this is the standard response for successful HTTP requests)",
+        "message": "OK"
+    },
+    "201": {
+        "description": "The request has been fulfilled, and a new resource is created",
+        "message": "Created"
+    },
+    "202": {
+        "description": "The request has been accepted for processing, but the processing has not been completed",
+        "message": "Accepted"
+    },
+    "203": {
+        "description": "The request has been successfully processed, but is returning information that may be from another source",
+        "message": "Non-Authoritative Information"
+    },
+    "204": {
+        "description": "The request has been successfully processed, but is not returning any content",
+        "message": "No Content"
+    },
+    "205": {
+        "description": "The request has been successfully processed, but is not returning any content, and requires that the requester reset the document view",
+        "message": "Reset Content"
+    },
+    "206": {
+        "description": "The server is delivering only part of the resource due to a range header sent by the client",
+        "message": "Partial Content"
+    },
+    "2xx": {
+        "description": "",
+        "message": "Successful"
+    },
+    "300": {
+        "description": "A link list. The user can select a link and go to that location. Maximum five addresses",
+        "message": "Multiple Choices"
+    },
+    "301": {
+        "description": "The requested page has moved to a new URL",
+        "message": "Moved Permanently"
+    },
+    "302": {
+        "description": "The requested page has moved temporarily to a new URL",
+        "message": "Found"
+    },
+    "303": {
+        "description": "The requested page can be found under a different URL",
+        "message": "See Other"
+    },
+    "304": {
+        "description": "Indicates the requested page has not been modified since last requested",
+        "message": "Not Modified"
+    },
+    "306": {
+        "description": "-- No longer used --",
+        "message": "Switch Proxy"
+    },
+    "307": {
+        "description": "The requested page has moved temporarily to a new URL",
+        "message": "Temporary Redirect"
+    },
+    "308": {
+        "description": "Used in the resumable requests proposal to resume aborted PUT or POST requests",
+        "message": "Resume Incomplete"
+    },
+    "3xx": {
+        "description": "",
+        "message": "Redirection"
+    },
+    "400": {
+        "description": "The request cannot be fulfilled due to bad syntax",
+        "message": "Bad Request"
+    },
+    "401": {
+        "description": "The request was a legal request, but the server is refusing to respond to it. For use when authentication is possible but has failed or not yet been provided",
+        "message": "Unauthorized"
+    },
+    "402": {
+        "description": "-- Reserved for future use --",
+        "message": "Payment Required"
+    },
+    "403": {
+        "description": "The request was a legal request, but the server is refusing to respond to it",
+        "message": "Forbidden"
+    },
+    "404": {
+        "description": "The requested page could not be found but may be available again in the future",
+        "message": "Not Found"
+    },
+    "405": {
+        "description": "A request was made of a page using a request method not supported by that page",
+        "message": "Method Not Allowed"
+    },
+    "406": {
+        "description": "The server can only generate a response that is not accepted by the client",
+        "message": "Not Acceptable"
+    },
+    "407": {
+        "description": "The client must first authenticate itself with the proxy",
+        "message": "Proxy Authentication Required"
+    },
+    "408": {
+        "description": "The server timed out waiting for the request",
+        "message": "Request Timeout"
+    },
+    "409": {
+        "description": "The request could not be completed because of a conflict in the request",
+        "message": "Conflict"
+    },
+    "410": {
+        "description": "The requested page is no longer available",
+        "message": "Gone"
+    },
+    "411": {
+        "description": "The \"Content-Length\" is not defined. The server will not accept the request without it",
+        "message": "Length Required"
+    },
+    "412": {
+        "description": "The precondition given in the request evaluated to false by the server",
+        "message": "Precondition Failed"
+    },
+    "413": {
+        "description": "The server will not accept the request, because the request entity is too large",
+        "message": "Request Entity Too Large"
+    },
+    "414": {
+        "description": "The server will not accept the request, because the URL is too long. Occurs when you convert a POST request to a GET request with a long query information",
+        "message": "Request-URI Too Long"
+    },
+    "415": {
+        "description": "The server will not accept the request, because the media type is not supported",
+        "message": "Unsupported Media Type"
+    },
+    "416": {
+        "description": "The client has asked for a portion of the file, but the server cannot supply that portion",
+        "message": "Requested Range Not Satisfiable"
+    },
+    "417": {
+        "description": "The server cannot meet the requirements of the Expect request-header field",
+        "message": "Expectation Failed"
+    },
+    "418": {
+        "description": "Any attempt to brew coffee with a teapot should result in the error code \"418 I'm a teapot\". The resulting entity body MAY be short and stout",
+        "message": "I'm a teapot"
+    },
+    "421": {
+        "description": "The request was directed at a server that is not able to produce a response (for example because a connection reuse)",
+        "message": "Misdirected Request"
+    },
+    "422": {
+        "description": "The request was well-formed but was unable to be followed due to semantic errors",
+        "message": "Unprocessable Entity"
+    },
+    "423": {
+        "description": "The resource that is being accessed is locked",
+        "message": "Locked"
+    },
+    "424": {
+        "description": "The request failed due to failure of a previous request (e.g., a PROPPATCH)",
+        "message": "Failed Dependency"
+    },
+    "426": {
+        "description": "The client should switch to a different protocol such as TLS/1.0, given in the Upgrade header field",
+        "message": "Upgrade Required"
+    },
+    "428": {
+        "description": "The origin server requires the request to be conditional",
+        "message": "Precondition Required"
+    },
+    "429": {
+        "description": "The user has sent too many requests in a given amount of time. Intended for use with rate limiting schemes",
+        "message": "Too Many Requests"
+    },
+    "431": {
+        "description": "The server is unwilling to process the request because either an individual header field, or all the header fields collectively, are too large",
+        "message": "Request Header Fields Too Large"
+    },
+    "451": {
+        "description": "A server operator has received a legal demand to deny access to a resource or to a set of resources that includes the requested resource",
+        "message": "Unavailable For Legal Reasons"
+    },
+    "4xx": {
+        "description": "",
+        "message": "Client Error"
+    },
+    "500": {
+        "description": "An error has occured in a server side script, a no more specific message is suitable",
+        "message": "Internal Server Error"
+    },
+    "501": {
+        "description": "The server either does not recognize the request method, or it lacks the ability to fulfill the request",
+        "message": "Not Implemented"
+    },
+    "502": {
+        "description": "The server was acting as a gateway or proxy and received an invalid response from the upstream server",
+        "message": "Bad Gateway"
+    },
+    "503": {
+        "description": "The server is currently unavailable (overloaded or down)",
+        "message": "Service Unavailable"
+    },
+    "504": {
+        "description": "The server was acting as a gateway or proxy and did not receive a timely response from the upstream server",
+        "message": "Gateway Timeout"
+    },
+    "505": {
+        "description": "The server does not support the HTTP protocol version used in the request",
+        "message": "HTTP Version Not Supported"
+    },
+    "511": {
+        "description": "The client needs to authenticate to gain network access",
+        "message": "Network Authentication Required"
+    },
+    "5xx": {
+        "description": "",
+        "message": "Server Error"
+    },
+    "info": {
+        "codeLookup": {
+            "demoURL": "/statusMsg/?code=500",
+            "info": "Use the 'code' variable in the url to lookup and individual code"
+        },
+        "credits": "This site was crafted by Unreal Designs and is powered by UDCDN",
+        "htmlDisplay": {
+            "demoURL": "/statusMsg/?code=404&html",
+            "info": "Add the 'html' variable to your code lookup to get the error displayed in a nice html template"
+        },
+        "invalidCode": "If an invalid code is given, the site will just show the json list of all codes",
+        "lastUpdate": {
+            "date": "20160411",
+            "log": "4xx Codes updated via Wikipedia"
+        },
+        "references": {
+            "W3Schools": "http://www.w3schools.com/tags/ref_httpmessages.asp",
+            "Wikipedia": "https://en.wikipedia.org/wiki/List_of_HTTP_status_codes"
+        }
+    }
+}

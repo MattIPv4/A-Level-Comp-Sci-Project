@@ -6,8 +6,8 @@
 {% endmacro %}
 
 <div>
-    <legend>Sign in</legend>
-    {% with errors = get_flashed_messages(category_filter=["error"]) %}
+    <legend>Login</legend>
+    {% with errors = get_flashed_messages(category_filter=["error-message"]) %}
         {% if errors %}
             <div>
                 {% for error in errors %}
