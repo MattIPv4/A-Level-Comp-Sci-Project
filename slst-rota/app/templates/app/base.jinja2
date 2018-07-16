@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- General -->
+    <title>{% block title %}{% endblock %} - {{ app.name }}</title>
+    <link rel="shortcut icon" href=""/>
+    <link rel="icon" type="image/png" href=""/>
+    <meta name="title" content="{{ app.name }} - {{ self.title() }}"/>
+    <meta name="description" content="{{ app.name }} - {{ self.title() }} - {{ app.description }}"/>
+    <link href="/static/css/main.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" rel="stylesheet"/>
+
+    <!-- Social -->
+    <!-- Social: Twitter -->
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="{{ app.name }} - {{ self.title() }}"/>
+    <meta name="twitter:description" content="{{ app.name }} - {{ self.title() }} - {{ app.description }}"/>
+    <meta name="twitter:image" content=""/>
+    <meta name="twitter:url" content="{{ request.url_route }}"/>
+    <!-- Social: OpenGraph -->
+    <meta prefix="og: http://ogp.me/ns#" property="og:title" content="{{ app.name }} - {{ self.title() }}"/>
+    <meta prefix="og: http://ogp.me/ns#" property="og:type" content="website"/>
+    <meta prefix="og: http://ogp.me/ns#" property="og:locale" content="en_GB"/>
+    <meta prefix="og: http://ogp.me/ns#" property="og:site_name" content="{{ app.name }}"/>
+    <meta prefix="og: http://ogp.me/ns#" property="og:description"
+          content="{{ app.name }} - {{ self.title() }} - {{ app.description }}"/>
+    <meta prefix="og: http://ogp.me/ns#" property="og:url" content="{{ request.url_route }}"/>
+    <meta prefix="og: http://ogp.me/ns#" property="og:image" content=""/>
+    <meta prefix="og: http://ogp.me/ns#" property="og:image:url" content=""/>
+
+    <!-- Web app -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="apple-touch-icon" href=""/>
+    <meta name="apple-mobile-web-app-title" content="{{ app.name }}"/>
+    <meta name="theme-color" content=""/>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{% include 'app/navbar.jinja2' %}
+
+{% block body %}{% endblock %}
+
+{% include 'app/footer.jinja2' %}
+
+<script src="/static/js/jquery.min.js"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
+        integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+        crossorigin="anonymous"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

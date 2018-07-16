@@ -1,15 +1,24 @@
 from flask import Blueprint, request, render_template, flash, session, redirect, url_for  # Flask
 from werkzeug.security import check_password_hash  # Passwords
+from typing import Union # Typing
 
-from app.m_auth.forms import LoginForm  # Forms
-from app.m_auth.models import User  # Models
+from app.modules.auth.forms import LoginForm  # Forms
+from app.modules.auth.models import User  # Models
 
 # Blueprint
-m_auth = Blueprint('auth', __name__, url_prefix='/auth')
+auth = Blueprint('auth', __name__, url_prefix='/auth')
+
+
+def current_user() -> Union[None, User]:
+    if session and 'user_id' in session and session['user_id']:
+        user = User.query.filter_by(id=session['user_id']).first()
+        if user:
+            return user
+    return None
 
 
 # Set the route and accepted methods
-@m_auth.route('/login/', methods=['GET', 'POST'])
+@auth.route('/login/', methods=['GET', 'POST'])
 def login():
     # If sign in form is submitted
     form = LoginForm(request.form)

@@ -1,0 +1,22 @@
+@import 'global';
+
+// Build the footer
+footer {
+  background-color: $dark;
+  border-top: $bordersize solid $primary;
+  color: $greyple;
+  margin-top: auto;
+  padding: 1.5em 0;
+  width: 100%;
+
+  .column {
+    align-items: center;
+    display: flex;
+  }
+
+  p { margin-bottom: 0; }
+  a { color: mix($greyple, $primary, 35%); }
+}
+
+// Give last container margin before footer
+body>.container:last-of-type { margin-bottom: .5em; }

@@ -1,0 +1,23 @@
+// Horizontally center flex
+.a-center,
+.h-center {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+// Vertically center flex
+.a-center,
+.v-center {
+  display: flex;
+  justify-content: center;
+}
+
+// Text center
+.a-center,
+.t-center {
+  text-align: center;
+}
+
+// Full height elm
+.full-h { height: 100%; }

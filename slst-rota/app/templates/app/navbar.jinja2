@@ -1,0 +1,31 @@
+<header class="navbar">
+    <div class="container larger">
+        <div class="row">
+            <a class="item title" href="{{ url_for('index') }}">
+                {{ app.name }}
+            </a>
+
+            <a class="item" href="{{ url_for('index') }}">Home</a>
+
+            <span class="right">
+                {% if is_authed() %}
+                    {% if auth.current_user().auth_level == 1 %}
+                        {% set base = "student" %}
+                    {% else %}
+                        {% set base = "staff" %}
+                    {% endif %}
+                    <span class="dropdown">
+                        <a class="droptitle" href="{{ url_for(base+'.me') }}">
+                            {{ session.user.username }} <i class="fas fa-angle-right"></i>
+                        </a>
+                        <span class="drop">
+                            <a class="item" href="{{ url_for('auth.logout') }}">Logout</a>
+                        </span>
+                    </span>
+                {% else %}
+                    <a class="item" href="{{ url_for('auth.login') }}">Login</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</header>

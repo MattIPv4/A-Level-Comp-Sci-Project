@@ -1,4 +1,4 @@
-from flask import Flask, render_template  # Flask
+from flask import Flask, render_template, session  # Flask
 from flask_sqlalchemy import SQLAlchemy  # DB
 from typing import Tuple  # Typing
 import jinja2, os  # Templates
@@ -11,7 +11,7 @@ from .utils import Utils  # Utils
 app = Flask("SLST Rota")
 loader = jinja2.ChoiceLoader([
     app.jinja_loader,
-    jinja2.FileSystemLoader(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')),
+    jinja2.FileSystemLoader(Utils.absolute_path('templates')),
 ])
 app.jinja_loader = loader
 
@@ -23,8 +23,27 @@ watcher.run()
 # Config
 app.config.from_object('config')
 
+# Static
+app.static_url_path = "/static"
+app.static_folder = Utils.absolute_path('static')
+
 # Db
 db = SQLAlchemy(app)
+
+# Import modules
+from app.modules.auth.controllers import auth
+
+# Register blueprint(s)
+app.register_blueprint(auth)
+
+# Build the database
+db.create_all()
+
+
+def is_authed() -> bool:
+    if session and 'user_id' in session and session['user_id']:
+        return True
+    return False
 
 
 @app.context_processor
@@ -53,17 +72,8 @@ def error(code: int):
 def not_found(error):
     return error_render(404)
 
+
 # Index
 @app.route('/')
 def index():
     return render_template("index.jinja2")
-
-
-# Import modules
-from app.m_auth.controllers import m_auth
-
-# Register blueprint(s)
-app.register_blueprint(m_auth)
-
-# Build the database
-db.create_all()

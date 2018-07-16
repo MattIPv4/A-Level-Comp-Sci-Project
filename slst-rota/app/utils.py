@@ -12,6 +12,10 @@ class Utils:
     statusMessageCustomData = {}
 
     @staticmethod
+    def absolute_path(relative: str) -> str:
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), relative)
+
+    @staticmethod
     def fetch_status_messages():
         # Try from the API to get latest (and save locally)
         try:

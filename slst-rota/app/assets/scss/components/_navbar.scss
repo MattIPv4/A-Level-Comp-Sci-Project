@@ -1,0 +1,96 @@
+@import 'global';
+@import '../utils/size';
+
+// Build the navbar
+header {
+  &.navbar {
+    background-color: $dark;
+    box-shadow: 0 8px 6px -6px #222;
+    height: 5rem;
+    margin-bottom: .5em;
+    overflow: visible;
+    z-index: 100;
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      // Allow a set of items to be on the right
+      .right { margin-left: auto; }
+
+      // Standard item
+      .item,
+      .droptitle {
+        color: $lightgreyple;
+        display: inline;
+        line-height: 5rem;
+        padding: 0 2rem;
+        text-decoration: none;
+
+        // Ensure images aren't too cosy
+        img {
+          @include square(3.4rem);
+          margin-top: -5px;
+          padding-right: .1em;
+        }
+
+        // Make any title larger
+        &.title {
+          font-size: 1.45em;
+          text-shadow: 1px 1px rgba(0, 0, 0, .2);
+        }
+
+        // Give links their hover color
+        &[href]:hover { color: mix($primary, $lightgreyple, 75%);  }
+      }
+
+      // Support dropdowns
+      .dropdown {
+        box-shadow: inset -10px 10px -10px $primary;
+        display: flex;
+        flex-direction: column;
+
+        .drop {
+          background: $dark;
+          display: flex;
+          flex-direction: column;
+          height: auto;
+          margin-left: 1.5rem;
+          max-height: 0;
+          opacity: 0;
+          overflow: hidden;
+          transition: opacity .5s 0s, max-height 0s .5s;
+        }
+
+        // Specifics for droptitle
+        .droptitle {
+          cursor: pointer;
+
+          .fa-angle-right {
+            transform: rotate(0deg);
+            transition: .1s all linear;
+            transition-delay: .25s;
+          }
+        }
+
+        // Reveal animation (height)
+        &:hover {
+          .drop {
+            display: flex;
+            max-height: 100vh;
+            opacity: 1;
+            transition: opacity .5s 0s, max-height 0s 0s;
+          }
+
+          .droptitle {
+            .fa-angle-right {
+              transform: rotate(90deg);
+              transition-delay: 0s;
+            }
+          }
+        }
+      }
+    }
+  }
+}

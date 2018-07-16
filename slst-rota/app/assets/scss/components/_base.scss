@@ -1,0 +1,163 @@
+@import 'global';
+@import '../utils/size';
+@import '../utils/position';
+
+// Dark theme for base
+html, body {
+  background-color: $black;
+  color: $lightgreyple;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Open Sans', Helvetica, sans-serif;
+  font-weight: $normalweight;
+  min-height: 100vh;
+}
+
+// Make small a bit smaller
+small { font-size: 70%; }
+
+// Indent lists
+ul, ol { margin-left: 1rem; }
+
+// Code blocks
+code { color: $primary; }
+
+// Ensure correct 'bold' font weight
+b, strong, optgroup { font-weight: $boldweight; }
+
+// Larger containers
+.container {
+  max-width: 1280px;
+
+  &.larger { max-width: 1500px; }
+}
+
+// Buttons
+.button {
+  border-color: $white;
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2);
+  color: $primary;
+  font-size: 13px;
+  padding: 0 30px;
+  transition: all .2s;
+
+  &.button-square { padding: 0 1em; }
+
+  &:hover,
+  &:focus {
+    border-color: darken($white, 30%);
+    color: $primary;
+    text-decoration: none;
+  }
+
+  &:hover { box-shadow: 0 0 4px 2px rgba(0, 0, 0, .2); }
+  &:focus { box-shadow: 0 0 1px 0 rgba(0, 0, 0, .2); }
+
+  &.button-primary {
+    background-color: $primary;
+    border-color: $primary;
+    color: $white;
+
+    &:hover,
+    &:focus {
+      background-color: darken($primary, 10%);
+      border-color: darken($primary, 10%);
+      color: $white;
+    }
+  }
+
+  // FontAwesome button fix (make them larger)
+  .svg-inline--fa[class*="fa-"] {
+    height: 1.5em;
+    vertical-align: -.375em;
+    width: auto;
+  }
+}
+
+// Fancy lines after text
+h1, h2, h3, h4, h5 {
+  &.line {
+    overflow: hidden;
+
+    &::after {
+      background: $primary;
+      content: '';
+      display: inline-block;
+      height: $bordersize;
+      margin-left: .5em;
+      margin-right: -100%;
+      vertical-align: middle;
+      width: 100%;
+    }
+  }
+}
+
+// Hr
+hr {
+  border: 0;
+  border-top: $bordersize solid $primary;
+  margin-bottom: 2.5rem;
+  margin-top: 2rem;
+}
+
+// Links
+a {
+  color: $primary;
+  text-decoration: none;
+  transition: color .1s;
+
+  &:hover {
+    color: $primary;
+    text-decoration: underline;
+  }
+}
+
+// Labels
+.label {
+  background: mix($greyple, $primary, 20%);
+  border-radius: .2em;
+  color: $lightgreyple;
+  font-size: .6em;
+  font-weight: 300;
+  letter-spacing: .05em;
+  line-height: 1em;
+  padding: .1em .4em;
+  vertical-align: .16em;
+}
+
+// Emphasis
+em {
+  color: $primary;
+  font-style: normal;
+  font-weight: $normalweight;
+
+  &.dull { color: mix($greyple, $primary, 35%); }
+}
+
+// Images
+img {
+  @include square(1.5em);
+  vertical-align: middle;
+
+  &.avatar {
+    background-color: $dark;
+    border-radius: 50%;
+
+    &.half-border { border-radius: 25%; }
+
+    &.ring {
+      border: $bordersize solid $dark;
+
+      &.red { border-color: $primary; }
+    }
+  }
+}
+
+// Cards
+.card {
+  background: $dark;
+  border-radius: .5em;
+  box-shadow: 0 8px 6px -6px #222;
+  margin: 1em 0;
+  padding: 1em;
+}

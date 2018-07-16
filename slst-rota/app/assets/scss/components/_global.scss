@@ -1,0 +1,13 @@
+// Define some global colours
+$black: #23272a;
+$dark: #2c2f33;
+$greyple: #99aab5;
+$lightgreyple: lighten($greyple, 20%);
+$darkgreyple: darken($greyple, 20%);
+$white: #fff;
+$primary: #ee2424;
+
+// Define some other globals
+$bordersize: 2px;
+$normalweight: 300;
+$boldweight: 600;
