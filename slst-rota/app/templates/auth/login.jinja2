@@ -4,14 +4,13 @@
 
 {% block body %}
     {% macro render_field(field, placeholder=None) %}
-        <div>
-            {% set css_class = 'form-control ' + kwargs.pop('class', '') %}
-            {{ field(class=css_class, placeholder=placeholder, **kwargs) }}
-        </div>
+        <label for="{{ field.id }}">{{ placeholder }}</label>
+        {% set css_class = 'u-full-width ' + kwargs.pop('class', '') %}
+        {{ field(class=css_class, placeholder=placeholder, **kwargs) }}
     {% endmacro %}
 
     <div class="container">
-        <legend>Login</legend>
+        <h1>Login to {{ app.name }}</h1>
         {% with errors = get_flashed_messages(category_filter=["error-message"]) %}
             {% if errors %}
                 <div>
@@ -22,27 +21,27 @@
             {% endif %}
         {% endwith %}
 
-        {% if form.errors %}
-            <div>
-                {% for field, error in form.errors.items() %}
-                    {% for e in error %}
-                        {{ e }}<br>
-                    {% endfor %}
-                {% endfor %}
-            </div>
-        {% endif %}
         <form method="POST" action="." accept-charset="UTF-8" role="form">
             {{ form.csrf_token }}
-            {{ render_field(form.username, placeholder="Username",
+
+            <div class="row">
+                <div class="one-half column">
+                    {{ render_field(form.username, placeholder="Username",
                                   autofocus="") }}
-            {{ render_field(form.password, placeholder="Password") }}
-            <div>
-                <label>
-                    <input type="checkbox" name="remember" value="1"> Remember Me
-                </label>
-                <a role="button" href="">Forgot your password?</a><span class="clearfix"></span>
+                </div>
+                <div class="one-half column">
+                    {{ render_field(form.password, placeholder="Password") }}
+                </div>
             </div>
-            <button type="submit" name="submit">Sign in</button>
+
+            <div class="row">
+                <div class="one-half column">
+                    <button type="submit" name="submit">Login</button>
+                </div>
+                <div class="one-half column">
+                    <a role="button" href="" class="button">Forgot your password?</a>
+                </div>
+            </div>
         </form>
     </div>
 {% endblock %}

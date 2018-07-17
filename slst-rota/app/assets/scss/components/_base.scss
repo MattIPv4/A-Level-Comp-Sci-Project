@@ -33,7 +33,7 @@ b, strong, optgroup { font-weight: $boldweight; }
 }
 
 // Buttons
-.button {
+.button, button, input[type="button"], input[type="submit"] {
   border-color: $white;
   box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2);
   color: $primary;
