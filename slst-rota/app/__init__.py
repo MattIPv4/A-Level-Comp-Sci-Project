@@ -31,24 +31,22 @@ app.static_folder = Utils.absolute_path('static')
 db = SQLAlchemy(app)
 
 # Import modules
-from app.modules.auth.controllers import auth
+from app.modules import auth
+from app.modules.auth.controllers import auth as blueprint_auth
 
 # Register blueprint(s)
-app.register_blueprint(auth)
+app.register_blueprint(blueprint_auth)
 
 # Build the database
 db.create_all()
 
 
-def is_authed() -> bool:
-    if session and 'user_id' in session and session['user_id']:
-        return True
-    return False
-
-
 @app.context_processor
 def variables() -> dict:
-    a = datetime.utcnow()  # Convince pycharm its used (and stop warnings)
+    a = [
+        datetime,
+        auth
+    ]  # Convince pycharm its used (and stop warnings)
     return dict(**globals())
 
 
