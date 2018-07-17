@@ -1,7 +1,9 @@
-from flask import Flask, render_template, session  # Flask
+from flask import Flask, render_template  # Flask
 from flask_sqlalchemy import SQLAlchemy  # DB
+from sqlalchemy.orm import sessionmaker  # DB Session
+from sqlalchemy import create_engine # DB Engine
 from typing import Tuple  # Typing
-import jinja2, os  # Templates
+import jinja2  # Templates
 from datetime import datetime  # Datetime
 
 from .sasswatcher import SassWatcher  # SASS
@@ -29,6 +31,15 @@ app.static_folder = Utils.absolute_path('static')
 
 # Db
 db = SQLAlchemy(app)
+engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+Session = sessionmaker()
+Session.configure(bind=engine)
+
+
+def db_session():
+    session = Session()
+    return session
+
 
 # Import modules
 from app.modules import auth
