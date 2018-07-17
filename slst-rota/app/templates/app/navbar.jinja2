@@ -16,8 +16,10 @@
                         {% set base = "staff" %}
                     {% endif %}
                     <span class="dropdown">
-                        <a class="droptitle" href="{{ url_for(base+'.me') }}">
-                            {{ this_user.username }} <i class="fas fa-angle-right"></i>
+                        <a class="droptitle" href="{# url_for(base+'.me') #}">
+                            {{ this_user.username }}
+                            <span class="label">{{ base }}</span>
+                            <i class="fas fa-angle-right"></i>
                         </a>
                         <span class="drop">
                             <a class="item" href="{{ url_for('auth.logout') }}">Logout</a>

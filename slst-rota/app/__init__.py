@@ -1,7 +1,7 @@
 from flask import Flask, render_template  # Flask
 from flask_sqlalchemy import SQLAlchemy  # DB
 from sqlalchemy.orm import sessionmaker  # DB Session
-from sqlalchemy import create_engine # DB Engine
+from sqlalchemy import create_engine  # DB Engine
 from typing import Tuple  # Typing
 import jinja2  # Templates
 from datetime import datetime  # Datetime
@@ -41,6 +41,17 @@ def db_session():
     return session
 
 
+# Errors
+def error_render(code: int, extra: str = "") -> Tuple[str, int]:
+    message = str(code)
+    details = ""
+    data = Utils.status_message(code)
+    if data:
+        message = data[3]
+        details = data[2]
+    return render_template("app/error.jinja2", error_message=message, error_details=details, error_extra=extra), code
+
+
 # Import modules
 from app.modules import auth
 from app.modules.auth.controllers import auth as blueprint_auth
@@ -59,17 +70,6 @@ def variables() -> dict:
         auth
     ]  # Convince pycharm its used (and stop warnings)
     return dict(**globals())
-
-
-# Errors
-def error_render(code: int, extra: str = "") -> Tuple[str, int]:
-    message = str(code)
-    details = ""
-    data = Utils.status_message(code)
-    if data:
-        message = data[3]
-        details = data[2]
-    return render_template("app/error.jinja2", error_message=message, error_details=details, error_extra=extra), code
 
 
 @app.route('/error/<int:code>')

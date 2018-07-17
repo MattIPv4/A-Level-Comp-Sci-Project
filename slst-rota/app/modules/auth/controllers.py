@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, flash, session, redirect,
 from werkzeug.security import check_password_hash, generate_password_hash  # Passwords
 from typing import Union  # Typing
 
-from app import db, db_session  # DB
+from app import db_session, error_render  # DB, Errors
 from app.modules.auth.forms import LoginForm  # Forms
 from app.modules.auth.models import User  # Models
 
@@ -21,6 +21,10 @@ def current_user() -> Union[None, User]:
 # Login
 @auth.route('/login/', methods=['GET', 'POST'])
 def login():
+    # If session exists
+    if current_user():
+        return error_render(500)
+
     # If sign in form is submitted
     form = LoginForm(request.form)
 
@@ -37,6 +41,16 @@ def login():
         flash('Wrong email or password', 'error-message')
 
     return render_template("auth/login.jinja2", form=form)
+
+
+# Logout
+@auth.route('/logout/', methods=['GET'])
+def logout():
+    # If session exists
+    if current_user():
+        session.clear()
+
+    return redirect(url_for('index'))
 
 
 # Create a dummy account
