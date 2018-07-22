@@ -3,23 +3,43 @@
 {% block title %}Welcome{% endblock %}
 
 {% block body %}
+    {% set this_user = auth.current_user() %}
     <div class="container">
         <div class="row">
             <h1 class="mt-4">
-                Hi
+                Hi{% if this_user %} {{ this_user.username }}!{% else %}, log in to get started!{% endif %}
             </h1>
         </div>
-        <div class="row">
-            <div class="two-thirds column">
+        {% if this_user and this_user.auth_level == 1 %}
+            {# Student authed #}
+            <div class="row">
+                <div class="two-thirds column">
 
-                Student login
+                </div>
+                <div class="one-third column">
 
+                </div>
             </div>
-            <div class="one-third column">
+        {% elif this_user and this_user.auth_level == 2 %}
+            {# Staff authed #}
+            <div class="row">
+                <div class="two-thirds column">
 
-                Staff login
+                </div>
+                <div class="one-third column">
 
+                </div>
             </div>
-        </div>
+        {% else %}
+            {# Not authed #}
+            <div class="row">
+                <div class="two-thirds column">
+
+                </div>
+                <div class="one-third column">
+
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
