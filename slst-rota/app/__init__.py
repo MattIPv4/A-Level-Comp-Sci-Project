@@ -1,10 +1,12 @@
+from datetime import datetime  # Datetime
+from typing import Tuple  # Typing
+
+import jinja2  # Templates
 from flask import Flask, render_template  # Flask
 from flask_sqlalchemy import SQLAlchemy  # DB
-from sqlalchemy.orm import sessionmaker  # DB Session
 from sqlalchemy import create_engine  # DB Engine
-from typing import Tuple  # Typing
-import jinja2  # Templates
-from datetime import datetime  # Datetime
+from sqlalchemy.orm import sessionmaker  # DB Session
+from werkzeug.exceptions import HTTPException  # Errors
 
 from .sasswatcher import SassWatcher  # SASS
 from .utils import Utils  # Utils
@@ -77,9 +79,15 @@ def error(code: int):
     return error_render(code)
 
 
-@app.errorhandler(404)
-def not_found(error):
-    return error_render(404)
+@app.errorhandler(Exception)
+def http_error_handler(error):
+    code = 500
+    if isinstance(error, HTTPException):
+        code = error.code
+    if code == 500:
+        if app.debug:
+            raise error
+    return error_render(code)
 
 
 # Index
