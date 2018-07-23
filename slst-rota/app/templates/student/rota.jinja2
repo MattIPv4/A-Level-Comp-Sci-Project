@@ -1,0 +1,55 @@
+{% extends "app/base.jinja2" %}
+
+{% block title %}Student Rota{% endblock %}
+
+{% block body %}
+    {% set this_user = auth.current_user() %}
+    <div class="container">
+        <div class="row">
+            <h1 class="mt-4">
+                {{ title }}
+            </h1>
+            <table class="u-full-width">
+                <thead>
+                <tr>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Student Assigned</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Monday</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="highlight">
+                    <td>11:45</td>
+                    <td>12:15</td>
+                    <td>Matt</td>
+                </tr>
+                <tr>
+                    <td>13:30</td>
+                    <td>14:25</td>
+                    <td>Joe</td>
+                </tr>
+                <tr>
+                    <td>Tuesday</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="highlight">
+                    <td>11:45</td>
+                    <td>12:15</td>
+                    <td>Matt</td>
+                </tr>
+                <tr>
+                    <td>13:30</td>
+                    <td>14:25</td>
+                    <td>Joe</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

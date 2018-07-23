@@ -1,5 +1,5 @@
 from datetime import datetime  # Datetime
-from typing import Tuple  # Typing
+from typing import Union, Tuple  # Typing
 
 import jinja2  # Templates
 from flask import Flask, render_template  # Flask
@@ -38,13 +38,18 @@ Session = sessionmaker()
 Session.configure(bind=engine)
 
 
+# Base model for other database tables to inherit
+class Base_Model(db.Model):
+    __abstract__ = True
+
+
 def db_session():
     session = Session()
     return session
 
 
 # Errors
-def error_render(code: int, extra: str = "") -> Tuple[str, int]:
+def error_render(code: Union[int, str], extra: str = "") -> Tuple[str, int]:
     message = str(code)
     details = ""
     data = Utils.status_message(code)
@@ -56,21 +61,27 @@ def error_render(code: int, extra: str = "") -> Tuple[str, int]:
 
 # Import modules
 from app.modules import auth
+from app.modules import student
 from app.modules.auth.controllers import auth as blueprint_auth
+from app.modules.student.controllers import student as blueprint_student
 
 # Register blueprint(s)
 app.register_blueprint(blueprint_auth)
+app.register_blueprint(blueprint_student)
 
 # Build the database
+__a = [
+    auth, student
+]  # Convince pycharm things are used (and stop warnings)
 db.create_all()
 
 
 @app.context_processor
 def variables() -> dict:
-    a = [
+    __a = [
         datetime,
         auth
-    ]  # Convince pycharm its used (and stop warnings)
+    ]  # Convince pycharm things are used (and stop warnings)
     return dict(**globals())
 
 

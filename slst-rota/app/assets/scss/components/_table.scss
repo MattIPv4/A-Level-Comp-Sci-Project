@@ -1,0 +1,10 @@
+@import 'global';
+
+table {
+  tr {
+    &.highlight {
+      color: $primary;
+      font-weight: 700;
+    }
+  }
+}
