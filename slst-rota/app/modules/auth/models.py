@@ -1,16 +1,10 @@
-from app import db  # DB
-
-
-# Base model for other database tables to inherit
-class Base(db.Model):
-    __abstract__ = True
+from app import db, Base_Model  # DB
 
 
 # Define a User model
-class User(Base):
+class User(Base_Model):
     __tablename__ = 'users'
 
-    # User Name
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128), nullable=False)
     password = db.Column(db.String(128), nullable=False)

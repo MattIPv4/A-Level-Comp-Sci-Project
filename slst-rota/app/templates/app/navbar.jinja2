@@ -1,14 +1,29 @@
 <header class="navbar">
     <div class="container larger">
         <div class="row">
+            {% set this_user = auth.current_user() %}
             <a class="item title" href="{{ url_for('index') }}">
                 {{ app.name }}
             </a>
 
             <a class="item" href="{{ url_for('index') }}">Home</a>
 
+            {% if this_user and this_user.auth_level == 1 %}
+                {# Student #}
+                <span class="dropdown">
+                    <a class="droptitle" href="{{ url_for('student.rota') }}">
+                        Rota <i class="fas fa-angle-right"></i>
+                    </a>
+                    <span class="drop">
+                        <a class="item" href="{{ url_for('student.rota') }}">Personal Rota</a>
+                        <a class="item" href="{{ url_for('student.rota_full') }}">Full Rota</a>
+                    </span>
+                </span>
+            {% elif this_user and this_user.auth_level == 2 %}
+                {# Staff #}
+            {% endif %}
+
             <span class="right">
-            {% set this_user = auth.current_user() %}
                 {% if this_user %}
                     {% if this_user.auth_level == 1 %}
                         {% set base = "student" %}
@@ -16,7 +31,7 @@
                         {% set base = "staff" %}
                     {% endif %}
                     <span class="dropdown">
-                        <a class="droptitle" href="{# url_for(base+'.me') #}">
+                        <a class="droptitle">
                             {{ this_user.username }}
                             <span class="label">{{ base }}</span>
                             <i class="fas fa-angle-right"></i>

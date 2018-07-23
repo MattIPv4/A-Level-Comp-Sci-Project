@@ -101,6 +101,12 @@ def http_error_handler(error):
     return error_render(code)
 
 
+from werkzeug.exceptions import default_exceptions # Errors
+
+for ex in default_exceptions:
+    app.register_error_handler(ex, http_error_handler)
+
+
 # Index
 @app.route('/')
 def index():

@@ -1,0 +1,20 @@
+{% macro render_table(headings, data) %}
+    <table class="u-full-width">
+        <thead>
+        <tr>
+            {% for heading in headings %}
+                <th>{{ heading }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in data %}
+            <tr{% if item[0] %} class="highlight"{% endif %}>
+                {% for value in item[1] %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
