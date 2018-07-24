@@ -23,7 +23,7 @@ header {
       .item,
       .droptitle {
         color: $lightgreyple;
-        display: inline;
+        display: block;
         line-height: 5rem;
         padding: 0 2rem;
         text-decoration: none;
@@ -48,18 +48,18 @@ header {
       // Support dropdowns
       .dropdown {
         box-shadow: inset -10px 10px -10px $primary;
-        display: flex;
-        flex-direction: column;
+        display: block;
+        float: left;
 
         .drop {
           background: $dark;
-          display: flex;
-          flex-direction: column;
+          display: block;
           height: auto;
           margin-left: 1.5rem;
           max-height: 0;
           opacity: 0;
           overflow: hidden;
+          position: absolute;
           transition: opacity .5s 0s, max-height 0s .5s;
         }
 
@@ -77,7 +77,6 @@ header {
         // Reveal animation (height)
         &:hover {
           .drop {
-            display: flex;
             max-height: 100vh;
             opacity: 1;
             transition: opacity .5s 0s, max-height 0s 0s;

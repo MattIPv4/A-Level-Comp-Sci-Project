@@ -19,6 +19,8 @@
                         <a class="item" href="{{ url_for('student.rota_full') }}">Full Rota</a>
                     </span>
                 </span>
+
+                <a class="item" href="{{ url_for('student.unavailability') }}">Unavailability</a>
             {% elif this_user and this_user.auth_level == 2 %}
                 {# Staff #}
             {% endif %}
