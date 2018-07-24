@@ -3,11 +3,7 @@
 {% block title %}Welcome{% endblock %}
 
 {% block body %}
-    {% macro render_field(field, placeholder=None) %}
-        <label for="{{ field.id }}">{{ placeholder }}</label>
-        {% set css_class = 'u-full-width ' + kwargs.pop('class', '') %}
-        {{ field(class=css_class, placeholder=placeholder, **kwargs) }}
-    {% endmacro %}
+    {% from "app/macros/field.jinja2" import render_field with context %}
 
     <div class="container">
         <h1>Login to {{ app.name }}</h1>
@@ -21,7 +17,7 @@
             {% endif %}
         {% endwith %}
 
-        <form method="POST" action="." accept-charset="UTF-8" role="form">
+        <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
             {{ form.csrf_token }}
 
             <div class="row">

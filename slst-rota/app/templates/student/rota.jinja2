@@ -9,7 +9,7 @@
             <h1 class="mt-4">
                 {{ title }}
             </h1>
-            {% from "app/table.jinja2" import render_table with context %}
+            {% from "app/macros/table.jinja2" import render_table with context %}
             {{ render_table(["Start Time", "End Time", "Student(s) Assigned"], rota_data) }}
             {% if show_rota_full %}
                 <p>Sessions highlighted are for today.</p>

@@ -11,7 +11,7 @@
             </h1>
 
             <h4 class="mb-0">Your next rota assignment</h4>
-            {% from "app/table.jinja2" import render_table with context %}
+            {% from "app/macros/table.jinja2" import render_table with context %}
             {{ render_table(["Day", "Start Time", "End Time", "Student(s) Assigned"], [next_session]) }}
         </div>
     </div>

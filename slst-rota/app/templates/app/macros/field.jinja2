@@ -1,0 +1,5 @@
+{% macro render_field(field, placeholder=None) %}
+    <label for="{{ field.id }}">{{ placeholder }}</label>
+    {% set css_class = 'u-full-width ' + kwargs.pop('class', '') %}
+    {{ field(class=css_class, placeholder=placeholder, **kwargs) }}
+{% endmacro %}
