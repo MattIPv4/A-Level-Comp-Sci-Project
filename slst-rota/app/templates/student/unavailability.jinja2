@@ -1,0 +1,16 @@
+{% extends "app/base.jinja2" %}
+
+{% block title %}Student Unavailability{% endblock %}
+
+{% block body %}
+    {% set this_user = auth.current_user() %}
+    <div class="container">
+        <div class="row">
+            <h1 class="mt-4">
+                Unavailability for {{ this_user.username }}
+            </h1>
+            {% from "app/macros/table.jinja2" import render_table with context %}
+            {{ render_table(["Start Time", "End Time", "Unavailable", ""], rota_data) }}
+        </div>
+    </div>
+{% endblock %}

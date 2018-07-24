@@ -5,5 +5,5 @@ from wtforms.validators import DataRequired  # Form: Validation
 
 # Login (using WTForms)
 class LoginForm(FlaskForm):
-    username = StringField('Username', [DataRequired(message='Please enter your username.')])
-    password = PasswordField('Password', [DataRequired(message='Please enter your password.')])
+    username = StringField('Username', validators=[DataRequired(message='Please enter your username.')])
+    password = PasswordField('Password', validators=[DataRequired(message='Please enter your password.')])

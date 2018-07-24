@@ -12,6 +12,13 @@
 .mt-3 { margin-top: 1.5rem; }
 .mt-4 { margin-top: 2rem; }
 
+// Margins: Bottom/Top
+.mbt-0 { @extend #{'.mb-0', '.mt-0'}; }
+.mbt-1 { @extend #{'.mb-1', '.mt-1'}; }
+.mbt-2 { @extend #{'.mb-2', '.mt-2'}; }
+.mbt-3 { @extend #{'.mb-3', '.mt-3'}; }
+.mbt-4 { @extend #{'.mb-4', '.mt-4'}; }
+
 // Hide alt text
 .hide-alt {
   color: rgba(0, 0, 0, 0);

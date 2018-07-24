@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, flash, session, redirect,
 from werkzeug.security import check_password_hash, generate_password_hash  # Passwords
 from typing import Union  # Typing
 
-from app import db_session, error_render  # DB, Errors
+from app import db_session  # DB
 from app.modules.auth.forms import LoginForm  # Forms
 from app.modules.auth.models import User  # Models
 
@@ -23,7 +23,7 @@ def current_user() -> Union[None, User]:
 def login():
     # If session exists
     if current_user():
-        return error_render(500)
+        return redirect(url_for('index'))
 
     # If sign in form is submitted
     form = LoginForm(request.form)

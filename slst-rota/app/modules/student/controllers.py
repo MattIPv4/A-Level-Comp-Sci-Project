@@ -4,7 +4,8 @@ from datetime import datetime  # Datetime
 
 from app import db_session, error_render  # DB, Errors
 from app.modules import auth  # Auth
-from app.modules.student.models import Session, Assignment, session_to_view  # Rota Sessions
+from app.modules.student.forms import UnavailabilityForm # Form
+from app.modules.student.models import Session, Assignment, session_to_rota_view, Unavailability  # Rota Sessions
 
 # Blueprint
 student = Blueprint('student', __name__, url_prefix='/student')
@@ -84,7 +85,7 @@ def rota():
             current_day = session.day
 
         # Assignments for day
-        rota_data.append(session_to_view(session, lambda a: a.session.day == datetime.today().weekday()))
+        rota_data.append(session_to_rota_view(session, lambda a: a.session.day == datetime.today().weekday()))
 
     return render_template("student/rota.jinja2", title="Rota view for {}".format(user.username),
                            rota_data=rota_data, show_rota_full=True)
@@ -115,7 +116,7 @@ def rota_full():
             current_day = session.day
 
         # Assignments for day (highlight ones with current user)
-        rota_data.append(session_to_view(session, lambda a: a.user.id == user.id))
+        rota_data.append(session_to_rota_view(session, lambda a: a.user.id == user.id))
 
     return render_template("student/rota.jinja2", title="Full rota view",
                            rota_data=rota_data, show_rota_full=False)
@@ -128,3 +129,98 @@ def fake():
     session = db_session()
     session.add(this_fake)
     session.commit()
+
+
+# Unavailability
+@student.route('/unavailability/', methods=['GET'])
+def unavailability():
+    user = auth.current_user()
+
+    # If no session exists
+    if not user:
+        return redirect(url_for('auth.login'))
+
+    # If not student
+    if user.auth_level != 1:
+        return error_render("Student access only",
+                            "This page is only accessible to users with the student authentication level")
+
+    # Get rota data
+    data = Session.query.order_by(Session.day.asc(), Session.start_time.asc()).all()
+    rota_data = []
+    current_day = None
+    for session in data:
+        # Day subheadings
+        if session.day != current_day:
+            rota_data.append([False, [list(calendar.day_name)[session.day], "", "", ""]])
+            current_day = session.day
+
+        # Assignments for day (highlight ones with current user)
+        rota_data.append([
+            False,
+            [
+                session.start_time_frmt,
+                session.end_time_frmt,
+                "Yes" if user.id in [f.user.id for f in session.unavailabilities] else "No",
+                '<a class="button button-primary mbt-0" href="{}">Update unavailability</a>'.format(
+                    url_for('student.unavailability_edit', id=session.id))
+            ]
+        ])
+
+    return render_template("student/unavailability.jinja2", rota_data=rota_data)
+
+# Unavailability
+@student.route('/unavailability/edit/<int:id>', methods=['GET', 'POST'])
+def unavailability_edit(id: int):
+    user = auth.current_user()
+
+    # If no session exists
+    if not user:
+        return redirect(url_for('auth.login'))
+
+    # If not student
+    if user.auth_level != 1:
+        return error_render("Student access only",
+                            "This page is only accessible to users with the student authentication level")
+
+    session = Session.query.filter_by(id=id).first()
+
+    # If bad session
+    if not session or session.archived is True:
+        return redirect(url_for('student.unavailability'))
+
+    # Form
+    form = UnavailabilityForm(request.form)
+
+    # Verify the form
+    if form.validate_on_submit():
+
+        dbsession = db_session()
+
+        if not form.unavailable.data:
+
+            Unavailability.query.with_session(dbsession).filter_by(user_id=user.id, session_id=session.id).delete()
+
+            dbsession.commit()
+            return redirect(url_for('student.unavailability'))
+
+        if form.unavailable.data and form.reason.data:
+            Unavailability.query.with_session(dbsession).filter_by(user_id=user.id, session_id=session.id).delete()
+
+            new_unavailablity = Unavailability(user.id, session.id, form.reason.data)
+            dbsession.add(new_unavailablity)
+
+
+            dbsession.commit()
+            return redirect(url_for('student.unavailability'))
+
+        flash('Please enter a reason for marking yourself as unavailable', 'error-message')
+
+    # Get current if any
+    data = Unavailability.query.filter_by(user_id=user.id, session_id=session.id).first()
+    if data:
+        form.unavailable.data = True
+        form.reason.data = data.reason
+
+    # Render
+    return render_template("student/unavailability_edit.jinja2", form=form)

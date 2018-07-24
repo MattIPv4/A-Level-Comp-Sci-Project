@@ -15,6 +15,7 @@ class Session(Base_Model):
     archived = db.Column(db.SmallInteger, nullable=False, default=0)
 
     assignments = db.relationship('Assignment')
+    unavailabilities = db.relationship('Unavailability')
 
     # New instance instantiation procedure
     def __init__(self, day: int, start_time: int, end_time: int):
@@ -62,7 +63,7 @@ class Assignment(Base_Model):
 
 
 # Convert sessions to the view needed for the rota
-def session_to_view(session: Session, highlight_check: Union[Callable, None] = None) -> List[list]:
+def session_to_rota_view(session: Session, highlight_check: Union[Callable, None] = None) -> List[list]:
     data = [False, []]
     data[1].append(session.start_time_frmt)  # Get hours:minutes
     data[1].append(session.end_time_frmt)  # Get hours:minutes
@@ -77,3 +78,32 @@ def session_to_view(session: Session, highlight_check: Union[Callable, None] = N
     data[1][-1] = ", ".join(data[1][-1])
 
     return data
+
+
+# Define an Unavailability model
+class Unavailability(Base_Model):
+    __tablename__ = 'unavailabilities'
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', ondelete='CASCADE'),
+        primary_key=True,
+        nullable=False,
+    )
+    user = db.relationship('User')
+
+    session_id = db.Column(
+        db.Integer,
+        db.ForeignKey('sessions.id', ondelete='CASCADE'),
+        primary_key=True,
+        nullable=False,
+    )
+    session = db.relationship('Session')
+
+    reason = db.Column(db.String, nullable=False)
+
+    # New instance instantiation procedure
+    def __init__(self, user_id: int, session_id: int, reason: str):
+        self.user_id = user_id
+        self.session_id = session_id
+        self.reason = reason
