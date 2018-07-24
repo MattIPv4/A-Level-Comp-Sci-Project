@@ -16,15 +16,23 @@ class Session(Base_Model):
 
     assignments = db.relationship('Assignment')
 
-    day_frmt = list(day_name)[day] # day name
-    start_time_frmt = str(timedelta(minutes=start_time))[:-3] # hours:minutes
-    end_time_frmt = str(timedelta(minutes=end_time))[:-3] # hours:minutes
-
     # New instance instantiation procedure
     def __init__(self, day: int, start_time: int, end_time: int):
         self.day = day
         self.start_time = start_time
         self.end_time = end_time
+
+    @property
+    def day_frmt(self):
+        return list(day_name)[self.day]  # day name
+
+    @property
+    def start_time_frmt(self):
+        return str(timedelta(minutes=self.start_time))[:-3] # hours:minutes
+
+    @property
+    def end_time_frmt(self):
+        return str(timedelta(minutes=self.end_time))[:-3] # hours:minutes
 
 
 # Define an Assignment model

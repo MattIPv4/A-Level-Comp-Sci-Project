@@ -2,7 +2,7 @@ from datetime import datetime  # Datetime
 from typing import Union, Tuple  # Typing
 
 import jinja2  # Templates
-from flask import Flask, render_template  # Flask
+from flask import Flask, render_template, redirect, url_for  # Flask
 from flask_sqlalchemy import SQLAlchemy  # DB
 from sqlalchemy import create_engine  # DB Engine
 from sqlalchemy.orm import sessionmaker  # DB Session
@@ -110,4 +110,11 @@ for ex in default_exceptions:
 # Index
 @app.route('/')
 def index():
+    user = auth.current_user()
+
+    # Student index
+    if user and user.auth_level == 1:
+        return redirect(url_for("student.home"))
+
+    # Normal index
     return render_template("index.jinja2")

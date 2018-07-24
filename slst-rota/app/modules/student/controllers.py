@@ -40,7 +40,17 @@ def home():
 
         next_session = session
         break
-    next_session = session_to_view(next_session)
+
+    # Format for table macro
+    next_session = [
+        False,
+        [
+            next_session.day_frmt,
+            next_session.start_time_frmt,
+            next_session.end_time_frmt,
+            ", ".join([f.user.username for f in next_session.assignments])
+        ]
+    ]
 
     return render_template("student/index.jinja2", next_session=next_session)
 
