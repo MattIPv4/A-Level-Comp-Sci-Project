@@ -1,6 +1,5 @@
 import json
 import os
-from collections import namedtuple
 from datetime import datetime
 from typing import Union, Tuple
 
@@ -72,7 +71,6 @@ class Utils:
         now = datetime.now()
         seconds = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
         return seconds / 60
-
 
     @staticmethod
     def log(type: str, *args, **kwargs):

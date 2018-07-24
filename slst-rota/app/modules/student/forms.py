@@ -1,4 +1,4 @@
-from flask_wtf import FlaskForm # Form
+from flask_wtf import FlaskForm  # Form
 from wtforms import StringField, BooleanField  # Form: Elements
 
 

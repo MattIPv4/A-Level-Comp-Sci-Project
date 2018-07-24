@@ -56,6 +56,7 @@ def error_render(code: Union[int, str], extra: str = "") -> Tuple[str, int]:
     if data:
         message = data[3]
         details = data[2]
+    extra = extra.replace("\n", "<br/>")
     return render_template("app/error.jinja2", error_message=message, error_details=details, error_extra=extra), code
 
 
@@ -101,7 +102,7 @@ def http_error_handler(error):
     return error_render(code)
 
 
-from werkzeug.exceptions import default_exceptions # Errors
+from werkzeug.exceptions import default_exceptions  # Errors
 
 for ex in default_exceptions:
     app.register_error_handler(ex, http_error_handler)

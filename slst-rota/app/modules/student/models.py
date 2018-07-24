@@ -1,7 +1,8 @@
-from app import db, Base_Model  # DB
-from calendar import day_name # Days
+from calendar import day_name  # Days
 from datetime import timedelta  # Times
 from typing import Union, Callable, List  # Typing
+
+from app import db, Base_Model  # DB
 
 
 # Define a Session model
@@ -29,11 +30,11 @@ class Session(Base_Model):
 
     @property
     def start_time_frmt(self):
-        return str(timedelta(minutes=self.start_time))[:-3] # hours:minutes
+        return str(timedelta(minutes=self.start_time))[:-3]  # hours:minutes
 
     @property
     def end_time_frmt(self):
-        return str(timedelta(minutes=self.end_time))[:-3] # hours:minutes
+        return str(timedelta(minutes=self.end_time))[:-3]  # hours:minutes
 
 
 # Define an Assignment model
@@ -75,7 +76,7 @@ def session_to_rota_view(session: Session, highlight_check: Union[Callable, None
         # Highlight
         if highlight_check is not None and highlight_check(assignment):
             data[0] = True
-    data[1][-1] = ", ".join(data[1][-1])
+    data[1][-1] = ", ".join(data[1][-1]) or "<i>None</i>"
 
     return data
 

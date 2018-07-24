@@ -27,7 +27,7 @@ def home():
                             "This page is only accessible to users with the student authentication level")
 
     # Get next session for student
-    data = Session.query.order_by(Session.day.asc(), Session.start_time.asc()).all()
+    data = Session.query.filter_by(archived=False).order_by(Session.day.asc(), Session.start_time.asc()).all()
     data = [f for f in data if user.id in [g.user.id for g in f.assignments]]
     next_session = data[0]
     for session in data:
@@ -62,7 +62,7 @@ def home():
     # Get unavailability
     data = Session.query.all()
     data2 = Unavailability.query.filter_by(user_id=user.id).all()
-    unavailability_stat = "Unavailable for {} out of {} sessions ({:.2f}%).".format(
+    unavailability_stat = "Unavailable {} / {} sessions.<br/>({:.2f}% availability)".format(
         len(data2), len(data), (1 - (len(data2) / len(data))) * 100)
 
     return render_template("student/index.jinja2", session_is_current=session_is_current, next_session=next_session,
@@ -165,18 +165,25 @@ def unavailability():
     rota_data = []
     current_day = None
     for session in data:
+
+        # Don't show assigned sessions
+        assigned = False
+        if user.id in [f.user.id for f in session.assignments]:
+            assigned = True
+
         # Day subheadings
         if session.day != current_day:
             rota_data.append([False, [list(calendar.day_name)[session.day], "", "", ""]])
             current_day = session.day
 
-        # Assignments for day (highlight ones with current user)
+        # Sessions
         rota_data.append([
             False,
             [
                 session.start_time_frmt,
                 session.end_time_frmt,
                 "Yes" if user.id in [f.user.id for f in session.unavailabilities] else "No",
+                "Currently assigned, unable to update." if assigned else
                 '<a class="button button-primary mbt-0" href="{}">Update unavailability</a>'.format(
                     url_for('student.unavailability_edit', id=session.id))
             ]
@@ -204,6 +211,12 @@ def unavailability_edit(id: int):
     # If bad session
     if not session or session.archived is True:
         return redirect(url_for('student.unavailability'))
+
+    # If student assigned
+    if user.id in [f.user.id for f in session.assignments]:
+        return error_render("Currently assigned to session",
+                            "You cannot update your unavailability on a session you are currently assigned to."
+                            "\nPlease seek help from a staff user to un-assign you from the session")
 
     # Form
     form = UnavailabilityForm(request.form)

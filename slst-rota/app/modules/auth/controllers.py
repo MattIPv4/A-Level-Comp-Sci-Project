@@ -1,6 +1,7 @@
+from typing import Union  # Typing
+
 from flask import Blueprint, request, render_template, flash, session, redirect, url_for  # Flask
 from werkzeug.security import check_password_hash, generate_password_hash  # Passwords
-from typing import Union  # Typing
 
 from app import db_session  # DB
 from app.modules.auth.forms import LoginForm  # Forms
