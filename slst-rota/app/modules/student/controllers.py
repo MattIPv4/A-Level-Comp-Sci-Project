@@ -5,6 +5,7 @@ from flask import Blueprint, request, render_template, flash, redirect, url_for 
 
 from app import db_session, error_render, Utils  # DB, Errors
 from app.modules import auth  # Auth
+from app.modules.auth.models import User # User
 from app.modules.student.forms import UnavailabilityForm  # Form
 from app.modules.student.models import Session, session_to_rota_view, Unavailability  # Rota Sessions
 
@@ -12,19 +13,28 @@ from app.modules.student.models import Session, session_to_rota_view, Unavailabi
 student = Blueprint('student', __name__, url_prefix='/student')
 
 
+# Standard check for all rotues
+def auth_check():
+    user = auth.current_user()
+    error = None
+
+    # If no session exists
+    if not error and not user:
+        error = redirect(url_for('auth.login'))
+
+    # If not student
+    if not error and user.auth_level != 1:
+        error = error_render("Student access only",
+                            "This page is only accessible to users with the student authentication level")
+
+    return user, error
+
 # Home
 @student.route('/', methods=['GET'])
 def home():
-    user = auth.current_user()
-
-    # If no session exists
-    if not user:
-        return redirect(url_for('auth.login'))
-
-    # If not student
-    if user.auth_level != 1:
-        return error_render("Student access only",
-                            "This page is only accessible to users with the student authentication level")
+    user, error = auth_check()
+    if error:
+        return error
 
     # Get next session for student
     data = Session.query.filter_by(archived=False).order_by(Session.day.asc(), Session.start_time.asc()).all()
@@ -42,13 +52,14 @@ def home():
         next_session = session
         break
 
-    # Format for table macro
+    # Check if the next session is current
     session_is_current = False
     if next_session.day == datetime.today().weekday() \
             and next_session.start_time <= Utils.minutes_now() \
             and next_session.end_time >= Utils.minutes_now():
         session_is_current = True
 
+    # Format for table macro
     next_session = [
         session_is_current,
         [
@@ -60,8 +71,8 @@ def home():
     ]
 
     # Get unavailability
-    data = Session.query.all()
-    data2 = Unavailability.query.filter_by(user_id=user.id).all()
+    data = Session.query.filter_by(archived=False).all()
+    data2 = [f for f in Unavailability.query.filter_by(user_id=user.id).all() if not f.session.archived]
     unavailability_stat = "Unavailable {} / {} sessions.<br/>({:.2f}% availability)".format(
         len(data2), len(data), (1 - (len(data2) / len(data))) * 100)
 
@@ -72,19 +83,12 @@ def home():
 # Rota
 @student.route('/rota/', methods=['GET'])
 def rota():
-    user = auth.current_user()
-
-    # If no session exists
-    if not user:
-        return redirect(url_for('auth.login'))
-
-    # If not student
-    if user.auth_level != 1:
-        return error_render("Student access only",
-                            "This page is only accessible to users with the student authentication level")
+    user, error = auth_check()
+    if error:
+        return error
 
     # Get rota data
-    data = Session.query.order_by(Session.day.asc(), Session.start_time.asc()).all()
+    data = Session.query.filter_by(archived=False).order_by(Session.day.asc(), Session.start_time.asc()).all()
     rota_data = []
     current_day = None
     for session in data:
@@ -107,19 +111,12 @@ def rota():
 # Full Rota
 @student.route('/rota/full/', methods=['GET'])
 def rota_full():
-    user = auth.current_user()
-
-    # If no session exists
-    if not user:
-        return redirect(url_for('auth.login'))
-
-    # If not student
-    if user.auth_level != 1:
-        return error_render("Student access only",
-                            "This page is only accessible to users with the student authentication level")
+    user, error = auth_check()
+    if error:
+        return error
 
     # Get rota data
-    data = Session.query.order_by(Session.day.asc(), Session.start_time.asc()).all()
+    data = Session.query.filter_by(archived=False).order_by(Session.day.asc(), Session.start_time.asc()).all()
     rota_data = []
     current_day = None
     for session in data:
@@ -138,6 +135,10 @@ def rota_full():
 # Rota
 @student.route('/fake/', methods=['GET'])
 def fake():
+    user, error = auth_check()
+    if error:
+        return error
+
     session = db_session()
     # this_fake = Session(0, 705, 735)
     # session.add(this_fake)
@@ -149,19 +150,12 @@ def fake():
 # Unavailability
 @student.route('/unavailability/', methods=['GET'])
 def unavailability():
-    user = auth.current_user()
-
-    # If no session exists
-    if not user:
-        return redirect(url_for('auth.login'))
-
-    # If not student
-    if user.auth_level != 1:
-        return error_render("Student access only",
-                            "This page is only accessible to users with the student authentication level")
+    user, error = auth_check()
+    if error:
+        return error
 
     # Get rota data
-    data = Session.query.order_by(Session.day.asc(), Session.start_time.asc()).all()
+    data = Session.query.filter_by(archived=False).order_by(Session.day.asc(), Session.start_time.asc()).all()
     rota_data = []
     current_day = None
     for session in data:
@@ -195,16 +189,9 @@ def unavailability():
 # Unavailability
 @student.route('/unavailability/edit/<int:id>', methods=['GET', 'POST'])
 def unavailability_edit(id: int):
-    user = auth.current_user()
-
-    # If no session exists
-    if not user:
-        return redirect(url_for('auth.login'))
-
-    # If not student
-    if user.auth_level != 1:
-        return error_render("Student access only",
-                            "This page is only accessible to users with the student authentication level")
+    user, error = auth_check()
+    if error:
+        return error
 
     session = Session.query.filter_by(id=id).first()
 
