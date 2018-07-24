@@ -6,13 +6,30 @@
     {% set this_user = auth.current_user() %}
     <div class="container">
         <div class="row">
-            <h1 class="mt-4">
-                Hello {{ this_user.username }}
-            </h1>
+            <div class="two-thirds column">
+                <h1 class="mt-4">
+                    Hello {{ this_user.username }}
+                </h1>
 
-            <h4 class="mb-0">Your next rota assignment</h4>
-            {% from "app/macros/table.jinja2" import render_table with context %}
-            {{ render_table(["Day", "Start Time", "End Time", "Student(s) Assigned"], [next_session]) }}
+                <h4 class="mb-0">
+                    Your {% if session_is_current %}<b>current</b>{% else %}next{% endif %} rota assignment
+                </h4>
+                {% from "app/macros/table.jinja2" import render_table with context %}
+                {{ render_table(["Day", "Start Time", "End Time", "Student(s) Assigned"], [next_session]) }}
+                <a href="{{ url_for("student.rota") }}" class="button button-primary mt-1">View personal rota</a>
+                <a href="{{ url_for("student.rota_full") }}" class="button mt-1">View full rota</a>
+            </div>
+            <div class="one-third column">
+                <h4 class="mb-0">Your session unavailability</h4>
+                <div class="row">
+                    <div class="one-half column">
+                        <p>{{ unavailability_stat }}</p>
+                    </div>
+                    <div class="one-half column">
+                        <a href="{{ url_for("student.unavailability") }}" class="button mt-1">Manage unavailability</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

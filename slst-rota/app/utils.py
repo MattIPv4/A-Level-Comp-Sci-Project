@@ -68,6 +68,13 @@ class Utils:
                "{}: {}".format(code, Utils.statusMessageData[str(code)]['message'])
 
     @staticmethod
+    def minutes_now() -> float:
+        now = datetime.now()
+        seconds = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
+        return seconds / 60
+
+
+    @staticmethod
     def log(type: str, *args, **kwargs):
         now = "[{0.hour:02d}:{0.minute:02d}:{0.second:02d}]".format(datetime.now())
         print("{} [{}]".format(now, type), *args, **kwargs)

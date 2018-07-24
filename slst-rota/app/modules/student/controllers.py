@@ -1,11 +1,12 @@
-from flask import Blueprint, request, render_template, flash, session, redirect, url_for  # Flask
 import calendar  # Calendar
 from datetime import datetime  # Datetime
 
-from app import db_session, error_render  # DB, Errors
+from flask import Blueprint, request, render_template, flash, redirect, url_for  # Flask
+
+from app import db_session, error_render, Utils  # DB, Errors
 from app.modules import auth  # Auth
-from app.modules.student.forms import UnavailabilityForm # Form
-from app.modules.student.models import Session, Assignment, session_to_rota_view, Unavailability  # Rota Sessions
+from app.modules.student.forms import UnavailabilityForm  # Form
+from app.modules.student.models import Session, session_to_rota_view, Unavailability  # Rota Sessions
 
 # Blueprint
 student = Blueprint('student', __name__, url_prefix='/student')
@@ -35,16 +36,21 @@ def home():
             continue
 
         # Assignment can't be before now (end time)
-        if session.end_time < ((datetime.now() - datetime.now().replace(hour=0, minute=0, second=0,
-                                                                        microsecond=0)).total_seconds() / 60):
+        if session.end_time < Utils.minutes_now():
             continue
 
         next_session = session
         break
 
     # Format for table macro
+    session_is_current = False
+    if next_session.day == datetime.today().weekday() \
+            and next_session.start_time <= Utils.minutes_now() \
+            and next_session.end_time >= Utils.minutes_now():
+        session_is_current = True
+
     next_session = [
-        False,
+        session_is_current,
         [
             next_session.day_frmt,
             next_session.start_time_frmt,
@@ -53,7 +59,14 @@ def home():
         ]
     ]
 
-    return render_template("student/index.jinja2", next_session=next_session)
+    # Get unavailability
+    data = Session.query.all()
+    data2 = Unavailability.query.filter_by(user_id=user.id).all()
+    unavailability_stat = "Unavailable for {} out of {} sessions ({:.2f}%).".format(
+        len(data2), len(data), (1 - (len(data2) / len(data))) * 100)
+
+    return render_template("student/index.jinja2", session_is_current=session_is_current, next_session=next_session,
+                           unavailability_stat=unavailability_stat)
 
 
 # Rota
@@ -125,9 +138,11 @@ def rota_full():
 # Rota
 @student.route('/fake/', methods=['GET'])
 def fake():
-    this_fake = Assignment(1, 1)
     session = db_session()
-    session.add(this_fake)
+    # this_fake = Session(0, 705, 735)
+    # session.add(this_fake)
+    # this_fake = Assignment(1, 2)
+    # session.add(this_fake)
     session.commit()
 
 
@@ -169,6 +184,7 @@ def unavailability():
 
     return render_template("student/unavailability.jinja2", rota_data=rota_data)
 
+
 # Unavailability
 @student.route('/unavailability/edit/<int:id>', methods=['GET', 'POST'])
 def unavailability_edit(id: int):
@@ -198,7 +214,6 @@ def unavailability_edit(id: int):
         dbsession = db_session()
 
         if not form.unavailable.data:
-
             Unavailability.query.with_session(dbsession).filter_by(user_id=user.id, session_id=session.id).delete()
 
             dbsession.commit()
@@ -209,7 +224,6 @@ def unavailability_edit(id: int):
 
             new_unavailablity = Unavailability(user.id, session.id, form.reason.data)
             dbsession.add(new_unavailablity)
-
 
             dbsession.commit()
             return redirect(url_for('student.unavailability'))
