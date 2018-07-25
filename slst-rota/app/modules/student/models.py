@@ -1,5 +1,5 @@
 from calendar import day_name  # Days
-from datetime import timedelta  # Times
+from datetime import timedelta, datetime  # Times
 from typing import Union, Callable, List  # Typing
 
 from app import db, Base_Model  # DB
@@ -108,3 +108,34 @@ class Unavailability(Base_Model):
         self.user_id = user_id
         self.session_id = session_id
         self.reason = reason
+
+
+# Define an Attendance model
+class Attendance(Base_Model):
+    __tablename__ = 'attendance'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+    user = db.relationship('User')
+
+    session_id = db.Column(
+        db.Integer,
+        db.ForeignKey('sessions.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+    session = db.relationship('Session')
+
+    in_time = db.Column(db.DateTime, nullable=False)
+    out_time = db.Column(db.DateTime, nullable=True, default=None)
+
+    # New instance instantiation procedure
+    def __init__(self, user_id: int, session_id: int, in_time: datetime = None, out_time: datetime = None):
+        self.user_id = user_id
+        self.session_id = session_id
+        self.in_time = in_time if in_time else datetime.utcnow()
+        self.out_time = out_time

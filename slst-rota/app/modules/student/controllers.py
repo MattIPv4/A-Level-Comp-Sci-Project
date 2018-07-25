@@ -1,15 +1,20 @@
 import calendar  # Calendar
 from datetime import datetime  # Datetime
+from typing import Tuple, Union  # Typing
 
 from flask import Blueprint, request, render_template, flash, redirect, url_for  # Flask
 
 from app import db_session, error_render, Utils  # DB, Errors
 from app.modules import auth  # Auth
-from app.modules.auth.models import User # User
+from app.modules.auth import User  # User
 from app.modules.student.forms import UnavailabilityForm  # Form
-from app.modules.student.models import Session, session_to_rota_view, Unavailability  # Rota Sessions
+from app.modules.student.models import Session, session_to_rota_view, Assignment, Unavailability, \
+    Attendance  # Rota Sessions
 
 # Blueprint
+__a = [
+    Session, Assignment, Unavailability, Attendance
+]  # Convince pycharm things are used (and stop warnings)
 student = Blueprint('student', __name__, url_prefix='/student')
 
 
@@ -25,20 +30,22 @@ def auth_check():
     # If not student
     if not error and user.auth_level != 1:
         error = error_render("Student access only",
-                            "This page is only accessible to users with the student authentication level")
+                             "This page is only accessible to users with the student authentication level")
 
     return user, error
 
-# Home
-@student.route('/', methods=['GET'])
-def home():
-    user, error = auth_check()
-    if error:
-        return error
 
-    # Get next session for student
+# Quick method to get next/current assignment
+def next_current_assignment(user: User) -> Tuple[Union[Session, None], bool]:
+    # Get session assignments
     data = Session.query.filter_by(archived=False).order_by(Session.day.asc(), Session.start_time.asc()).all()
     data = [f for f in data if user.id in [g.user.id for g in f.assignments]]
+
+    # Handle no assignments
+    if not data:
+        return None, False
+
+    # Get next/current
     next_session = data[0]
     for session in data:
         # Session can't be before now (day)
@@ -59,7 +66,38 @@ def home():
             and next_session.end_time >= Utils.minutes_now():
         session_is_current = True
 
+    return next_session, session_is_current
+
+
+# Quick method to get if a user is signed in/out for a session
+def signed_in_out_session(user: User, session: Session) -> Tuple[Union[Attendance, None], bool, bool]:
+    data = Attendance.query.filter_by(user_id=user.id, session_id=session.id).order_by(
+        Attendance.in_time.desc()).first()
+
+    # No attendance or not today's attendance
+    if not data or data.in_time.date() != datetime.utcnow().date():
+        return data, False, False
+
+    # If has an out time
+    if data.out_time:
+        return data, True, True
+
+    # In but not out
+    return data, True, False
+
+
+# Home
+@student.route('/', methods=['GET'])
+def home():
+    user, error = auth_check()
+    if error:
+        return error
+
+    # Get next session for student
+    next_session, session_is_current = next_current_assignment(user)
+
     # Format for table macro
+    next_session_org = next_session
     next_session = [
         session_is_current,
         [
@@ -77,7 +115,8 @@ def home():
         len(data2), len(data), (1 - (len(data2) / len(data))) * 100)
 
     return render_template("student/index.jinja2", session_is_current=session_is_current, next_session=next_session,
-                           unavailability_stat=unavailability_stat)
+                           unavailability_stat=unavailability_stat,
+                           signed_in_out_session=signed_in_out_session(user, next_session_org))
 
 
 # Rota
@@ -238,3 +277,80 @@ def unavailability_edit(id: int):
 
     # Render
     return render_template("student/unavailability_edit.jinja2", form=form)
+
+
+# Sign in
+@student.route('/attendance/in/', methods=['GET'])
+def attendance_in():
+    user, error = auth_check()
+    if error:
+        return error
+
+    # Get next session for student
+    next_session, session_is_current = next_current_assignment(user)
+
+    # Handle no session
+    if not next_session:
+        return error_render("No assigned sessions found", "No rota sessions assigned to your user were found")
+
+    # Handle no current session (or session further than 5 minutes away)
+    if not session_is_current and (next_session.start_time - Utils.minutes_now()) > 5:
+        return error_render("No current assigned session found", "No rota session assigned to your user that is current"
+                                                                 " (now or less than five minutes away) was found")
+
+    # Get most recent sign in for this session
+    data = signed_in_out_session(user, next_session)
+
+    # If already signed in
+    if data[1]:
+        return error_render("Already signed in for assigned session",
+                            "Your user is already signed in for the current assinged session")
+
+    # Insert attendance into db
+    session = db_session()
+    attendance = Attendance(user.id, next_session.id)
+    session.add(attendance)
+    session.commit()
+
+    return redirect(url_for("index"))
+
+
+# Sign out
+@student.route('/attendance/out/', methods=['GET'])
+def attendance_out():
+    user, error = auth_check()
+    if error:
+        return error
+
+    # Get next session for student
+    next_session, session_is_current = next_current_assignment(user)
+
+    # Handle no session
+    if not next_session:
+        return error_render("No assigned sessions found",
+                            "No rota sessions assigned to your user were found")
+
+    # Handle no current session
+    if not session_is_current:
+        return error_render("No current assigned session found",
+                            "No rota session assigned to your user that is current was found")
+
+    # Get most recent sign in for this session
+    data = signed_in_out_session(user, next_session)
+
+    # If not attendance found or last sign in not today
+    if not data[1]:
+        return error_render("Not signed in for assigned session",
+                            "No sign in was found for the current assigned session")
+
+    # If already signed out
+    if data[2]:
+        return error_render("Already signed out for assigned session",
+                            "Your user has already signed out for the current assigned session")
+
+    # Update attendance
+    session = db_session()
+    Attendance.query.with_session(session).filter_by(id=data[0].id).first().out_time = datetime.utcnow()
+    session.commit()
+
+    return redirect(url_for("index"))
