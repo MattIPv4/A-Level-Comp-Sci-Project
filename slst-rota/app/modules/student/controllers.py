@@ -217,7 +217,7 @@ def unavailability():
                 session.end_time_frmt,
                 "Yes" if user.id in [f.user.id for f in session.unavailabilities] else "No",
                 "Currently assigned, unable to update." if assigned else
-                '<a class="button button-primary mbt-0" href="{}">Update unavailability</a>'.format(
+                '<a class="button primary mbt-0" href="{}">Update unavailability</a>'.format(
                     url_for('student.unavailability_edit', id=session.id))
             ]
         ])

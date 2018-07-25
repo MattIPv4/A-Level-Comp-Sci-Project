@@ -16,24 +16,27 @@
                 </h4>
                 {% from "app/macros/table.jinja2" import render_table with context %}
                 {{ render_table(["Day", "Start Time", "End Time", "Student(s) Assigned"], [next_session]) }}
-                <a href="{{ url_for("student.rota") }}" class="button button-primary mt-1">View personal rota</a>
+                <a href="{{ url_for("student.rota") }}" class="button primary mt-1">View personal rota</a>
                 <a href="{{ url_for("student.rota_full") }}" class="button mt-1">View full rota</a>
-
-                {% if session_is_current %}
-                    <hr/>
-                    {% if not signed_in_out_session[1] %}
-                        <a href="{{ url_for("student.attendance_in") }}" class="button button-primary mt-1">Sign in for
-                            current session</a>
-                    {% elif not signed_in_out_session[2] %}
-                        <a href="{{ url_for("student.attendance_out") }}" class="button button-primary mt-1">Sign out
-                            from
-                            current session</a>
-                    {% else %}
-                        <p><i>Already signed out for current rota assignment.</i></p>
-                    {% endif %}
-                {% endif %}
             </div>
             <div class="one-third column">
+                {% if session_is_current %}
+                    {% if not signed_in_out_session[1] %}
+                        <h4 class="mt-4 mb-0">Not signed in for current assignment</h4>
+                        <a href="{{ url_for("student.attendance_in") }}" class="button success mt-1">Sign in for
+                            current assignment</a>
+                    {% elif not signed_in_out_session[2] %}
+                        <h4 class="mt-4 mb-0">Signed in for current assignment</h4>
+                        <a href="{{ url_for("student.attendance_out") }}" class="button danger mt-1">Sign out
+                            from current assignment</a>
+                    {% else %}
+                        <h4 class="mt-4 mb-0">Already signed out from current assignment</h4>
+                    {% endif %}
+                {% else %}
+                    <h4 class="mt-4 mb-0">No current assignment</h4>
+                {% endif %}
+                <hr/>
+
                 <h4 class="mt-4 mb-0">Your session unavailability</h4>
                 <div class="row">
                     <div class="one-half column">

@@ -13,10 +13,10 @@
             {{ render_table(["Start Time", "End Time", "Student(s) Assigned"], rota_data) }}
             {% if show_rota_full %}
                 <p>Sessions highlighted are for today.</p>
-                <a class="button button-primary mt-2" href="{{ url_for('student.rota_full') }}">View full rota</a>
+                <a class="button primary mt-2" href="{{ url_for('student.rota_full') }}">View full rota</a>
             {% else %}
                 <p>Sessions highlighted are assigned to you.</p>
-                <a class="button button-primary mt-2" href="{{ url_for('student.rota') }}">View personal rota</a>
+                <a class="button primary mt-2" href="{{ url_for('student.rota') }}">View personal rota</a>
             {% endif %}
         </div>
     </div>
