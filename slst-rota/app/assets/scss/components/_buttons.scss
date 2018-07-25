@@ -1,0 +1,67 @@
+@import 'global';
+
+@mixin button_style($color, $text) {
+  background-color: $color;
+  border-color: $color;
+  color: $text;
+
+  &:hover,
+  &:focus {
+    background-color: darken($color, 10%);
+    border-color: darken($color, 10%);
+    color: $text;
+  }
+}
+
+// General button
+.button, button, input[type="button"], input[type="submit"] {
+  border-color: $white;
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2);
+  color: $primary;
+  font-size: 13px;
+  padding: 0 30px;
+  transition: all .2s;
+
+  &.button-square {
+    padding: 0 1em;
+  }
+
+  &:hover,
+  &:focus {
+    border-color: darken($white, 30%);
+    color: $primary;
+    text-decoration: none;
+  }
+
+  &:hover {
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, .2);
+  }
+  &:focus {
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, .2);
+  }
+
+  // Primary button
+  &.button-primary,
+  &.primary {
+    @include button_style($primary, $white);
+  }
+
+  // Success button
+  &.button-success,
+  &.success {
+    @include button_style($success, $white);
+  }
+
+  // Danger button
+  &.button-danger,
+  &.danger {
+    @include button_style($danger, $white);
+  }
+
+  // FontAwesome button fix (make them larger)
+  .svg-inline--fa[class*="fa-"] {
+    height: 1.5em;
+    vertical-align: -.375em;
+    width: auto;
+  }
+}
