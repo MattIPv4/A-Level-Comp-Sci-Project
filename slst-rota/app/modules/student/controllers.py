@@ -70,12 +70,15 @@ def next_current_assignment(user: User) -> Tuple[Union[Session, None], bool]:
 
 
 # Quick method to get if a user is signed in/out for a session
-def signed_in_out_session(user: User, session: Session) -> Tuple[Union[Attendance, None], bool, bool]:
+def signed_in_out_session(user: User, session: Union[Session, None]) -> Tuple[Union[Attendance, None], bool, bool]:
+    if not session:
+        return None, False, False
+
     data = Attendance.query.filter_by(user_id=user.id, session_id=session.id).order_by(
         Attendance.in_time.desc()).first()
 
     # No attendance or not today's attendance
-    if not data or data.in_time.date() != datetime.utcnow().date():
+    if not data or data.in_time.date() != datetime.now().date():
         return data, False, False
 
     # If has an out time
@@ -98,15 +101,16 @@ def home():
 
     # Format for table macro
     next_session_org = next_session
-    next_session = [
-        session_is_current,
-        [
-            next_session.day_frmt,
-            next_session.start_time_frmt,
-            next_session.end_time_frmt,
-            ", ".join([f.user.username for f in next_session.assignments])
+    if next_session:
+        next_session = [
+            session_is_current,
+            [
+                next_session.day_frmt,
+                next_session.start_time_frmt,
+                next_session.end_time_frmt,
+                ", ".join([f.user.username for f in next_session.assignments])
+            ]
         ]
-    ]
 
     # Get unavailability
     data = Session.query.filter_by(archived=False).all()
@@ -181,8 +185,8 @@ def fake():
     session = db_session()
     # this_fake = Session(0, 705, 735)
     # session.add(this_fake)
-    # this_fake = Assignment(1, 2)
-    # session.add(this_fake)
+    this_fake = Assignment(1, 1, Utils.minutes_today(0))
+    session.add(this_fake)
     session.commit()
 
 
@@ -279,6 +283,73 @@ def unavailability_edit(id: int):
     return render_template("student/unavailability_edit.jinja2", form=form)
 
 
+# Attendance
+@student.route('/attendance/', methods=['GET'])
+def attendance():
+    user, error = auth_check()
+    if error:
+        return error
+
+    data = [f for f in Assignment.query.filter_by(user_id=user.id).all() if not f.session.archived]
+    breakdown = []
+
+    # Totals data
+    attendance_total = 0
+    attendance_present = 0
+    attendance_absent = 0
+    attendance_in_diff = []
+    attendance_out_diff = []
+
+    # Compile assignment attendance data
+    for assignment in data:
+        this_attendance = [f for f in assignment.attendance if not f[1] or (f[1] and not f[1].current)]
+        this_total = len(this_attendance)
+        this_present = sum(1 for f in this_attendance if f[1])
+        this_absent = this_total - this_present
+
+        this_in_diff = [f[1].in_diff for f in this_attendance if f[1]]
+        this_in_diff_avg = (sum(this_in_diff) / len(this_in_diff)) if this_in_diff else 0
+
+        this_out_diff = [f[1].out_diff for f in this_attendance if f[1]]
+        this_out_diff_avg = (sum(this_out_diff) / len(this_out_diff)) if this_out_diff else 0
+
+        # Totals data
+        attendance_total += this_total
+        attendance_present += this_present
+        attendance_absent += this_absent
+        attendance_in_diff.extend(this_in_diff)
+        attendance_out_diff.extend(this_out_diff)
+
+        # Individual assignment data
+        this = [this_total, this_present, this_absent, this_in_diff, this_in_diff_avg, this_out_diff, this_out_diff_avg]
+        breakdown.append(this)
+
+    attendance_in_diff_avg = (sum(attendance_in_diff) / len(attendance_in_diff)) if attendance_in_diff else 0
+    attendance_out_diff_avg = (sum(attendance_out_diff) / len(attendance_out_diff)) if attendance_out_diff else 0
+
+    attendance_stat = "No attendance records found for your user."
+    punctuality_stat = "No attendance records found for your user."
+    if attendance_total != 0:
+        attendance_stat = "<b>{:.2f}%</b> - {:,}/{:,} assigned sessions attended ({:,} absent).".format(
+            (attendance_present / attendance_total) * 100,
+            attendance_present, attendance_total, attendance_absent
+        )
+        punctuality_stat = "<b>{:,.0f} minute{} {} sign in avg.</b> - Signed out {:,.0f} minute{} {} avg.".format(
+            abs(attendance_in_diff_avg),
+            Utils.unit_s(abs(attendance_in_diff_avg)),
+            "late" if attendance_in_diff_avg >= 0 else "early",
+
+            abs(attendance_out_diff_avg),
+            Utils.unit_s(abs(attendance_out_diff_avg)),
+            "late" if attendance_out_diff_avg > 0 else "early",
+        )
+
+    attendance_table = []
+
+    return render_template("student/attendance.jinja2", attendance_stat=attendance_stat,
+                           punctuality_stat=punctuality_stat, attendance_table=attendance_table)
+
+
 # Sign in
 @student.route('/attendance/in/', methods=['GET'])
 def attendance_in():
@@ -308,7 +379,7 @@ def attendance_in():
 
     # Insert attendance into db
     session = db_session()
-    attendance = Attendance(user.id, next_session.id)
+    attendance = Attendance.from_session(user.id, next_session)
     session.add(attendance)
     session.commit()
 
@@ -350,7 +421,7 @@ def attendance_out():
 
     # Update attendance
     session = db_session()
-    Attendance.query.with_session(session).filter_by(id=data[0].id).first().out_time = datetime.utcnow()
+    Attendance.query.with_session(session).filter_by(id=data[0].id).first().out_time = datetime.now()
     session.commit()
 
     return redirect(url_for("index"))

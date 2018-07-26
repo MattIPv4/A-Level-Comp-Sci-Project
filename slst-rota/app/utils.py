@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta, date
 from typing import Union, Tuple
 
 import requests
@@ -67,10 +67,28 @@ class Utils:
                "{}: {}".format(code, Utils.statusMessageData[str(code)]['message'])
 
     @staticmethod
-    def minutes_now() -> float:
-        now = datetime.now()
-        seconds = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
+    def minutes_datetime(datetime: datetime) -> float:
+        mid = datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        seconds = (datetime - mid).total_seconds()
         return seconds / 60
+
+    @staticmethod
+    def minutes_now() -> float:
+        return Utils.minutes_datetime(datetime.now())
+
+    @staticmethod
+    def minutes_today(minutes: float) -> datetime:
+        now = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        td = timedelta(minutes=minutes)
+        return (now + td)
+
+    @staticmethod
+    def date() -> date:
+        return datetime.now().date()
+
+    @staticmethod
+    def unit_s(value: int) -> str:
+        return "" if value == 1 else "s"
 
     @staticmethod
     def log(type: str, *args, **kwargs):
