@@ -11,11 +11,15 @@
                     Hello {{ this_user.username }}
                 </h1>
 
-                <h4 class="mb-0">
-                    Your {% if session_is_current %}<b>current</b>{% else %}next{% endif %} rota assignment
-                </h4>
-                {% from "app/macros/table.jinja2" import render_table with context %}
-                {{ render_table(["Day", "Start Time", "End Time", "Student(s) Assigned"], [next_session]) }}
+                {% if next_session %}
+                    <h4 class="mb-0">
+                        Your {% if session_is_current %}<b>current</b>{% else %}next{% endif %} rota assignment
+                    </h4>
+                    {% from "app/macros/table.jinja2" import render_table with context %}
+                    {{ render_table(["Day", "Start Time", "End Time", "Student(s) Assigned"], [next_session]) }}
+                {% else %}
+                    <h4>No sessions assigned to your user</h4>
+                {% endif %}
                 <a href="{{ url_for("student.rota") }}" class="button primary mt-1">View personal rota</a>
                 <a href="{{ url_for("student.rota_full") }}" class="button mt-1">View full rota</a>
             </div>
