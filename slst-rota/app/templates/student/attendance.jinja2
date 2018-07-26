@@ -15,7 +15,11 @@
         <div class="row">
             <div class="one-third column">
                 <h4>Attendance</h4>
-                <p>{{ attendance_stat }}</p>
+                <p class="mb-2">{{ attendance_stat }}</p>
+                <div class="stat-bar mb-2">
+                    <span class="success" style="width: {{ attendance_present }}%;"></span>
+                    <span class="danger" style="width: {{ attendance_absent }}%;"></span>
+                </div>
 
                 <h4>Punctuality</h4>
                 <p>{{ punctuality_stat }}</p>
@@ -23,7 +27,7 @@
             <div class="two-thirds column">
                 <h4 class="mb-0">Attendance breakdown</h4>
                 {% from "app/macros/table.jinja2" import render_table with context %}
-                {{ render_table(["Start Time", "End Time", "Attendance", "Punctuality"], [attendance_table]) }}
+                {{ render_table(["Start Time", "End Time", "Attendance", "Punctuality"], attendance_table) }}
             </div>
         </div>
     </div>

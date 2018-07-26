@@ -14,22 +14,32 @@ html, body {
 }
 
 // Make small a bit smaller
-small { font-size: 70%; }
+small {
+  font-size: 70%;
+}
 
 // Indent lists
-ul, ol { margin-left: 1rem; }
+ul, ol {
+  margin-left: 1rem;
+}
 
 // Code blocks
-code { color: $primary; }
+code {
+  color: $primary;
+}
 
 // Ensure correct 'bold' font weight
-b, strong, optgroup { font-weight: $boldweight; }
+b, strong, optgroup {
+  font-weight: $boldweight;
+}
 
 // Larger containers
 .container {
   max-width: 1280px;
 
-  &.larger { max-width: 1500px; }
+  &.larger {
+    max-width: 1500px;
+  }
 }
 
 // Fancy lines after text
@@ -89,7 +99,9 @@ em {
   font-style: normal;
   font-weight: $normalweight;
 
-  &.dull { color: mix($greyple, $primary, 35%); }
+  &.dull {
+    color: mix($greyple, $primary, 35%);
+  }
 }
 
 // Images
@@ -101,7 +113,9 @@ img {
     background-color: $dark;
     border-radius: 50%;
 
-    &.half-border { border-radius: 25%; }
+    &.half-border {
+      border-radius: 25%;
+    }
 
     &.ring {
       border: $bordersize solid $dark;
@@ -121,4 +135,30 @@ img {
 // Forms
 input {
   color: $dark;
+}
+
+// Stat bar
+.stat-bar {
+  display: block;
+  width: 100%;
+  height: 30px;
+  padding: 0;
+  border: $bordersize solid $dark;
+
+  > span {
+    height: 100%;
+    width: 0;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    float: left;
+
+    &.success {
+      background: $success;
+    }
+
+    &.danger {
+      background: $danger;
+    }
+  }
 }

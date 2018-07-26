@@ -193,7 +193,6 @@ class Attendance(Base_Model):
 
     @property
     def current(self) -> bool:
-        print(self.in_time_org, datetime.now(), self.out_time_org)
         if self.in_time_org < datetime.now() < self.out_time_org and not self.out_time:
             return True
         return False
