@@ -32,7 +32,7 @@ def login():
     # Verify the sign in form
     if form.validate_on_submit():
 
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter_by(disabled=0, username=form.username.data).first()
 
         if user and check_password_hash(user.password, form.password.data):
             session['user_id'] = user.id
@@ -102,6 +102,7 @@ def account(id: int = None):
                         # Update username
                         user_session = User.query.with_session(dbsession).filter_by(id=target.id).first()
                         user_session.username = form.username.data
+                        target.username = form.username.data
                         dbsession.commit()
                         flash('Username updated')
 
@@ -114,21 +115,54 @@ def account(id: int = None):
             else:
                 flash('Invalid access to update username')
 
+        # Handle auth level change
+        if form.auth_level.data != target.auth_level:
+
+            # Ensure correct access
+            if user.auth_level == 2 and target.id != user.id:
+
+                # Update username
+                user_session = User.query.with_session(dbsession).filter_by(id=target.id).first()
+                user_session.auth_level = form.auth_level.data
+                target.auth_level = form.auth_level.data
+                dbsession.commit()
+                flash('Auth level updated')
+
+            else:
+                flash('Invalid access to update auth level')
+
+        # Handle disabled change
+        if form.disabled.data != target.disabled:
+
+            # Ensure correct access
+            if user.auth_level == 2 and target.id != user.id:
+
+                # Update username
+                user_session = User.query.with_session(dbsession).filter_by(id=target.id).first()
+                user_session.disabled = form.disabled.data
+                target.disabled = form.disabled.data
+                dbsession.commit()
+                flash('Disabled status updated')
+
+            else:
+                flash('Invalid access to update disabled status')
+
         # Handle password change
         if form.new_password.data:
 
             # Ensure correct access
-            if target == user or user.auth_level == 2:
+            if target.id == user.id or user.auth_level == 2:
 
                 # Verify new = new confirm
                 if form.new_password.data == form.new_password_confirm.data:
 
                     # Verify old = current, or skip if not editing current user
-                    if target != user or check_password_hash(user.password, form.old_password.data):
+                    if target.id != user.id or check_password_hash(user.password, form.old_password.data):
 
                         # Update password
                         user_session = User.query.with_session(dbsession).filter_by(id=target.id).first()
                         user_session.password = generate_password_hash(form.new_password.data)
+                        target.password = generate_password_hash(form.new_password.data)
                         dbsession.commit()
                         flash('Password updated')
 
@@ -141,11 +175,8 @@ def account(id: int = None):
             else:
                 flash('Invalid access to update password')
 
-        # Get latest copy of user
-        user = current_user()
-
     # Render
     return render_template("auth/account.jinja2", form=form, target=target,
-                           show_auth_level=(user.auth_level == 2 and user != target),
+                           show_auth_level=(user.auth_level == 2 and user.id != target.id),
                            show_username=(user.auth_level == 2),
-                           show_old_password=(user != target))
+                           show_old_password=(user.id == target.id))

@@ -7,7 +7,12 @@
     {% from "app/macros/field.jinja2" import render_field with context %}
 
     <div class="container">
-        <h1>Manage Account: {{ target.username }}</h1>
+        <h1>
+            Manage Account: {{ target.username }}
+            {% if this_user.id != target.id %}<br/>
+                <small>Currently signed in as: {{ this_user.username }}</small>{% endif %}
+        </h1>
+
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div>
@@ -37,10 +42,19 @@
                                value="{{ target.username }}"/>
                     {% endif %}
                     {% if show_auth_level %}
-                        {{ render_field(form.auth_level, placeholder="Auth Level", value=target.auth_level) }}
+                        <div class="row">
+                            <div class="one-half column">
+                                {{ render_field(form.auth_level, placeholder="Auth Level", value=target.auth_level) }}
+                            </div>
+                            <div class="one-half column">
+                                {{ render_field(form.disabled, placeholder="Disabled", value=target.disabled) }}
+                            </div>
+                        </div>
                     {% else %}
                         <input type="hidden" id="{{ form.auth_level.id }}" name="{{ form.auth_level.id }}"
                                value="{{ target.auth_level }}"/>
+                        <input type="hidden" id="{{ form.disabled.id }}" name="{{ form.disabled.id }}"
+                               value="{{ target.disabled }}"/>
                     {% endif %}
                     <button type="submit" name="submit" class="button primary mt-2">Update</button>
                 </div>

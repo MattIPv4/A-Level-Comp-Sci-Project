@@ -13,6 +13,7 @@ class LoginForm(FlaskForm):
 class AccountForm(FlaskForm):
     username = StringField('Username')
     auth_level = SelectField('Auth Level', choices=[(1, "Student"), (2, "Staff")], coerce=int)
+    disabled = SelectField('Disabled', choices=[(0, "No"), (1, "Yes")], coerce=int)
     old_password = PasswordField('Old Password')
     new_password = PasswordField('New Password')
     new_password_confirm = PasswordField('New Password Confirmation')
