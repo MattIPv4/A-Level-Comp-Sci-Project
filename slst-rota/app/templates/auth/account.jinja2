@@ -1,0 +1,50 @@
+{% extends "app/base.jinja2" %}
+
+{% block title %}Account{% endblock %}
+
+{% block body %}
+    {% set this_user = auth.current_user() %}
+    {% from "app/macros/field.jinja2" import render_field with context %}
+
+    <div class="container">
+        <h1>Manage Account: {{ target.username }}</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        {{ message }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
+            {{ form.csrf_token }}
+
+            <div class="row">
+                <div class="two-thirds column">
+                    {{ render_field(form.new_password, placeholder="New Password (only to change)") }}
+                    {{ render_field(form.new_password_confirm, placeholder="New Password Confirmation (only to change)") }}
+                    {% if show_old_password %}
+                        {{ render_field(form.old_password, placeholder="Old Password (only to change)") }}
+                    {% endif %}
+                </div>
+                <div class="one-third column">
+                    {% if show_username %}
+                        {{ render_field(form.username, placeholder="Username", value=target.username) }}
+                    {% else %}
+                        <input type="hidden" id="{{ form.username.id }}" name="{{ form.username.id }}"
+                               value="{{ target.username }}"/>
+                    {% endif %}
+                    {% if show_auth_level %}
+                        {{ render_field(form.auth_level, placeholder="Auth Level", value=target.auth_level) }}
+                    {% else %}
+                        <input type="hidden" id="{{ form.auth_level.id }}" name="{{ form.auth_level.id }}"
+                               value="{{ target.auth_level }}"/>
+                    {% endif %}
+                    <button type="submit" name="submit" class="button primary mt-2">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
