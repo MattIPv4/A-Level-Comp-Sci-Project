@@ -1,12 +1,13 @@
 {% extends "app/base.jinja2" %}
 
-{% block title %}Welcome{% endblock %}
+{% block title %}Account{% endblock %}
 
 {% block body %}
+    {% set this_user = auth.current_user() %}
     {% from "app/macros/field.jinja2" import render_field with context %}
 
     <div class="container">
-        <h1>Login to {{ app.name }}</h1>
+        <h1>Manage Account: {{ this_user.username }}</h1>
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div>
@@ -22,16 +23,12 @@
 
             <div class="row">
                 <div class="one-half column">
-                    {{ render_field(form.username, placeholder="Username", autofocus="") }}
+                    {{ render_field(form.new_password, placeholder="New Password", autofocus="") }}
+                    {{ render_field(form.new_password_confirm, placeholder="New Password Confirmation") }}
                 </div>
                 <div class="one-half column">
-                    {{ render_field(form.password, placeholder="Password") }}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="one-half column">
-                    <button type="submit" name="submit" class="button primary">Login</button>
+                    {{ render_field(form.old_password, placeholder="Old Password") }}
+                    <button type="submit" name="submit" class="button primary mt-2">Update</button>
                 </div>
             </div>
         </form>

@@ -3,11 +3,12 @@ from datetime import datetime  # Datetime
 from typing import Tuple, Union  # Typing
 
 from flask import Blueprint, request, render_template, flash, redirect, url_for  # Flask
+from werkzeug.security import check_password_hash, generate_password_hash  # Passwords
 
 from app import db_session, error_render, Utils  # DB, Errors
 from app.modules import auth  # Auth
 from app.modules.auth import User  # User
-from app.modules.student.forms import UnavailabilityForm  # Form
+from app.modules.student.forms import UnavailabilityForm, AccountForm  # Form
 from app.modules.student.models import Session, session_to_rota_view, Assignment, Unavailability, \
     Attendance  # Rota Sessions
 
@@ -123,6 +124,42 @@ def home():
                            signed_in_out_session=signed_in_out_session(user, next_session_org))
 
 
+# Account
+@student.route('/account/', methods=['GET', 'POST'])
+def account():
+    user, error = auth_check()
+    if error:
+        return error
+
+    # Form
+    form = AccountForm(request.form)
+
+    # Verify the form
+    if form.validate_on_submit():
+
+        # Verify new = new confirm
+        if form.new_password.data == form.new_password_confirm.data:
+
+            # Verify old = current
+            if check_password_hash(user.password, form.old_password.data):
+
+                # Update password
+                dbsession = db_session()
+                user_session = User.query.with_session(dbsession).filter_by(id=user.id).first()
+                user_session.password = generate_password_hash(form.new_password.data)
+                dbsession.commit()
+                flash('Password updated')
+
+            else:
+                flash('Old Password is not correct')
+
+        else:
+            flash('New Password and New Password Confirmation do not match')
+
+    # Render
+    return render_template("student/account.jinja2", form=form)
+
+
 # Rota
 @student.route('/rota/', methods=['GET'])
 def rota():
@@ -185,8 +222,8 @@ def fake():
     session = db_session()
     # this_fake = Session(0, 705, 735)
     # session.add(this_fake)
-    this_fake = Assignment(1, 1, Utils.minutes_today(0))
-    session.add(this_fake)
+    # this_fake = Assignment(1, 1, Utils.minutes_today(0))
+    # session.add(this_fake)
     session.commit()
 
 

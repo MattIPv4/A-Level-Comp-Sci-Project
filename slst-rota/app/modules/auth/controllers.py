@@ -39,7 +39,7 @@ def login():
 
             return redirect(url_for('index'))
 
-        flash('Wrong email or password', 'error-message')
+        flash('Wrong email or password')
 
     return render_template("auth/login.jinja2", form=form)
 
@@ -52,21 +52,3 @@ def logout():
         session.clear()
 
     return redirect(url_for('index'))
-
-
-# Create a dummy account
-@auth.route('/dummy/student/', methods=['GET'])
-def dummy_student():
-    user = User("test_student", generate_password_hash("test"), 1)
-    session = db_session()
-    session.add(user)
-    session.commit()
-
-
-# Create a dummy account
-@auth.route('/dummy/staff/', methods=['GET'])
-def dummy_staff():
-    user = User("test_staff", generate_password_hash("test"), 2)
-    session = db_session()
-    session.add(user)
-    session.commit()
