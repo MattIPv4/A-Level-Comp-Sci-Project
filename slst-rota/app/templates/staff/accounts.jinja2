@@ -1,0 +1,16 @@
+{% extends "app/base.jinja2" %}
+
+{% block title %}All Accounts{% endblock %}
+
+{% block body %}
+    {% set this_user = auth.current_user() %}
+    <div class="container">
+        <div class="row">
+            <h1 class="mt-4">
+                All Accounts
+            </h1>
+            {% from "app/macros/table.jinja2" import render_table with context %}
+            {{ render_table(["Username", "Auth Level", "Disabled", ""], accounts) }}
+        </div>
+    </div>
+{% endblock %}

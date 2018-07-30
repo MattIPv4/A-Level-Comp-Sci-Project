@@ -24,19 +24,15 @@
                 <a class="item" href="{{ url_for('student.attendance') }}">Attendance</a>
             {% elif this_user and this_user.auth_level == 2 %}
                 {# Staff #}
+                <a class="item" href="{{ url_for('staff.accounts') }}">Accounts</a>
             {% endif %}
 
             <span class="right">
                 {% if this_user %}
-                    {% if this_user.auth_level == 1 %}
-                        {% set base = "student" %}
-                    {% else %}
-                        {% set base = "staff" %}
-                    {% endif %}
                     <span class="dropdown">
                         <a class="droptitle" href="{{ url_for('auth.account') }}">
                             {{ this_user.username }}
-                            <span class="label">{{ base }}</span>
+                            {{ this_user.auth_label }}
                             <i class="fas fa-angle-right"></i>
                         </a>
                         <span class="drop">

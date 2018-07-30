@@ -1,7 +1,8 @@
-from flask import Blueprint, redirect, url_for  # Flask
+from flask import Blueprint, render_template, redirect, url_for  # Flask
 
 from app import error_render  # Errors
 from app.modules import auth  # Auth
+from app.modules.auth import User # User
 
 # Blueprint
 __a = [
@@ -25,3 +26,25 @@ def auth_check():
                              "This page is only accessible to users with the staff authentication level")
 
     return user, error
+
+# All accounts
+@staff.route('/accounts/', methods=['GET'])
+def accounts():
+    user, error = auth_check()
+    if error:
+        return error
+
+    data = User.query.all()
+    accounts = []
+    for item in data:
+        accounts.append([
+            item.id == user.id,
+            [
+                item.username,
+                "{} ({})".format(item.auth_label, item.auth_level),
+                "Yes" if item.disabled == 1 else "No",
+                "<a href='{}' class='button'>Edit</a>".format(url_for("auth.account", id=item.id))
+            ]
+        ])
+
+    return render_template("staff/accounts.jinja2", accounts=accounts)

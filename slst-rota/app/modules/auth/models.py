@@ -18,5 +18,13 @@ class User(Base_Model):
         self.password = password
         self.auth_level = auth_level
 
+    @property
+    def auth_name(self) -> str:
+        return "Student" if self.auth_level == 1 else "Staff" if self.auth_level == 2 else ""
+
+    @property
+    def auth_label(self) -> str:
+        return '<span class="label">{}</span>'.format(self.auth_name)
+
     def __repr__(self):
         return '<User %r>' % (self.username)
