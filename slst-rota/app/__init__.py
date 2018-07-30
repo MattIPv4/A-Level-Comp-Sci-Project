@@ -63,16 +63,19 @@ def error_render(code: Union[int, str], extra: str = "") -> Tuple[str, int]:
 # Import modules
 from app.modules import auth
 from app.modules import student
+from app.modules import staff
 from app.modules.auth.controllers import auth as blueprint_auth
 from app.modules.student.controllers import student as blueprint_student
+from app.modules.staff.controllers import staff as blueprint_staff
 
 # Register blueprint(s)
 app.register_blueprint(blueprint_auth)
 app.register_blueprint(blueprint_student)
+app.register_blueprint(blueprint_staff)
 
 # Build the database
 __a = [
-    auth, student
+    auth, student, staff
 ]  # Convince pycharm things are used (and stop warnings)
 db.create_all()
 

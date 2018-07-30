@@ -19,7 +19,7 @@ __a = [
 student = Blueprint('student', __name__, url_prefix='/student')
 
 
-# Standard check for all rotues
+# Standard check for all routes
 def auth_check():
     user = auth.current_user()
     error = None
