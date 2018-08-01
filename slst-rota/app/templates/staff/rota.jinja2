@@ -1,0 +1,26 @@
+{% extends "app/base.jinja2" %}
+
+{% block title %}Student Rota{% endblock %}
+
+{% block body %}
+    {% set this_user = auth.current_user() %}
+    <div class="container">
+        <div class="row">
+            <div class="two-thirds column">
+                <h1 class="mt-4">
+                    Full Student Rota
+                </h1>
+            </div>
+            <div class="one-third column">
+                <h4 class="mt-4 mb-1">
+                    <small>New session - </small>
+                    <a href="{{ url_for("staff.rota_new") }}" class="button button-primary">Create</a>
+                </h4>
+            </div>
+
+            {% from "app/macros/table.jinja2" import render_table with context %}
+            {{ render_table(["Start Time", "End Time", "Student(s) Assigned", ""], rota_data) }}
+            <p>Sessions with no assignments are highlighted.</p>
+        </div>
+    </div>
+{% endblock %}
