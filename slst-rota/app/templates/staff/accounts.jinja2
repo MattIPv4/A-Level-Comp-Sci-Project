@@ -6,11 +6,25 @@
     {% set this_user = auth.current_user() %}
     <div class="container">
         <div class="row">
-            <h1 class="mt-4">
-                All Accounts
-            </h1>
-            {% from "app/macros/table.jinja2" import render_table with context %}
-            {{ render_table(["Username", "Auth Level", "Disabled", ""], accounts) }}
+            <div class="two-thirds column">
+                <h1 class="mt-4">
+                    All Accounts
+                </h1>
+                {% from "app/macros/table.jinja2" import render_table with context %}
+                {{ render_table(["Username", "Auth Level", "Disabled", ""], accounts) }}
+            </div>
+            <div class="one-third column mt-4">
+                <h3 class="mt-4">
+                    Create new account
+                </h3>
+                <a href="{{ url_for("staff.new_account") }}" class="button button-primary">Create</a>
+
+                <h3 class="mt-4">
+                    Delete an account
+                </h3>
+                <p>To delete (disable) an account, press edit on the account and the select Yes under the Disabled
+                    dropdown. Pressing update will then lock the account out when the user next attempts to log in.</p>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -54,7 +54,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-# Account
+# Manage Account
 @auth.route('/account/', methods=['GET', 'POST'])
 @auth.route('/account/<int:id>', methods=['GET', 'POST'])
 def account(id: int = None):

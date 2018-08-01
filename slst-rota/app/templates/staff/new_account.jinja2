@@ -1,0 +1,39 @@
+{% extends "app/base.jinja2" %}
+
+{% block title %}Account{% endblock %}
+
+{% block body %}
+    {% set this_user = auth.current_user() %}
+    {% from "app/macros/field.jinja2" import render_field with context %}
+
+    <div class="container">
+        <h1>
+            Create new account
+        </h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        {{ message }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
+            {{ form.csrf_token }}
+
+            <div class="row">
+                <div class="two-thirds column">
+                    {{ render_field(form.username, placeholder="Username") }}
+                    {{ render_field(form.password, placeholder="Password") }}
+                </div>
+                <div class="one-third column">
+                    {{ render_field(form.auth_level, placeholder="Auth Level") }}
+                    <button type="submit" name="submit" class="button primary mt-2">Create</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

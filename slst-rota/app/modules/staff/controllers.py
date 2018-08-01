@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for  # Flask
+from flask import Blueprint, render_template, redirect, url_for, request, flash  # Flask
+from werkzeug.security import generate_password_hash  # Passwords
 
-from app import error_render  # Errors
+from app import db_session, error_render  # DB, Errors
 from app.modules import auth  # Auth
+from app.modules.staff.forms import AccountForm  # Forms
 from app.modules.auth import User # User
 
 # Blueprint
@@ -48,3 +50,52 @@ def accounts():
         ])
 
     return render_template("staff/accounts.jinja2", accounts=accounts)
+
+
+# Create Account
+@staff.route('/accounts/new', methods=['GET', 'POST'])
+def new_account():
+    user, error = auth_check()
+    if error:
+        return error
+
+    # Form
+    form = AccountForm(request.form)
+
+    # Verify the form
+    if form.validate_on_submit():
+
+        # Verify username
+        if form.username.data:
+
+            result = User.query.filter_by(username=form.username.data).first()
+
+            # Verify username not already used
+            if not result:
+
+                # Verify password
+                if form.password.data:
+
+                    # Verify auth level
+                    if form.auth_level.data:
+
+                        session = db_session()
+                        user = User(form.username.data, generate_password_hash(form.password.data), form.auth_level.data)
+                        session.add(user)
+                        session.commit()
+                        return redirect(url_for('staff.accounts'))
+
+                    else:
+                        flash('Please select an auth level')
+
+                else:
+                    flash('Please enter a password')
+
+            else:
+                flash('Username {} already in use'.format(form.username.data))
+
+        else:
+            flash('Please enter a username')
+
+    # Render
+    return render_template("staff/new_account.jinja2", form=form)
