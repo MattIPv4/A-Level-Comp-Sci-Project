@@ -38,6 +38,16 @@ class Session(Base_Model):
         dt = Utils.minutes_today(self.end_time)
         return dt.strftime("%H:%M")
 
+    @property
+    def start_time_time(self):
+        dt = Utils.minutes_today(self.start_time)
+        return dt.time()
+
+    @property
+    def end_time_time(self):
+        dt = Utils.minutes_today(self.end_time)
+        return dt.time()
+
 
 # Define an Assignment model
 class Assignment(Base_Model):
