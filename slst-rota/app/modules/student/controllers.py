@@ -271,7 +271,7 @@ def unavailability_edit(id: int):
             dbsession.commit()
             return redirect(url_for('student.unavailability'))
 
-        flash('Please enter a reason for marking yourself as unavailable', 'error-message')
+        flash('Please enter a reason for marking yourself as unavailable')
 
     # Get current if any
     data = Unavailability.query.filter_by(user_id=user.id, session_id=session.id).first()

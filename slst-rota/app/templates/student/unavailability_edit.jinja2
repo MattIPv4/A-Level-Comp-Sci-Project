@@ -7,7 +7,7 @@
 
     <div class="container">
         <h1></h1>
-        {% with errors = get_flashed_messages(category_filter=["error-message"]) %}
+        {% with errors = get_flashed_messages() %}
             {% if errors %}
                 <div>
                     {% for error in errors %}
