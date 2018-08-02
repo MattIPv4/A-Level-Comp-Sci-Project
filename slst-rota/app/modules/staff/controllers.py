@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash  # Flask
 from werkzeug.security import generate_password_hash  # Passwords
 import calendar # Calendar
+from datetime import datetime # Datetime
 
-from app import db_session, error_render  # DB, Errors
+from app import db_session, error_render, Utils  # DB, Errors, Utils
 from app.modules import auth  # Auth
-from app.modules.staff.forms import AccountForm  # Forms
+from app.modules.staff.forms import AccountForm, SessionForm # Forms
 from app.modules.student import Session # Session
 from app.modules.auth import User # User
 
@@ -141,7 +142,71 @@ def rota_edit_session(id: int):
     if error:
         return error
 
-    ## TODO: below
+    # Get session data
+    session = Session.query.filter_by(id=id).first()
+
+    # If bad session
+    if not session:
+        return redirect(url_for('staff.rota'))
+
+    # Form
+    form = SessionForm(request.form)
+
+    # Verify the form
+    if form.validate_on_submit():
+
+        # Verify day
+        if form.day.data:
+
+            # Verify start time
+            if form.start_time.data:
+
+                # Verify end time
+                if form.end_time.data:
+
+                    # Verify times
+                    if form.start_time.data < form.end_time.data:
+
+                        dbsession = db_session()
+                        session = Session.query.with_session(dbsession).filter_by(id=id).first()
+
+                        start_time = datetime.combine(datetime.now().date(), form.start_time.data)
+                        start_time = int(Utils.minutes_datetime(start_time))
+
+                        end_time = datetime.combine(datetime.now().date(), form.end_time.data)
+                        end_time = int(Utils.minutes_datetime(end_time))
+
+                        session.day = form.day.data
+                        session.start_time = start_time
+                        session.end_time = end_time
+
+                        dbsession.commit()
+                        return redirect(url_for('staff.rota'))
+
+                    else:
+                        flash('Start time must be before end time')
+
+                else:
+                    flash('Please enter an end time')
+
+            else:
+                flash('Please enter a start time')
+
+        else:
+            flash('Please select a day of the week')
+
+    # Errors
+    if form.errors:
+        for field, error in form.errors.items():
+            flash('{}: {}'.format(field, ", ".join(error)))
+
+    # Values
+    form.day.data = session.day
+    form.start_time.data = session.start_time_time
+    form.end_time.data = session.end_time_time
+
+    # Render
+    return render_template("staff/session_edit.jinja2", form=form)
 
 # Rota edit - assignments
 @staff.route('/rota/edit/assignments/<int:id>', methods=['GET', 'POST'])
@@ -161,44 +226,5 @@ def rota_new():
         return error
 
     ## TODO: below
-
-    # Form
-    form = AccountForm(request.form)
-
-    # Verify the form
-    if form.validate_on_submit():
-
-        # Verify username
-        if form.username.data:
-
-            result = User.query.filter_by(username=form.username.data).first()
-
-            # Verify username not already used
-            if not result:
-
-                # Verify password
-                if form.password.data:
-
-                    # Verify auth level
-                    if form.auth_level.data:
-
-                        session = db_session()
-                        user = User(form.username.data, generate_password_hash(form.password.data), form.auth_level.data)
-                        session.add(user)
-                        session.commit()
-                        return redirect(url_for('staff.accounts'))
-
-                    else:
-                        flash('Please select an auth level')
-
-                else:
-                    flash('Please enter a password')
-
-            else:
-                flash('Username {} already in use'.format(form.username.data))
-
-        else:
-            flash('Please enter a username')
-
-    # Render
-    return render_template("staff/new_account.jinja2", form=form)
+    user = User(form.username.data, generate_password_hash(form.password.data), form.auth_level.data)
+    session.add(user)
