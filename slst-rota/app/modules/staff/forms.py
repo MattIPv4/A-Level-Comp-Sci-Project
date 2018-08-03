@@ -15,6 +15,6 @@ class AccountForm(FlaskForm):
 # Session (using WTForms)
 class SessionForm(FlaskForm):
     day = SelectField('Day of Week', choices=[(f, calendar.day_name[f]) for f in range(len(calendar.day_name))],
-                      coerce=int, validators=[DataRequired(message='Please select a day of the week.')])
-    start_time = TimeField('Start Time', validators=[DataRequired(message='Please enter a start time.')])
-    end_time = TimeField('End Time', validators=[DataRequired(message='Please enter an end time.')])
+                      coerce=int, default=0, validators=[DataRequired(message='Please select a day of the week.')])
+    start_time = TimeField('Start Time', validators=[DataRequired(message='Please enter a start time and ensure it is in the correct format.')])
+    end_time = TimeField('End Time', validators=[DataRequired(message='Please enter an end time and ensure it is in the correct format.')])

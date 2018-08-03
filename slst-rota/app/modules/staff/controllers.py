@@ -206,16 +206,7 @@ def rota_edit_session(id: int):
     form.end_time.data = session.end_time_time
 
     # Render
-    return render_template("staff/session_edit.jinja2", form=form)
-
-# Rota edit - assignments
-@staff.route('/rota/edit/assignments/<int:id>', methods=['GET', 'POST'])
-def rota_edit_assignments(id: int):
-    user, error = auth_check()
-    if error:
-        return error
-
-    ## TODO: below
+    return render_template("staff/session_edit.jinja2", form=form, title_type="Edit", button_type="Update")
 
 
 # New rota session
@@ -225,6 +216,63 @@ def rota_new():
     if error:
         return error
 
+    # Form
+    form = SessionForm(request.form)
+
+    # Verify the form
+    if form.validate_on_submit():
+
+        # Verify day
+        if form.day.data:
+
+            # Verify start time
+            if form.start_time.data:
+
+                # Verify end time
+                if form.end_time.data:
+
+                    # Verify times
+                    if form.start_time.data < form.end_time.data:
+
+                        dbsession = db_session()
+
+                        start_time = datetime.combine(datetime.now().date(), form.start_time.data)
+                        start_time = int(Utils.minutes_datetime(start_time))
+
+                        end_time = datetime.combine(datetime.now().date(), form.end_time.data)
+                        end_time = int(Utils.minutes_datetime(end_time))
+
+                        session = Session(form.day.data, start_time, end_time)
+                        dbsession.add(session)
+
+                        dbsession.commit()
+                        return redirect(url_for('staff.rota'))
+
+                    else:
+                        flash('Start time must be before end time')
+
+                else:
+                    flash('Please enter an end time')
+
+            else:
+                flash('Please enter a start time')
+
+        else:
+            flash('Please select a day of the week')
+
+    # Errors
+    if form.errors:
+        for field, error in form.errors.items():
+            flash('{}: {}'.format(field, ", ".join(error)))
+
+    # Render
+    return render_template("staff/session_edit.jinja2", form=form, title_type="New", button_type="Create")
+
+# Rota edit - assignments
+@staff.route('/rota/edit/assignments/<int:id>', methods=['GET', 'POST'])
+def rota_edit_assignments(id: int):
+    user, error = auth_check()
+    if error:
+        return error
+
     ## TODO: below
-    user = User(form.username.data, generate_password_hash(form.password.data), form.auth_level.data)
-    session.add(user)

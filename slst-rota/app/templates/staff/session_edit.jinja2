@@ -1,6 +1,6 @@
 {% extends "app/base.jinja2" %}
 
-{% block title %}Edit Rota Session{% endblock %}
+{% block title %}{{ title_type }} Rota Session{% endblock %}
 
 {% block body %}
     {% from "app/macros/field.jinja2" import render_field with context %}
@@ -23,11 +23,11 @@
             <div class="row">
                 <div class="two-thirds column">
                     {{ render_field(form.day, placeholder="Day of the Week", autofocus="") }}
-                    {{ render_field(form.start_time, placeholder="Start Time") }}
-                    {{ render_field(form.end_time, placeholder="End Time") }}
+                    {{ render_field(form.start_time, placeholder="Start Time (HH:MM)") }}
+                    {{ render_field(form.end_time, placeholder="End Time (HH:MM)") }}
                 </div>
                 <div class="one-third column">
-                    <button type="submit" name="submit" class="button primary mt-4">Update</button>
+                    <button type="submit" name="submit" class="button primary mt-4">{{ button_type }}</button>
                     <br/><a role="button" href="{{ url_for("staff.rota") }}" class="button mt-4">Cancel</a>
                 </div>
             </div>
