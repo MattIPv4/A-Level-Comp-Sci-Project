@@ -2,10 +2,11 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash 
 from werkzeug.security import generate_password_hash  # Passwords
 import calendar # Calendar
 from datetime import datetime # Datetime
+import json # JSON
 
 from app import db_session, error_render, Utils  # DB, Errors, Utils
 from app.modules import auth  # Auth
-from app.modules.staff.forms import AccountForm, SessionForm # Forms
+from app.modules.staff.forms import AccountForm, SessionForm, AssignmentForm # Forms
 from app.modules.student import Session # Session
 from app.modules.auth import User # User
 
@@ -275,4 +276,33 @@ def rota_edit_assignments(id: int):
     if error:
         return error
 
-    ## TODO: below
+    # Get session data
+    session = Session.query.filter_by(id=id).first()
+
+    # If bad session
+    if not session:
+        return redirect(url_for('staff.rota'))
+
+    # Form
+    form = AssignmentForm(request.form)
+
+    # Verify the form
+    if form.validate_on_submit():
+        return redirect(url_for('staff.rota'))
+
+    # Errors
+    if form.errors:
+        for field, error in form.errors.items():
+            flash('{}: {}'.format(field, ", ".join(error)))
+
+    # Compile assignments
+    assigned = [(f.user.id, f.user.username) for f in session.assignments]
+    unassigned = [(f.id, f.username) for f in User.query.filter_by(auth_level=1).all() if f.id not in [g[0] for g in assigned]]
+
+    # Values
+    form.assigned.data = json.dumps([f[0] for f in assigned])
+
+    print(assigned, unassigned, form.assigned.data)
+
+    # Render
+    return render_template("staff/assignment_edit.jinja2", form=form, assigned=assigned, unassigned=unassigned)

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm  # Form
-from wtforms import StringField, PasswordField, SelectField, TimeField # Form: Elements
+from wtforms import StringField, PasswordField, SelectField, TimeField, HiddenField # Form: Elements
 from wtforms.validators import DataRequired  # Form: Validation
 import calendar # Calendar
 
@@ -18,3 +18,8 @@ class SessionForm(FlaskForm):
                       coerce=int, default=0, validators=[DataRequired(message='Please select a day of the week.')])
     start_time = TimeField('Start Time', validators=[DataRequired(message='Please enter a start time and ensure it is in the correct format.')])
     end_time = TimeField('End Time', validators=[DataRequired(message='Please enter an end time and ensure it is in the correct format.')])
+
+
+# Assignments
+class AssignmentForm(FlaskForm):
+    assigned = HiddenField()
