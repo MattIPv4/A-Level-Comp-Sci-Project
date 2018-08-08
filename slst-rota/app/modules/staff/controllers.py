@@ -288,7 +288,13 @@ def rota_edit_assignments(id: int):
 
     # Verify the form
     if form.validate_on_submit():
-        return redirect(url_for('staff.rota'))
+        try:
+            form.assigned.data = json.loads(form.assigned.data)
+        except:
+            flash('An error occurred parsing the JSON data')
+        else:
+
+            return redirect(url_for('staff.rota'))
 
     # Errors
     if form.errors:

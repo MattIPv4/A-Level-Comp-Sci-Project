@@ -47,6 +47,20 @@
         // Remove old and create new
         element.parentElement.parentElement.remove();
         create_button(name, id, !assigned);
+
+        // Get existing JSON value
+        var input = document.getElementById("{{ form.assigned.id }}");
+        var value = JSON.parse(input.value);
+
+        // Update
+        if(assigned) {
+            value.splice(value.indexOf(id),1);
+        } else {
+            value.push(id);
+        }
+
+        // Set new JSON value
+        input.value = JSON.stringify(value);
     }
 
     // Create a new button
