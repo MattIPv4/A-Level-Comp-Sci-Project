@@ -34,7 +34,15 @@
                     </span>
                 </span>
 
-                <a class="item" href="{{ url_for('staff.rota') }}">Rota Management</a>
+                <span class="dropdown">
+                    <a class="droptitle" href="{{ url_for('staff.rota') }}">
+                        Rota Management <i class="fas fa-angle-right"></i>
+                    </a>
+                    <span class="drop">
+                        <a class="item" href="{{ url_for('staff.rota') }}">Full Student Rota</a>
+                        <a class="item" href="{{ url_for('staff.rota_new') }}">New Rota Session</a>
+                    </span>
+                </span>
             {% endif %}
 
             <span class="right">
