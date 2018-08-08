@@ -69,7 +69,8 @@ class Assignment(Base_Model):
     )
     session = db.relationship('Session')
 
-    created = db.Column(db.DateTime, nullable=False)
+    created = db.Column(db.DateTime, primary_key=True, nullable=False)
+    removed = db.Column(db.DateTime, nullable=True)
 
     # New instance instantiation procedure
     def __init__(self, user_id: int, session_id: int, created: datetime = None):
@@ -80,7 +81,7 @@ class Assignment(Base_Model):
     @property
     def attendance(self) -> List[Tuple[date, Union['Attendance', None]]]:
         results = []
-        delta = datetime.now().date() - self.created.date()
+        delta = (self.removed.date() if self.removed else datetime.now().date()) - self.created.date()
 
         for i in range(delta.days + 1):
             # Day assignment created, if assignment created after session start, ignore
@@ -111,6 +112,7 @@ def session_to_rota_view(session: Session, highlight_check: Union[Callable, None
     # Usernames
     data[1].append([])
     for assignment in session.assignments:
+        if assignment.removed: continue
         data[1][-1].append(assignment.user.username)
         # Highlight
         if highlight_check is not None and highlight_check(assignment):

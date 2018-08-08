@@ -39,7 +39,7 @@ def auth_check():
 def next_current_assignment(user: User) -> Tuple[Union[Session, None], bool]:
     # Get session assignments
     data = Session.query.filter_by(archived=False).order_by(Session.day.asc(), Session.start_time.asc()).all()
-    data = [f for f in data if user.id in [g.user.id for g in f.assignments]]
+    data = [f for f in data if user.id in [g.user.id for g in f.assignments if not g.removed]]
 
     # Handle no assignments
     if not data:
@@ -108,7 +108,7 @@ def home():
                 next_session.day_frmt,
                 next_session.start_time_frmt,
                 next_session.end_time_frmt,
-                ", ".join([f.user.username for f in next_session.assignments])
+                ", ".join([f.user.username for f in next_session.assignments if not f.removed])
             ]
         ]
 
@@ -136,7 +136,7 @@ def rota():
     current_day = None
     for session in data:
         # Only current user
-        if user.id not in [f.user.id for f in session.assignments]:
+        if user.id not in [f.user.id for f in session.assignments if not f.removed]:
             continue
 
         # Day subheadings
@@ -175,21 +175,6 @@ def rota_full():
                            rota_data=rota_data, show_rota_full=False)
 
 
-# Rota
-@student.route('/fake/', methods=['GET'])
-def fake():
-    user, error = auth_check()
-    if error:
-        return error
-
-    session = db_session()
-    # this_fake = Session(0, 705, 735)
-    # session.add(this_fake)
-    # this_fake = Assignment(1, 1, Utils.minutes_today(0))
-    # session.add(this_fake)
-    session.commit()
-
-
 # Unavailability
 @student.route('/unavailability/', methods=['GET'])
 def unavailability():
@@ -205,7 +190,7 @@ def unavailability():
 
         # Don't show assigned sessions
         assigned = False
-        if user.id in [f.user.id for f in session.assignments]:
+        if user.id in [f.user.id for f in session.assignments if not f.removed]:
             assigned = True
 
         # Day subheadings
@@ -243,7 +228,7 @@ def unavailability_edit(id: int):
         return redirect(url_for('student.unavailability'))
 
     # If student assigned
-    if user.id in [f.user.id for f in session.assignments]:
+    if user.id in [f.user.id for f in session.assignments if not f.removed]:
         return error_render("Currently assigned to session",
                             "You cannot update your unavailability on a session you are currently assigned to."
                             "\nPlease seek help from a staff user to un-assign you from the session")

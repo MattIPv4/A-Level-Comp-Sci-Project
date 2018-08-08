@@ -7,7 +7,7 @@ import json # JSON
 from app import db_session, error_render, Utils  # DB, Errors, Utils
 from app.modules import auth  # Auth
 from app.modules.staff.forms import AccountForm, SessionForm, AssignmentForm # Forms
-from app.modules.student import Session # Session
+from app.modules.student import Session, Assignment # Session
 from app.modules.auth import User # User
 
 # Blueprint
@@ -124,11 +124,11 @@ def rota():
 
         # Assignments for day (highlight ones with current user)
         rota_data.append([
-            (session.assignments == []),
+            ([f for f in session.assignments if not f.removed] == []),
             [
                 session.start_time_frmt,
                 session.end_time_frmt,
-                ", ".join([f.user.username for f in session.assignments]) or "None",
+                ", ".join([f.user.username for f in session.assignments if not f.removed]) or "None",
                 "<a href='{}' class='button'>Edit Session</a>".format(url_for("staff.rota_edit_session", id=session.id)) +
                 " &nbsp; <a href='{}' class='button'>Update Assignments</a>".format(url_for("staff.rota_edit_assignments", id=session.id))
             ]
@@ -283,6 +283,10 @@ def rota_edit_assignments(id: int):
     if not session:
         return redirect(url_for('staff.rota'))
 
+    # Compile assignments
+    assigned = [(f.user.id, f.user.username) for f in session.assignments if not f.removed]
+    unassigned = [(f.id, f.username) for f in User.query.filter_by(auth_level=1).all() if f.id not in [g[0] for g in assigned]]
+
     # Form
     form = AssignmentForm(request.form)
 
@@ -293,6 +297,20 @@ def rota_edit_assignments(id: int):
         except:
             flash('An error occurred parsing the JSON data')
         else:
+            to_remove = [f[0] for f in assigned if f[0] not in form.assigned.data]
+            to_add = [f for f in form.assigned.data if f not in [g[0] for g in assigned]]
+
+            dbsession = db_session()
+
+            for remove in to_remove:
+                assignment = Assignment.query.with_session(dbsession).filter_by(user_id=remove, session_id=session.id, removed=None).first()
+                assignment.removed = datetime.now()
+                dbsession.commit()
+
+            for add in to_add:
+                assignment = Assignment(add, session.id)
+                dbsession.add(assignment)
+                dbsession.commit()
 
             return redirect(url_for('staff.rota'))
 
@@ -301,14 +319,8 @@ def rota_edit_assignments(id: int):
         for field, error in form.errors.items():
             flash('{}: {}'.format(field, ", ".join(error)))
 
-    # Compile assignments
-    assigned = [(f.user.id, f.user.username) for f in session.assignments]
-    unassigned = [(f.id, f.username) for f in User.query.filter_by(auth_level=1).all() if f.id not in [g[0] for g in assigned]]
-
     # Values
     form.assigned.data = json.dumps([f[0] for f in assigned])
-
-    print(assigned, unassigned, form.assigned.data)
 
     # Render
     return render_template("staff/assignment_edit.jinja2", form=form, assigned=assigned, unassigned=unassigned)
