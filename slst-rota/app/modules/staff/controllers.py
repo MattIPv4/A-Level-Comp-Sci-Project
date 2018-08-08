@@ -1,14 +1,15 @@
+import calendar  # Calendar
+import json  # JSON
+from datetime import datetime  # Datetime
+
 from flask import Blueprint, render_template, redirect, url_for, request, flash  # Flask
 from werkzeug.security import generate_password_hash  # Passwords
-import calendar # Calendar
-from datetime import datetime # Datetime
-import json # JSON
 
 from app import db_session, error_render, Utils  # DB, Errors, Utils
 from app.modules import auth  # Auth
-from app.modules.staff.forms import AccountForm, SessionForm, AssignmentForm # Forms
-from app.modules.student import Session, Assignment # Session
-from app.modules.auth import User # User
+from app.modules.auth import User  # User
+from app.modules.staff.forms import AccountForm, SessionForm, AssignmentForm  # Forms
+from app.modules.student import Session, Assignment  # Session
 
 # Blueprint
 __a = [
@@ -32,6 +33,7 @@ def auth_check():
                              "This page is only accessible to users with the staff authentication level")
 
     return user, error
+
 
 # All accounts
 @staff.route('/accounts/', methods=['GET'])
@@ -84,7 +86,8 @@ def new_account():
                     if form.auth_level.data:
 
                         session = db_session()
-                        user = User(form.username.data, generate_password_hash(form.password.data), form.auth_level.data)
+                        user = User(form.username.data, generate_password_hash(form.password.data),
+                                    form.auth_level.data)
                         session.add(user)
                         session.commit()
                         return redirect(url_for('staff.accounts'))
@@ -129,12 +132,15 @@ def rota():
                 session.start_time_frmt,
                 session.end_time_frmt,
                 ", ".join([f.user.username for f in session.assignments if not f.removed]) or "None",
-                "<a href='{}' class='button'>Edit Session</a>".format(url_for("staff.rota_edit_session", id=session.id)) +
-                " &nbsp; <a href='{}' class='button'>Update Assignments</a>".format(url_for("staff.rota_edit_assignments", id=session.id))
+                "<a href='{}' class='button'>Edit Session</a>".format(
+                    url_for("staff.rota_edit_session", id=session.id)) +
+                " &nbsp; <a href='{}' class='button'>Update Assignments</a>".format(
+                    url_for("staff.rota_edit_assignments", id=session.id))
             ]
         ])
 
     return render_template("staff/rota.jinja2", rota_data=rota_data)
+
 
 # Rota edit - session
 @staff.route('/rota/edit/session/<int:id>', methods=['GET', 'POST'])
@@ -269,6 +275,7 @@ def rota_new():
     # Render
     return render_template("staff/session_edit.jinja2", form=form, title_type="New", button_type="Create")
 
+
 # Rota edit - assignments
 @staff.route('/rota/edit/assignments/<int:id>', methods=['GET', 'POST'])
 def rota_edit_assignments(id: int):
@@ -285,7 +292,8 @@ def rota_edit_assignments(id: int):
 
     # Compile assignments
     assigned = [(f.user.id, f.user.username) for f in session.assignments if not f.removed]
-    unassigned = [(f.id, f.username) for f in User.query.filter_by(auth_level=1).all() if f.id not in [g[0] for g in assigned]]
+    unassigned = [(f.id, f.username) for f in User.query.filter_by(auth_level=1).all() if
+                  f.id not in [g[0] for g in assigned]]
 
     # Form
     form = AssignmentForm(request.form)
@@ -303,7 +311,8 @@ def rota_edit_assignments(id: int):
             dbsession = db_session()
 
             for remove in to_remove:
-                assignment = Assignment.query.with_session(dbsession).filter_by(user_id=remove, session_id=session.id, removed=None).first()
+                assignment = Assignment.query.with_session(dbsession).filter_by(user_id=remove, session_id=session.id,
+                                                                                removed=None).first()
                 assignment.removed = datetime.now()
                 dbsession.commit()
 
