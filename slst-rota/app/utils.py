@@ -23,17 +23,17 @@ class Utils:
             data = resp.json()
             if data:
                 Utils.statusMessageData = data
-                with open('assets/statusMsg.json', 'w') as file:
+                with open(Utils.absolute_path('assets/statusMsg.json'), 'w') as file:
                     json.dump(data, file, sort_keys=True, indent=4)
                 Utils.log("Utils.fetch_status_messages", "Loaded from API")
-        except:
-            Utils.log("Utils.fetch_status_messages", "Failed to load from API...")
+        except Exception as e:
+            Utils.log("Utils.fetch_status_messages", "Failed to load from API... '{}'".format(str(e)))
             pass
 
         # If API failed, use latest local copy
         if not Utils.statusMessageData:
-            if os.path.isfile('assets/statusMsg.json'):
-                with open('assets/statusMsg.json') as file:
+            if os.path.isfile(Utils.absolute_path('assets/statusMsg.json')):
+                with open(Utils.absolute_path('assets/statusMsg.json')) as file:
                     Utils.statusMessageData = json.load(file)
                     Utils.log("Utils.fetch_status_messages", "Loaded from local file")
 
