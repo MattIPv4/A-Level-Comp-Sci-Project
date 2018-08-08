@@ -1,0 +1,99 @@
+{% extends "app/base.jinja2" %}
+
+{% block title %}Update Assignments{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1></h1>
+        {% with errors = get_flashed_messages() %}
+            {% if errors %}
+                <div>
+                    {% for error in errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
+            {{ form.csrf_token }}
+
+            <div class="row">
+                <div class="one-third column" id="assigned_column">
+                    <h4>Assigned Students</h4>
+                </div>
+                <div class="one-third column" id="unassigned_column">
+                    <h4>Unassigned Students</h4>
+                </div>
+                <div class="one-third column">
+                    {{ form.assigned() }}
+                    <button type="submit" name="submit" class="button primary mt-4">Update</button>
+                    <br/><a role="button" href="{{ url_for("staff.rota") }}" class="button mt-4">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Click handler
+    function click_handle(element) {
+        // Get data
+        var id = parseInt(element.getAttribute("data-id")); // force int
+        var name = element.getAttribute("data-name");
+        var assigned = !!parseInt(element.getAttribute("data-assigned")); // force int then bool
+
+        // Remove old and create new
+        element.parentElement.parentElement.remove();
+        create_button(name, id, !assigned);
+    }
+
+    // Create a new button
+    function create_button(name, id, assigned) {
+        // Create outer and inner div
+        var outer = document.createElement("div");
+        var div = document.createElement("div");
+        outer.appendChild(div);
+        div.className = "button group";
+
+        // Create span with name in it
+        var span = document.createElement("span");
+        span.innerText = name;
+        div.appendChild(span);
+
+        // Create a element with data and click handler
+        var a = document.createElement("a");
+        a.setAttribute("data-id", id);
+        a.setAttribute("data-name", name);
+        a.setAttribute("data-assigned", (assigned?"1":"0"));
+        a.onclick = function(e) {
+            e.preventDefault();
+            click_handle(a);
+        };
+
+        // Set a text and position in div, then add to page
+        if(assigned) {
+            a.innerText = ">>";
+            div.appendChild(a);
+
+            document.getElementById("assigned_column").appendChild(outer);
+        } else {
+            a.innerText = "<<";
+            div.insertBefore(a, div.childNodes[0]);
+
+            document.getElementById("unassigned_column").appendChild(outer);
+        }
+    }
+
+    // Initial items: assigned
+    {% for item in assigned %}
+        create_button("{{ item[1] }}", {{ item[0] }}, true);
+    {% endfor %}
+
+    // Initial items: unassigned
+    {% for item in unassigned %}
+        create_button("{{ item[1] }}", {{ item[0] }}, false);
+    {% endfor %}
+</script>
+{% endblock %}

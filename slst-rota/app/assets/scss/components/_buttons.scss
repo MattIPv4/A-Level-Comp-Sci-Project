@@ -64,4 +64,43 @@
     vertical-align: -.375em;
     width: auto;
   }
+
+  // Group
+  &.button-group,
+  &.group {
+    padding: 0;
+    text-transform: none;
+    color: $white;
+    cursor: auto;
+    clear: both;
+
+    &:hover,
+    &:focus {
+      border-color: $white;
+    }
+
+    * {
+      padding: 0 15px;
+      display: inline-block;
+      height: 100%;
+      box-sizing: content-box;
+      border-left: 1px solid $white;
+    }
+
+    a,
+    button {
+      color: $primary;
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        color: $white;
+        text-decoration: none;
+      }
+    }
+
+    :first-child {
+      border-left: none;
+    }
+  }
 }
