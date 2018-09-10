@@ -9,7 +9,7 @@ from app import db_session, error_render, Utils  # DB, Errors, Utils
 from app.modules import auth  # Auth
 from app.modules.auth import User  # User
 from app.modules.staff.forms import AccountForm, SessionForm, AssignmentForm  # Forms
-from app.modules.student import Session, Assignment  # Session
+from app.modules.student import Session, Assignment, Unavailability  # Session
 
 # Blueprint
 __a = [
@@ -291,9 +291,15 @@ def rota_edit_assignments(id: int):
         return redirect(url_for('staff.rota'))
 
     # Compile assignments
-    assigned = [(f.user.id, f.user.username) for f in session.assignments if not f.removed]
-    unassigned = [(f.id, f.username) for f in User.query.filter_by(auth_level=1).all() if
-                  f.id not in [g[0] for g in assigned]]
+    assigned = [(f.user.id, f.user.username,
+                 True if Unavailability.query.filter_by(session=session, user=f.user).all() else False) for f in
+                session.assignments if not f.removed]
+    unassigned = [(f.id, f.username,
+                   True if Unavailability.query.filter_by(session=session, user=f).all() else False)
+                  for f in User.query.filter_by(auth_level=1).all() if f.id not in [g[0] for g in assigned]]
+
+    # Fetch unavailabilities
+    unavailable = Unavailability.query.filter_by(session=session).all()
 
     # Form
     form = AssignmentForm(request.form)
@@ -332,4 +338,6 @@ def rota_edit_assignments(id: int):
     form.assigned.data = json.dumps([f[0] for f in assigned])
 
     # Render
-    return render_template("staff/assignment_edit.jinja2", form=form, assigned=assigned, unassigned=unassigned)
+    return render_template("staff/assignment_edit.jinja2", form=form,
+                           assigned=assigned, unassigned=unassigned,
+                           unavailable=unavailable)

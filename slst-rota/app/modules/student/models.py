@@ -1,6 +1,7 @@
 from calendar import day_name  # Days
 from datetime import timedelta, datetime, date  # Times
 from typing import Union, Callable, List, Tuple  # Typing
+from flask import escape  # Escape
 
 from app import db, Base_Model, Utils  # DB
 
@@ -149,6 +150,10 @@ class Unavailability(Base_Model):
         self.user_id = user_id
         self.session_id = session_id
         self.reason = reason
+
+    @property
+    def reason_clean(self) -> str:
+        return escape(self.reason)
 
 
 # Define an Attendance model

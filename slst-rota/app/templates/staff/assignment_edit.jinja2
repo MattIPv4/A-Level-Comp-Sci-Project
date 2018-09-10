@@ -15,99 +15,115 @@
             {% endif %}
         {% endwith %}
 
-        <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
-            {{ form.csrf_token }}
-
-            <div class="row">
-                <div class="one-third column" id="assigned_column">
-                    <h4>Assigned Students</h4>
-                </div>
-                <div class="one-third column" id="unassigned_column">
-                    <h4>Unassigned Students</h4>
-                </div>
-                <div class="one-third column">
+        <div class="row">
+            <div class="two-thirds column">
+                <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
+                    {{ form.csrf_token }}
                     {{ form.assigned() }}
-                    <button type="submit" name="submit" class="button primary mt-4">Update</button>
-                    <br/><a role="button" href="{{ url_for("staff.rota") }}" class="button mt-4">Cancel</a>
-                </div>
+                    <button type="submit" name="submit" class="button primary mr-4">Update</button>
+                    <a role="button" href="{{ url_for("staff.rota") }}" class="button">Cancel</a>
+
+                    <div class="row">
+                        <div class="one-half column" id="assigned_column">
+                            <h4>Assigned Students</h4>
+                        </div>
+                        <div class="one-half column" id="unassigned_column">
+                            <h4>Unassigned Students</h4>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+            <div class="one-third column">
+                <h4>Unavailable Students</h4>
+                {% for unavail in unavailable %}
+                    <div class="card">
+                        {{ unavail.user.username }}
+                        <br/><i>{{ unavail.reason_clean }}</i>
+                    </div>
+                {% else %}
+                    <p>None</p>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    // Click handler
-    function click_handle(element) {
-        // Get data
-        var id = parseInt(element.getAttribute("data-id")); // force int
-        var name = element.getAttribute("data-name");
-        var assigned = !!parseInt(element.getAttribute("data-assigned")); // force int then bool
+    <script>
+        // Click handler
+        function click_handle(element) {
+            // Get data
+            var id = parseInt(element.getAttribute("data-id")); // force int
+            var name = element.getAttribute("data-name");
+            var unavailable = !!parseInt(element.getAttribute("data-unavailable")); // force int then bool
+            var assigned = !!parseInt(element.getAttribute("data-assigned")); // force int then bool
 
-        // Remove old and create new
-        element.parentElement.parentElement.remove();
-        create_button(name, id, !assigned);
+            // Remove old and create new
+            element.parentElement.parentElement.remove();
+            create_button(name, id, unavailable, !assigned);
 
-        // Get existing JSON value
-        var input = document.getElementById("{{ form.assigned.id }}");
-        var value = JSON.parse(input.value);
+            // Get existing JSON value
+            var input = document.getElementById("{{ form.assigned.id }}");
+            var value = JSON.parse(input.value);
 
-        // Update
-        if(assigned) {
-            value.splice(value.indexOf(id),1);
-        } else {
-            value.push(id);
+            // Update
+            if (assigned) {
+                value.splice(value.indexOf(id), 1);
+            } else {
+                value.push(id);
+            }
+
+            // Set new JSON value
+            input.value = JSON.stringify(value);
         }
 
-        // Set new JSON value
-        input.value = JSON.stringify(value);
-    }
+        // Create a new button
+        function create_button(name, id, unavailable, assigned) {
+            // Create outer and inner div
+            var outer = document.createElement("div");
+            var div = document.createElement("div");
+            outer.appendChild(div);
+            div.className = "button group";
+            if (unavailable) div.className += " muted";
 
-    // Create a new button
-    function create_button(name, id, assigned) {
-        // Create outer and inner div
-        var outer = document.createElement("div");
-        var div = document.createElement("div");
-        outer.appendChild(div);
-        div.className = "button group";
+            // Create span with name in it
+            var span = document.createElement("span");
+            span.innerText = name;
+            div.appendChild(span);
 
-        // Create span with name in it
-        var span = document.createElement("span");
-        span.innerText = name;
-        div.appendChild(span);
+            // Create a element with data and click handler
+            var a = document.createElement("a");
+            a.setAttribute("data-id", id);
+            a.setAttribute("data-name", name);
+            a.setAttribute("data-unavailable", (unavailable ? "1" : "0"));
+            a.setAttribute("data-assigned", (assigned ? "1" : "0"));
+            a.onclick = function (e) {
+                e.preventDefault();
+                click_handle(a);
+            };
 
-        // Create a element with data and click handler
-        var a = document.createElement("a");
-        a.setAttribute("data-id", id);
-        a.setAttribute("data-name", name);
-        a.setAttribute("data-assigned", (assigned?"1":"0"));
-        a.onclick = function(e) {
-            e.preventDefault();
-            click_handle(a);
-        };
+            // Set a text and position in div, then add to page
+            if (assigned) {
+                a.innerText = ">>";
+                div.appendChild(a);
 
-        // Set a text and position in div, then add to page
-        if(assigned) {
-            a.innerText = ">>";
-            div.appendChild(a);
+                document.getElementById("assigned_column").appendChild(outer);
+            } else {
+                a.innerText = "<<";
+                div.insertBefore(a, div.childNodes[0]);
 
-            document.getElementById("assigned_column").appendChild(outer);
-        } else {
-            a.innerText = "<<";
-            div.insertBefore(a, div.childNodes[0]);
-
-            document.getElementById("unassigned_column").appendChild(outer);
+                document.getElementById("unassigned_column").appendChild(outer);
+            }
         }
-    }
 
-    // Initial items: assigned
-    {% for item in assigned %}
-        create_button("{{ item[1] }}", {{ item[0] }}, true);
-    {% endfor %}
+        // Initial items: assigned
+        {% for item in assigned %}
+            create_button("{{ item[1] }}", {{ item[0] }}, {{ "true" if item[2] else "false" }}, true);
+        {% endfor %}
 
-    // Initial items: unassigned
-    {% for item in unassigned %}
-        create_button("{{ item[1] }}", {{ item[0] }}, false);
-    {% endfor %}
-</script>
+        // Initial items: unassigned
+        {% for item in unassigned %}
+            create_button("{{ item[1] }}", {{ item[0] }}, {{ "true" if item[2] else "false" }}, false);
+        {% endfor %}
+    </script>
 {% endblock %}

@@ -12,6 +12,20 @@
 .mt-3 { margin-top: 1.5rem; }
 .mt-4 { margin-top: 2rem; }
 
+// Margins: Left
+.ml-0 { margin-left: 0; }
+.ml-1 { margin-left: .5rem; }
+.ml-2 { margin-left: 1rem; }
+.ml-3 { margin-left: 1.5rem; }
+.ml-4 { margin-left: 2rem; }
+
+// Margins: Right
+.mr-0 { margin-right: 0; }
+.mr-1 { margin-right: .5rem; }
+.mr-2 { margin-right: 1rem; }
+.mr-3 { margin-right: 1.5rem; }
+.mr-4 { margin-right: 2rem; }
+
 // Margins: Bottom/Top
 .mbt-0 { @extend #{'.mb-0', '.mt-0'}; }
 .mbt-1 { @extend #{'.mb-1', '.mt-1'}; }

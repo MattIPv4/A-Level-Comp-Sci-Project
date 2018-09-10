@@ -52,10 +52,22 @@
     @include button_style($success, $white);
   }
 
+  // Warning button
+  &.button-warning,
+  &.warning {
+    @include button_style($warning, $white);
+  }
+
   // Danger button
   &.button-danger,
   &.danger {
     @include button_style($danger, $white);
+  }
+
+  // Muted button
+  &.button-muted,
+  &.muted {
+    @include button_style($dark, darken($white, 20%));
   }
 
   // FontAwesome button fix (make them larger)
@@ -70,7 +82,7 @@
   &.group {
     padding: 0;
     text-transform: none;
-    color: $white;
+    color: inherit;
     cursor: auto;
     clear: both;
 
@@ -84,7 +96,7 @@
       display: inline-block;
       height: 100%;
       box-sizing: content-box;
-      border-left: 1px solid $white;
+      border-left: 1px solid;
     }
 
     a,
