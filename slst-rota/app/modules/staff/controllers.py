@@ -1,6 +1,7 @@
 import calendar  # Calendar
 import json  # JSON
 from datetime import datetime  # Datetime
+from typing import List, Union, Tuple  # Typing
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash  # Flask
 from werkzeug.security import generate_password_hash  # Passwords
@@ -33,6 +34,30 @@ def auth_check():
                              "This page is only accessible to users with the staff authentication level")
 
     return user, error
+
+
+# Fetch the next user in the rotation that is assignable
+def next_assignable(users: List[User], session: Session, force_next: bool = False) \
+        -> Tuple[List[User], Union[None, User]]:
+    # Loop over users, check if unavailable, select if not
+    next_user = None
+    for user in users:
+        unavailable = Unavailability.query.filter_by(session=session, user=user).all()
+        if unavailable: continue
+        next_user = user
+        break
+
+    # If all unavailable and want to force, select first
+    if force_next and next_user is None:
+        next_user = users[0]
+
+    # If have user, move them to end
+    if next_user is not None:
+        users.remove(next_user)
+        users.append(next_user)
+
+    # Done
+    return users, next_user
 
 
 # All accounts
