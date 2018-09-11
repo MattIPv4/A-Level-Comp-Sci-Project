@@ -1,37 +1,36 @@
-// Margins: Bottom
-.mb-0 { margin-bottom: 0; }
-.mb-1 { margin-bottom: .5rem; }
-.mb-2 { margin-bottom: 1rem; }
-.mb-3 { margin-bottom: 1.5rem; }
-.mb-4 { margin-bottom: 2rem; }
+$margin-value: (0, .5rem, 1rem, 1.5rem, 2rem);
 
-// Margins: Top
-.mt-0 { margin-top: 0; }
-.mt-1 { margin-top: .5rem; }
-.mt-2 { margin-top: 1rem; }
-.mt-3 { margin-top: 1.5rem; }
-.mt-4 { margin-top: 2rem; }
+@each $g in $margin-value {
+  $i: index($margin-value, $g);
 
-// Margins: Left
-.ml-0 { margin-left: 0; }
-.ml-1 { margin-left: .5rem; }
-.ml-2 { margin-left: 1rem; }
-.ml-3 { margin-left: 1.5rem; }
-.ml-4 { margin-left: 2rem; }
+  // Bottom
+  .mb-#{$i - 1} {
+    margin-bottom: $g;
+  }
+  // Top
+  .mt-#{$i - 1} {
+    margin-top: $g;
+  }
 
-// Margins: Right
-.mr-0 { margin-right: 0; }
-.mr-1 { margin-right: .5rem; }
-.mr-2 { margin-right: 1rem; }
-.mr-3 { margin-right: 1.5rem; }
-.mr-4 { margin-right: 2rem; }
+  // Bottom/Top
+  .mbt-#{$i - 1} {
+    margin-top: $g;
+    margin-bottom: $g;
+  }
+  .mtb-#{$i - 1} {
+    margin-top: $g;
+    margin-bottom: $g;
+  }
 
-// Margins: Bottom/Top
-.mbt-0 { @extend #{'.mb-0', '.mt-0'}; }
-.mbt-1 { @extend #{'.mb-1', '.mt-1'}; }
-.mbt-2 { @extend #{'.mb-2', '.mt-2'}; }
-.mbt-3 { @extend #{'.mb-3', '.mt-3'}; }
-.mbt-4 { @extend #{'.mb-4', '.mt-4'}; }
+  // Left
+  .ml-#{$i - 1} {
+    margin-left: $g;
+  }
+  // Right
+  .mr-#{$i - 1} {
+    margin-right: $g;
+  }
+}
 
 // Hide alt text
 .hide-alt {
