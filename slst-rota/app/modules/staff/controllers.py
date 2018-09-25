@@ -60,6 +60,58 @@ def next_assignable(users: List[User], session: Session, force_next: bool = Fals
     return users, next_user
 
 
+# Generate assignments
+def generate_assignments(users_per_session: int = 1, force_user: bool = True):
+    # Fetch all sessions
+    sessions = Session.query.filter_by(archived=False).all()
+    if not sessions: return
+
+    # Fetch all users
+    users = User.query.filter_by(auth_level=1, disabled=False).all()
+    if not users: return
+
+    # DB
+    dbsession = db_session()
+
+    # Remove old assignments
+    assignments = Assignment.query.with_session(dbsession).filter_by(removed=None).all()
+    for assignment in assignments:
+        assignment.removed = datetime.now()
+    dbsession.commit()
+
+    # Loop over sessions
+    for session in sessions:
+        # Correct number of users per session
+        target = users_per_session
+        assigned = []
+        while target > 0:
+
+            # Get next user to assign
+            users, student = next_assignable(users, session, force_user)
+
+            # Give up if no users
+            if not student and not assigned:
+                break
+
+            # If valid student
+            if student:
+
+                # Give up if we're out of users (last assigned is this user)
+                if assigned and student == assigned[-1]:
+                    break
+                # Skip if already assigned
+                if student in assigned:
+                    continue
+
+                # Update target
+                target -= 1
+                # Assign
+                assigned.append(student)
+                assignment = Assignment(student, session.id)
+                dbsession.add(assignment)
+                dbsession.commit()
+
+
 # All accounts
 @staff.route('/accounts/', methods=['GET'])
 def accounts():
@@ -175,7 +227,7 @@ def rota_edit_session(id: int):
         return error
 
     # Get session data
-    session = Session.query.filter_by(id=id).first()
+    session = Session.query.filter_by(archived=False, id=id).first()
 
     # If bad session
     if not session:
@@ -309,7 +361,7 @@ def rota_edit_assignments(id: int):
         return error
 
     # Get session data
-    session = Session.query.filter_by(id=id).first()
+    session = Session.query.filter_by(archived=False, id=id).first()
 
     # If bad session
     if not session:
