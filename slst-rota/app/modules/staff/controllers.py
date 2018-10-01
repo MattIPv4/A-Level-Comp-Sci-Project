@@ -9,7 +9,7 @@ from werkzeug.security import generate_password_hash  # Passwords
 from app import db_session, error_render, Utils  # DB, Errors, Utils
 from app.modules import auth  # Auth
 from app.modules.auth import User  # User
-from app.modules.staff.forms import AccountForm, SessionForm, AssignmentForm  # Forms
+from app.modules.staff.forms import AccountForm, SessionForm, AssignmentForm, AutomaticAssignmentForm  # Forms
 from app.modules.student import Session, Assignment, Unavailability  # Session
 
 # Blueprint
@@ -427,6 +427,43 @@ def rota_automatic_assignments():
     if error:
         return error
 
-    generate_assignments(3, False)
+    # Check sessions
+    sessions = Session.query.filter_by(archived=False).all()
+    if not sessions:
+        return error_render(503, "No sessions are currently in the rota. Please define a session before automatically "
+                                 "assigning students to the rota.")
 
-    return
+    # Check students
+    users = User.query.filter_by(auth_level=1, disabled=False).all()
+    if not users:
+        return error_render(503, "No students are in the system. Please create a user (not disabled) before attempting "
+                                 "to assign them to rota sessions.")
+
+    # Get form and set checks
+    form = AutomaticAssignmentForm(request.form)
+    form.count.widget.min = 1
+    form.count.widget.max = len(users)
+
+    # Verify the form
+    if form.validate_on_submit():
+        # Check count is in range
+        if form.count.data and 1 <= form.count.data <= len(users):
+            force = bool(form.force.data) # Ensure bool
+            try:
+                generate_assignments(form.count.data, force)
+            except:
+                flash('An error occurred whilst generating the automatic assignments. Please try again.')
+            else:
+                # Success
+                return redirect(url_for('staff.rota'))
+        else:
+            flash('Students per session must be 1 or more and must be less then or equal to the total number of '
+                  'students in the system ({:,})'.format(len(users)))
+
+    # Errors
+    if form.errors:
+        for field, error in form.errors.items():
+            flash('{}: {}'.format(field, ", ".join(error)))
+
+    # Render
+    return render_template("staff/automatic_assignments.jinja2", form=form)

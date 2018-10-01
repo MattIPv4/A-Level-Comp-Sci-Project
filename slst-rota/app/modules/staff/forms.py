@@ -1,7 +1,10 @@
+import calendar  # Calendar
+
 from flask_wtf import FlaskForm  # Form
-from wtforms import StringField, PasswordField, SelectField, TimeField, HiddenField # Form: Elements
+from wtforms import StringField, PasswordField, SelectField, TimeField, HiddenField, \
+    IntegerField, BooleanField  # Form: Elements
+from wtforms.widgets.html5 import NumberInput # Number input
 from wtforms.validators import DataRequired  # Form: Validation
-import calendar # Calendar
 
 
 # Account (using WTForms)
@@ -16,10 +19,19 @@ class AccountForm(FlaskForm):
 class SessionForm(FlaskForm):
     day = SelectField('Day of Week', choices=[(f, calendar.day_name[f]) for f in range(len(calendar.day_name))],
                       coerce=int, default=0, validators=[DataRequired(message='Please select a day of the week.')])
-    start_time = TimeField('Start Time', validators=[DataRequired(message='Please enter a start time and ensure it is in the correct format.')])
-    end_time = TimeField('End Time', validators=[DataRequired(message='Please enter an end time and ensure it is in the correct format.')])
+    start_time = TimeField('Start Time', validators=[
+        DataRequired(message='Please enter a start time and ensure it is in the correct format.')])
+    end_time = TimeField('End Time', validators=[
+        DataRequired(message='Please enter an end time and ensure it is in the correct format.')])
 
 
 # Assignments
 class AssignmentForm(FlaskForm):
     assigned = HiddenField()
+
+
+# Automatic Assignments
+class AutomaticAssignmentForm(FlaskForm):
+    count = IntegerField('Students per Session', validators=[DataRequired(
+        message='Please enter a number of students to assign per session')], widget=NumberInput(), default=1)
+    force = BooleanField('Force students to be assigned')

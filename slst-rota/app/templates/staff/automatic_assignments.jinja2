@@ -1,0 +1,35 @@
+{% extends "app/base.jinja2" %}
+
+{% block title %}Automatic Assignments{% endblock %}
+
+{% block body %}
+    {% from "app/macros/field.jinja2" import render_field with context %}
+
+    <div class="container">
+        <h1>Automatically assign students to the rota sessions</h1>
+        {% with errors = get_flashed_messages() %}
+            {% if errors %}
+                <div>
+                    {% for error in errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
+            {{ form.csrf_token }}
+
+            <div class="row">
+                <div class="two-thirds column">
+                    {{ render_field(form.count, placeholder="Number of students to assign per session", autofocus="") }}
+                    {{ render_field(form.force, placeholder="Force unavailable students to be assigned if required") }}
+                </div>
+                <div class="one-third column">
+                    <button type="submit" name="submit" class="button primary mt-4">Run</button>
+                    <br/><a role="button" href="{{ url_for("staff.rota") }}" class="button mt-4">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
