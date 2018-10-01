@@ -107,7 +107,7 @@ def generate_assignments(users_per_session: int = 1, force_user: bool = True):
                 target -= 1
                 # Assign
                 assigned.append(student)
-                assignment = Assignment(student, session.id)
+                assignment = Assignment(student.id, session.id)
                 dbsession.add(assignment)
                 dbsession.commit()
 
@@ -418,3 +418,15 @@ def rota_edit_assignments(id: int):
     return render_template("staff/assignment_edit.jinja2", form=form,
                            assigned=assigned, unassigned=unassigned,
                            unavailable=unavailable)
+
+
+# Rota edit - automatic assignments
+@staff.route('/rota/auto', methods=['GET', 'POST'])
+def rota_automatic_assignments():
+    user, error = auth_check()
+    if error:
+        return error
+
+    generate_assignments(3, False)
+
+    return
