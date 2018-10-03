@@ -448,14 +448,13 @@ def rota_automatic_assignments():
     if form.validate_on_submit():
         # Check count is in range
         if form.count.data and 1 <= form.count.data <= len(users):
-            force = bool(form.force.data) # Ensure bool
+            force = bool(form.force.data)  # Ensure bool
             try:
                 generate_assignments(form.count.data, force)
             except:
                 flash('An error occurred whilst generating the automatic assignments. Please try again.')
             else:
-                # Success
-                return redirect(url_for('staff.rota'))
+                flash('The assignments have been successfully generated. Press the Back button to view the rota.')
         else:
             flash('Students per session must be 1 or more and must be less then or equal to the total number of '
                   'students in the system ({:,})'.format(len(users)))
