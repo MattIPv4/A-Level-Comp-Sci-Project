@@ -12,10 +12,16 @@
                 </h1>
             </div>
             <div class="one-third column">
-                <h4 class="mt-4 mb-1">
-                    <small>New session - </small>
-                    <a href="{{ url_for("staff.rota_new") }}" class="button button-primary">Create</a>
-                </h4>
+                <div class="mt-4 mb-1">
+                    <h4 class="mbt-0">
+                        <a href="{{ url_for("staff.rota_new") }}" class="button button-primary">
+                            Create session</a>
+                    </h4>
+                    <h4 class="mbt-0">
+                        <a href="{{ url_for("staff.rota_automatic_assignments") }}" class="button button-primary">
+                            Automatic Assignments</a>
+                    </h4>
+                </div>
             </div>
 
             {% from "app/macros/table.jinja2" import render_table with context %}

@@ -454,7 +454,7 @@ def rota_automatic_assignments():
             except:
                 flash('An error occurred whilst generating the automatic assignments. Please try again.')
             else:
-                flash('The assignments have been successfully generated. Press the Back button to view the rota.')
+                flash('Assignments have been successfully generated. Press the Back button to view the rota.')
         else:
             flash('Students per session must be 1 or more and must be less then or equal to the total number of '
                   'students in the system ({:,})'.format(len(users)))

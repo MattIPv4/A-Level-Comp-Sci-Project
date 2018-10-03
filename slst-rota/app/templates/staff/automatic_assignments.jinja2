@@ -11,8 +11,9 @@
             {% if errors %}
                 <div>
                     {% for error in errors %}
-                        {{ error }}<br>
+                        <b>{{ error }}</b><br/>
                     {% endfor %}
+                    <br/>
                 </div>
             {% endif %}
         {% endwith %}
