@@ -1,0 +1,27 @@
+{% extends "app/base.jinja2" %}
+
+{% block title %}Delete Rota Session{% endblock %}
+
+{% block body %}
+    {% from "app/macros/field.jinja2" import render_field with context %}
+
+    <div class="container">
+        <h1>Delete Rota Session</h1>
+
+        <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
+            {{ form.csrf_token }}
+
+            <div class="row">
+                <div class="two-thirds column">
+                    <h3>Are you sure you want to delete the rota session?</h3>
+                </div>
+                <div class="one-third column">
+                    <button type="submit" name="submit" class="button primary mt-4">Delete</button>
+                    <br/>
+                    <a role="button" href="{{ url_for("staff.rota_edit_session", id=id) }}" class="button mt-4">
+                        Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

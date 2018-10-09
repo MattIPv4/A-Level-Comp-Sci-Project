@@ -3,7 +3,7 @@ import calendar  # Calendar
 from flask_wtf import FlaskForm  # Form
 from wtforms import StringField, PasswordField, SelectField, TimeField, HiddenField, \
     IntegerField, BooleanField  # Form: Elements
-from wtforms.widgets.html5 import NumberInput # Number input
+from wtforms.widgets.html5 import NumberInput  # Number input
 from wtforms.validators import DataRequired  # Form: Validation
 
 
@@ -23,6 +23,11 @@ class SessionForm(FlaskForm):
         DataRequired(message='Please enter a start time and ensure it is in the correct format.')])
     end_time = TimeField('End Time', validators=[
         DataRequired(message='Please enter an end time and ensure it is in the correct format.')])
+
+
+# Session Delete
+class SessionDeleteForm(FlaskForm):
+    pass
 
 
 # Assignments

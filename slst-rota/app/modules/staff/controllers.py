@@ -9,7 +9,8 @@ from werkzeug.security import generate_password_hash  # Passwords
 from app import db_session, error_render, Utils  # DB, Errors, Utils
 from app.modules import auth  # Auth
 from app.modules.auth import User  # User
-from app.modules.staff.forms import AccountForm, SessionForm, AssignmentForm, AutomaticAssignmentForm  # Forms
+from app.modules.staff.forms import AccountForm, SessionForm, SessionDeleteForm, \
+    AssignmentForm, AutomaticAssignmentForm  # Forms
 from app.modules.student import Session, Assignment, Unavailability  # Session
 
 # Blueprint
@@ -290,7 +291,47 @@ def rota_edit_session(id: int):
     form.end_time.data = session.end_time_time
 
     # Render
-    return render_template("staff/session_edit.jinja2", form=form, title_type="Edit", button_type="Update")
+    return render_template("staff/session_edit.jinja2", form=form, title_type="Edit", button_type="Update", id=id)
+
+
+# Rota delete - session
+@staff.route('/rota/edit/session/<int:id>/delete', methods=['GET', 'POST'])
+def rota_delete_session(id: int):
+    user, error = auth_check()
+    if error:
+        return error
+
+    # Get session data
+    session = Session.query.filter_by(archived=False, id=id).first()
+
+    # If bad session
+    if not session:
+        return redirect(url_for('staff.rota'))
+
+    # Form
+    form = SessionDeleteForm(request.form)
+
+    # Verify the form
+    if form.validate_on_submit():
+        # Get session
+        dbsession = db_session()
+        session = Session.query.with_session(dbsession).filter_by(id=id).first()
+
+        # Remove old assignments
+        assignments = Assignment.query.with_session(dbsession).filter_by(session_id=id, removed=None).all()
+        for assignment in assignments:
+            assignment.removed = datetime.now()
+        dbsession.commit()
+
+        # Remove session
+        session.archived = 1
+
+        # Save
+        dbsession.commit()
+        return redirect(url_for('staff.rota'))
+
+    # Render
+    return render_template("staff/session_delete.jinja2", form=form, id=id)
 
 
 # New rota session
