@@ -175,6 +175,12 @@ def account(id: int = None):
             else:
                 flash('Invalid access to update password')
 
+    # Inject some values
+    if target:
+        form.username.data = target.username
+        form.auth_level.data = target.auth_level
+        form.disabled.data = target.disabled
+
     # Render
     return render_template("auth/account.jinja2", form=form, target=target,
                            show_auth_level=(user.auth_level == 2 and user.id != target.id),

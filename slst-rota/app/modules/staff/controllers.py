@@ -411,10 +411,11 @@ def rota_edit_assignments(id: int):
     # Compile assignments
     assigned = [(f.user.id, f.user.username,
                  True if Unavailability.query.filter_by(session=session, user=f.user).all() else False) for f in
-                session.assignments if not f.removed]
+                session.assignments if not f.removed and not f.user.disabled]
     unassigned = [(f.id, f.username,
                    True if Unavailability.query.filter_by(session=session, user=f).all() else False)
-                  for f in User.query.filter_by(auth_level=1).all() if f.id not in [g[0] for g in assigned]]
+                  for f in User.query.filter_by(auth_level=1).all() if f.id not in [g[0] for g in assigned] and
+                  not f.disabled]
 
     # Fetch unavailabilities
     unavailable = Unavailability.query.filter_by(session=session).all()

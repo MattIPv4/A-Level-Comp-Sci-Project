@@ -36,7 +36,7 @@
                 </div>
                 <div class="one-third column">
                     {% if show_username %}
-                        {{ render_field(form.username, placeholder="Username", value=target.username) }}
+                        {{ render_field(form.username, placeholder="Username") }}
                     {% else %}
                         <input type="hidden" id="{{ form.username.id }}" name="{{ form.username.id }}"
                                value="{{ target.username }}"/>
@@ -44,10 +44,10 @@
                     {% if show_auth_level %}
                         <div class="row">
                             <div class="one-half column">
-                                {{ render_field(form.auth_level, placeholder="Auth Level", value=target.auth_level) }}
+                                {{ render_field(form.auth_level, placeholder="Auth Level") }}
                             </div>
                             <div class="one-half column">
-                                {{ render_field(form.disabled, placeholder="Disabled", value=target.disabled) }}
+                                {{ render_field(form.disabled, placeholder="Disabled") }}
                             </div>
                         </div>
                     {% else %}
