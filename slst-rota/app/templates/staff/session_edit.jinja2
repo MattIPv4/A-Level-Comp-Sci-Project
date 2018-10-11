@@ -28,9 +28,11 @@
                 </div>
                 <div class="one-third column">
                     <button type="submit" name="submit" class="button primary mt-4">{{ button_type }}</button>
-                    <br/>
-                    <a role="button" href="{{ url_for("staff.rota_delete_session", id=id) }}" class="button mt-4">
-                        Delete</a>
+                    {% if id %}
+                        <br/>
+                        <a role="button" href="{{ url_for("staff.rota_delete_session", id=id) }}" class="button mt-4">
+                            Delete</a>
+                    {% endif %}
                     <br/>
                     <a role="button" href="{{ url_for("staff.rota") }}" class="button mt-4">Cancel</a>
                 </div>
