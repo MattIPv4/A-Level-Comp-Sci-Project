@@ -5,7 +5,7 @@
 // Dark theme for base
 html, body {
   background-color: $black;
-  color: $lightgreyple;
+  color: $lightgrey;
   display: flex;
   flex-direction: column;
   font-family: 'Open Sans', Helvetica, sans-serif;
@@ -82,9 +82,9 @@ a {
 
 // Labels
 .label {
-  background: mix($greyple, $primary, 20%);
+  background: mix($grey, $primary, 20%);
   border-radius: .2em;
-  color: $lightgreyple;
+  color: $lightgrey;
   font-size: .6em;
   font-weight: 300;
   letter-spacing: .05em;
@@ -100,7 +100,7 @@ em {
   font-weight: $normalweight;
 
   &.dull {
-    color: mix($greyple, $primary, 35%);
+    color: mix($grey, $primary, 35%);
   }
 }
 

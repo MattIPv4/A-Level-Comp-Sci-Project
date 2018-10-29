@@ -22,7 +22,7 @@ header {
       // Standard item
       .item,
       .droptitle {
-        color: $lightgreyple;
+        color: $lightgrey;
         display: block;
         line-height: 5rem;
         padding: 0 2rem;
@@ -42,7 +42,7 @@ header {
         }
 
         // Give links their hover color
-        &[href]:hover { color: mix($primary, $lightgreyple, 75%);  }
+        &[href]:hover { color: mix($primary, $lightgrey, 75%);  }
       }
 
       // Support dropdowns
