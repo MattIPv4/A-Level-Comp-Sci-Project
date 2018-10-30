@@ -209,7 +209,8 @@ def rota():
             [
                 session.start_time_frmt,
                 session.end_time_frmt,
-                ", ".join([f.user.username for f in session.assignments if not f.removed]) or "None",
+                ", ".join(
+                    [f.user.username for f in session.assignments if not f.removed and not f.user.disabled]) or "None",
                 "<a href='{}' class='button'>Edit Session</a>".format(
                     url_for("staff.rota_edit_session", id=session.id)) +
                 " &nbsp; <a href='{}' class='button'>Update Assignments</a>".format(
@@ -418,7 +419,7 @@ def rota_edit_assignments(id: int):
                   not f.disabled]
 
     # Fetch unavailabilities
-    unavailable = Unavailability.query.filter_by(session=session).all()
+    unavailable = [f for f in Unavailability.query.filter_by(session=session).all() if not f.user.disabled]
 
     # Form
     form = AssignmentForm(request.form)

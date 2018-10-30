@@ -113,7 +113,8 @@ def session_to_rota_view(session: Session, highlight_check: Union[Callable, None
     # Usernames
     data[1].append([])
     for assignment in session.assignments:
-        if assignment.removed: continue
+        if assignment.removed or assignment.user.disabled:
+            continue
         data[1][-1].append(assignment.user.username)
         # Highlight
         if highlight_check is not None and highlight_check(assignment):
