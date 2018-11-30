@@ -121,9 +121,9 @@ def accounts():
         return error
 
     data = User.query.all()
-    accounts = []
+    all_accounts = []
     for item in data:
-        accounts.append([
+        all_accounts.append([
             item.id == user.id,
             [
                 item.username,
@@ -133,7 +133,7 @@ def accounts():
             ]
         ])
 
-    return render_template("staff/accounts.jinja2", accounts=accounts)
+    return render_template("staff/accounts.jinja2", accounts=all_accounts)
 
 
 # Create Account
