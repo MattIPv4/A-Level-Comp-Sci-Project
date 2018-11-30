@@ -1,7 +1,7 @@
 import calendar  # Calendar
 import json  # JSON
 from datetime import datetime  # Datetime
-from typing import List, Union, Tuple  # Typing
+from typing import List, Union, Dict  # Typing
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash  # Flask
 from werkzeug.security import generate_password_hash  # Passwords
@@ -38,38 +38,56 @@ def auth_check():
 
 
 # Fetch the next user in the rotation that is assignable
-def next_assignable(users: List[User], session: Session, force_next: bool = False) \
-        -> Tuple[List[User], Union[None, User]]:
-    # Loop over users, check if unavailable, select if not
+def next_assignable(total_assigned: Dict[int, List[int, User]], assigned: List[User], session: Session,
+                    force_next: bool = False) -> Union[None, User]:
+    # The user that hopefully will be found
     next_user = None
-    for user in users:
-        unavailable = Unavailability.query.filter_by(session=session, user=user).all()
-        if unavailable: continue
-        next_user = user
-        break
+
+    # Order users by assignments so far (smallest first)
+    users_sorted = sorted(total_assigned.values(), key=lambda x: x[0])
+
+    # Loop over users until we find one (least assignments first)
+    for user in users_sorted:
+        # Check if already assigned
+        if user in assigned:
+            continue
+
+        # Check if available
+        unavailable = Unavailability.query.filter_by(
+            session=session, user=user).all()
+        if unavailable:
+            continue
+
+        # Store
+        next_user = users_sorted
 
     # If all unavailable and want to force, select first
     if force_next and next_user is None:
-        next_user = users[0]
+        users_sorted = [f for f in users_sorted if f[1] not in assigned]
+        if users_sorted:
+            next_user = users_sorted[0]
 
-    # If have user, move them to end
+    # If have user, update assinged
     if next_user is not None:
-        users.remove(next_user)
-        users.append(next_user)
+        next_user = next_user[1]
+        assigned.append(next_user)
+        total_assigned[next_user.id][0] += 1
 
     # Done
-    return users, next_user
+    return next_user
 
 
 # Generate assignments
 def generate_assignments(users_per_session: int = 1, force_user: bool = True):
     # Fetch all sessions
     sessions = Session.query.filter_by(archived=False).all()
-    if not sessions: return
+    if not sessions:
+        return
 
     # Fetch all users
     users = User.query.filter_by(auth_level=1, disabled=False).all()
-    if not users: return
+    if not users:
+        return
 
     # DB
     dbsession = db_session()
@@ -81,36 +99,28 @@ def generate_assignments(users_per_session: int = 1, force_user: bool = True):
     dbsession.commit()
 
     # Loop over sessions
+    total_assigned = {f.id: [0, f] for f in users}
     for session in sessions:
         # Correct number of users per session
         target = users_per_session
         assigned = []
+
+        # Loop for target
         while target > 0:
 
-            # Get next user to assign
-            users, student = next_assignable(users, session, force_user)
+            # Get next user to assign (will also update both assigned)
+            student = next_assignable(total_assigned, assigned, session, force_user)
 
             # Give up if no users
-            if not student and not assigned:
+            if not student:
                 break
 
-            # If valid student
-            if student:
-
-                # Give up if we're out of users (last assigned is this user)
-                if assigned and student == assigned[-1]:
-                    break
-                # Skip if already assigned
-                if student in assigned:
-                    continue
-
-                # Update target
-                target -= 1
-                # Assign
-                assigned.append(student)
-                assignment = Assignment(student.id, session.id)
-                dbsession.add(assignment)
-                dbsession.commit()
+            # Update target
+            target -= 1
+            # Assign
+            assignment = Assignment(student.id, session.id)
+            dbsession.add(assignment)
+            dbsession.commit()
 
 
 # All accounts
