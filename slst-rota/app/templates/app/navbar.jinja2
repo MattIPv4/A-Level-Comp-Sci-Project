@@ -21,7 +21,7 @@
                 </span>
 
                 <a class="item" href="{{ url_for('student.unavailability') }}">Unavailability</a>
-                <a class="item" href="{{ url_for('student.attendance') }}">Attendance</a>
+                <a class="item" href="{{ url_for('attendance.student', student_id=this_user.id) }}">Attendance</a>
             {% elif this_user and this_user.auth_level == 2 %}
                 {# Staff #}
                 <span class="dropdown">
