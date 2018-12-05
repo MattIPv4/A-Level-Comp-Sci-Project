@@ -38,7 +38,7 @@ def auth_check():
 
 
 # Fetch the next user in the rotation that is assignable
-def next_assignable(total_assigned: Dict[int, List[int, User]], assigned: List[User], session: Session,
+def next_assignable(total_assigned: Dict[int, list], assigned: List[User], session: Session,
                     force_next: bool = False) -> Union[None, User]:
     # The user that hopefully will be found
     next_user = None
@@ -48,18 +48,21 @@ def next_assignable(total_assigned: Dict[int, List[int, User]], assigned: List[U
 
     # Loop over users until we find one (least assignments first)
     for user in users_sorted:
+        # Get the user object
+        user_obj = user[1]  # [int (assignments), user]
+
         # Check if already assigned
-        if user in assigned:
+        if user_obj in assigned:
             continue
 
         # Check if available
-        unavailable = Unavailability.query.filter_by(
-            session=session, user=user).all()
+        unavailable = Unavailability.query.filter_by(session_id=session.id, user_id=user_obj.id).all()
         if unavailable:
             continue
 
         # Store
-        next_user = users_sorted
+        next_user = user
+        break
 
     # If all unavailable and want to force, select first
     if force_next and next_user is None:
