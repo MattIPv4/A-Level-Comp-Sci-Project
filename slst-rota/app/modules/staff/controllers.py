@@ -362,13 +362,13 @@ def rota_new():
     if form.validate_on_submit():
 
         # Verify day
-        if form.day.data:
+        if form.day.data is not None:
 
             # Verify start time
-            if form.start_time.data:
+            if form.start_time.data is not None:
 
                 # Verify end time
-                if form.end_time.data:
+                if form.end_time.data is not None:
 
                     # Verify times
                     if form.start_time.data < form.end_time.data:

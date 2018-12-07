@@ -95,9 +95,10 @@ class Assignment(Base_Model):
             data = Attendance.query.filter_by(user_id=self.user_id, session_id=self.session_id, date=d).first()
 
             # If has not happened yet
-            if d == datetime.now().date() and (self.session.start_time >= Utils.minutes_now() or (
-                    Utils.minutes_now() <= self.session.end_time and ((data and not data.out_time)) or not data)):
-                continue
+            if d == datetime.now().date():
+                if self.session.start_time >= Utils.minutes_now() or (
+                        Utils.minutes_now() <= self.session.end_time and (not data or (data and not data.out_time))):
+                    continue
 
             results.append((d, data))
 

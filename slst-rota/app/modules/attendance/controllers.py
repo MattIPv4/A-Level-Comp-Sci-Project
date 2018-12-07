@@ -33,119 +33,166 @@ def auth_check(student_page_id: int = None):
     return user, error
 
 
-# Student overview
-@attendance.route('/student/<int:student_id>', methods=['GET'])
-def student(student_id: int):
-    student = User.query.filter_by(id=student_id).first()
-    if not student:
-        return
-        # return redirect(url_for('attendance.home'))
+# Assignment report
+class AssignmentReport:
 
-    user, error = auth_check(student.id)
+    def __init__(self, assignment_data):
+        self.assignment = assignment_data
+
+        # Get all attendance records for assignment
+        self.attendance = [f for f in self.assignment.attendance if not f[1] or (f[1] and not f[1].current)]
+        self.total = len(self.attendance)
+        self.present = sum(1 for f in self.attendance if f[1])
+        self.absent = self.total - self.present
+
+        # Get how late in for each attendance record
+        self.in_diff = [f[1].in_diff for f in self.attendance if f[1]]
+        self.in_diff_avg = (sum(self.in_diff) / len(self.in_diff)) if self.in_diff else 0
+        self.in_on_time = sum(1 for f in self.attendance if f[1] and f[1].in_diff < 1)
+
+        # Get how early out for each attendance record
+        self.out_diff = [f[1].out_diff for f in self.attendance if f[1]]
+        self.out_diff_avg = (sum(self.out_diff) / len(self.out_diff)) if self.out_diff else 0
+        self.out_on_time = sum(1 for f in self.attendance if f[1] and (not f[1].out_time or f[1].out_diff > -1))
+
+    @property
+    def table(self):
+        return [
+            False,  # Highlight
+            [  # Columns
+                self.assignment.session.start_time_frmt,
+                self.assignment.session.end_time_frmt,
+                "{:.2f}% ({:,}/{:,})".format(
+                    (self.present / self.total) * 100, self.present, self.total
+                ) if self.total else "No attendance records",
+                "In: {:,.0f} minute{} {} / Out: {:,.0f} minute{} {}"
+                "<br/>In on time: {:.2f}% / Out on time: {:.2f}%".format(
+                    abs(self.in_diff_avg),
+                    Utils.unit_s(abs(self.in_diff_avg)),
+                    "late" if self.in_diff_avg >= 0 else "early",
+
+                    abs(self.out_diff_avg),
+                    Utils.unit_s(abs(self.out_diff_avg)),
+                    "late" if self.out_diff_avg > 0 else "early",
+
+                    (self.in_on_time / self.total) * 100,
+                    (self.out_on_time / self.total) * 100,
+                ) if self.total else "No attendance records"
+            ]
+        ]
+
+
+# The student report class
+class StudentReport:
+
+    def __init__(self, student_id: int):
+        # Fetch all assignment data for the student
+        self.__assignments = [f for f in Assignment.query.filter_by(user_id=student_id).all() if not f.session.archived]
+        self.breakdown = []
+
+        # Totals data
+        self.__attendance_total = 0
+        self.__attendance_present = 0
+        self.__attendance_absent = 0
+        self.__attendance_in_diff = []
+        self.__attendance_in_on_time = 0
+        self.__attendance_out_diff = []
+        self.__attendance_out_on_time = 0
+        self.__attendance_table = []
+        self.__current_day = None
+
+        # Compile assignment attendance data
+        for assignment in self.__assignments:
+            # Get report
+            data = AssignmentReport(assignment)
+            self.breakdown.append(data)
+
+            # Update totals data
+            self.__attendance_total += data.total
+            self.__attendance_present += data.present
+            self.__attendance_absent += data.absent
+            self.__attendance_in_diff.extend(data.in_diff)
+            self.__attendance_in_on_time += data.in_on_time
+            self.__attendance_out_diff.extend(data.out_diff)
+            self.__attendance_out_on_time += data.out_on_time
+
+            # Table: Day subheadings
+            if assignment.session.day != self.__current_day:
+                self.__attendance_table.append([False, [list(calendar.day_name)[assignment.session.day], "", "", ""]])
+                self.__current_day = assignment.session.day
+
+            # Table: Assignment
+            self.__attendance_table.append(data.table)
+
+        # Calculate overall tardiness
+        self.__attendance_in_diff_avg = (sum(self.__attendance_in_diff) / len(self.__attendance_in_diff)) \
+            if self.__attendance_in_diff else 0
+        self.__attendance_out_diff_avg = (sum(self.__attendance_out_diff) / len(self.__attendance_out_diff)) \
+            if self.__attendance_out_diff else 0
+
+        # Default word-y stats
+        self.__attendance_stat = "No attendance records found for your user."
+        self.__punctuality_stat = "No attendance records found for your user."
+
+        # Proper word-y stats if has attendance
+        if self.__attendance_total != 0:
+            # Attendance stats
+            self.__attendance_stat = "<b>{:.2f}%</b> - {:,}/{:,} assigned sessions attended.".format(
+                (self.__attendance_present / self.__attendance_total) * 100, self.__attendance_present,
+                self.__attendance_total)
+
+            # Punctuality stats
+            self.__punctuality_stat = "<b>{:,.0f} minute{} {} sign in avg.</b> - Signed out {:,.0f} minute{} {} avg." \
+                                      "<br/><b>In on time (or early) {:.2f}%</b> - Out on time {:.2f}%".format(
+                abs(self.__attendance_in_diff_avg),
+                Utils.unit_s(abs(self.__attendance_in_diff_avg)),
+                "late" if self.__attendance_in_diff_avg >= 0 else "early",
+
+                abs(self.__attendance_out_diff_avg),
+                Utils.unit_s(abs(self.__attendance_out_diff_avg)),
+                "late" if self.__attendance_out_diff_avg > 0 else "early",
+
+                (self.__attendance_in_on_time / self.__attendance_total) * 100,
+                (self.__attendance_out_on_time / self.__attendance_total) * 100,
+            )
+
+        # Present/Absence percentages
+        self.__attendance_present = (self.__attendance_present / self.__attendance_total) * 100 \
+            if self.__attendance_total else 0
+        self.__attendance_absent = (self.__attendance_absent / self.__attendance_total) * 100 \
+            if self.__attendance_total else 0
+
+        # Store into class
+        self.attendance = self.__attendance_stat
+        self.punctuality = self.__punctuality_stat
+        self.present = self.__attendance_present
+        self.absent = self.__attendance_absent
+        self.table = self.__attendance_table
+
+
+# Attendance Home
+@attendance.route('/', methods=['GET'])
+def home():
+    user, error = auth_check()
     if error:
         return error
 
-    data = [f for f in Assignment.query.filter_by(user_id=student.id).all() if not f.session.archived]
-    breakdown = []
+    table = []
 
-    # Totals data
-    attendance_total = 0
-    attendance_present = 0
-    attendance_absent = 0
-    attendance_in_diff = []
-    attendance_in_on_time = 0
-    attendance_out_diff = []
-    attendance_out_on_time = 0
-    attendance_table = []
-    current_day = None
+    return render_template("attendance/home.jinja2", attendance_table=[])
 
-    # Compile assignment attendance data
-    for assignment in data:
-        this_attendance = [f for f in assignment.attendance if not f[1] or (f[1] and not f[1].current)]
-        this_total = len(this_attendance)
-        this_present = sum(1 for f in this_attendance if f[1])
-        this_absent = this_total - this_present
 
-        this_in_diff = [f[1].in_diff for f in this_attendance if f[1]]
-        this_in_diff_avg = (sum(this_in_diff) / len(this_in_diff)) if this_in_diff else 0
-        this_in_on_time = sum(1 for f in this_attendance if f[1] and f[1].in_diff < 1)
+# Student overview
+@attendance.route('/student/<int:student_id>', methods=['GET'])
+def student(student_id: int):
+    this_student = User.query.filter_by(id=student_id).first()
+    if not this_student:
+        return
+        # return redirect(url_for('attendance.home'))
 
-        this_out_diff = [f[1].out_diff for f in this_attendance if f[1]]
-        this_out_diff_avg = (sum(this_out_diff) / len(this_out_diff)) if this_out_diff else 0
-        this_out_on_time = sum(1 for f in this_attendance if f[1] and (not f[1].out_time or f[1].out_diff > -1))
+    user, error = auth_check(this_student.id)
+    if error:
+        return error
 
-        # Totals data
-        attendance_total += this_total
-        attendance_present += this_present
-        attendance_absent += this_absent
-        attendance_in_diff.extend(this_in_diff)
-        attendance_in_on_time += this_in_on_time
-        attendance_out_diff.extend(this_out_diff)
-        attendance_out_on_time += this_out_on_time
-
-        # Individual assignment data
-        this = [this_total, this_present, this_absent,
-                this_in_diff, this_in_diff_avg, this_in_on_time,
-                this_out_diff, this_out_diff_avg, this_out_on_time]
-        breakdown.append(this)
-
-        # Day subheadings
-        if assignment.session.day != current_day:
-            attendance_table.append([False, [list(calendar.day_name)[assignment.session.day], "", "", ""]])
-            current_day = assignment.session.day
-
-        # Table breakdown
-        attendance_table.append([
-            False,
-            [
-                assignment.session.start_time_frmt,
-                assignment.session.end_time_frmt,
-                "{:.2f}% ({:,}/{:,})".format(
-                    (this_present / this_total) * 100, this_present, this_total
-                ) if this_total else "No attendance records",
-                "In: {:,.0f} minute{} {} / Out: {:,.0f} minute{} {}"
-                "<br/>In on time: {:.2f}% / Out on time: {:.2f}%".format(
-                    abs(this_in_diff_avg),
-                    Utils.unit_s(abs(this_in_diff_avg)),
-                    "late" if this_in_diff_avg >= 0 else "early",
-
-                    abs(this_out_diff_avg),
-                    Utils.unit_s(abs(this_out_diff_avg)),
-                    "late" if this_out_diff_avg > 0 else "early",
-
-                    (this_in_on_time / this_total) * 100,
-                    (this_out_on_time / this_total) * 100,
-                ) if this_total else "No attendance records"
-            ]
-        ])
-
-    attendance_in_diff_avg = (sum(attendance_in_diff) / len(attendance_in_diff)) if attendance_in_diff else 0
-    attendance_out_diff_avg = (sum(attendance_out_diff) / len(attendance_out_diff)) if attendance_out_diff else 0
-
-    attendance_stat = "No attendance records found for your user."
-    punctuality_stat = "No attendance records found for your user."
-    if attendance_total != 0:
-        attendance_stat = "<b>{:.2f}%</b> - {:,}/{:,} assigned sessions attended ({:,} absent).".format(
-            (attendance_present / attendance_total) * 100,
-            attendance_present, attendance_total, attendance_absent
-        )
-        punctuality_stat = "<b>{:,.0f} minute{} {} sign in avg.</b> - Signed out {:,.0f} minute{} {} avg." \
-                           "<br/><b>In on time (or early) {:.2f}%</b> - Out on time {:.2f}%".format(
-            abs(attendance_in_diff_avg),
-            Utils.unit_s(abs(attendance_in_diff_avg)),
-            "late" if attendance_in_diff_avg >= 0 else "early",
-
-            abs(attendance_out_diff_avg),
-            Utils.unit_s(abs(attendance_out_diff_avg)),
-            "late" if attendance_out_diff_avg > 0 else "early",
-
-            (attendance_in_on_time / attendance_total) * 100,
-            (attendance_out_on_time / attendance_total) * 100,
-        )
-
-    attendance_present = (attendance_present / attendance_total) * 100 if attendance_total else 0
-    attendance_absent = (attendance_absent / attendance_total) * 100 if attendance_total else 0
-
-    return render_template("attendance/student.jinja2", student=student, attendance_stat=attendance_stat,
-                           punctuality_stat=punctuality_stat, attendance_table=attendance_table,
-                           attendance_present=attendance_present, attendance_absent=attendance_absent)
+    report = StudentReport(this_student.id)
+    return render_template("attendance/student.jinja2", student=this_student, report=report)
