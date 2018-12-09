@@ -162,12 +162,20 @@ class StudentReport:
         self.__attendance_absent = (self.__attendance_absent / self.__attendance_total) * 100 \
             if self.__attendance_total else 0
 
+        # Attendance bar
+        self.__attendance_bar = "<div class=\"stat-bar\">" \
+                                "<span class=\"success\" style=\"width: {}%;\"></span>" \
+                                "<span class=\"danger\" style=\"width: {}%;\"></span>" \
+                                "</div>".format(self.__attendance_present,
+                                                self.__attendance_absent if self.__attendance_total else 0)
+
         # Store into class
         self.attendance = self.__attendance_stat
         self.punctuality = self.__punctuality_stat
         self.present = self.__attendance_present
         self.absent = self.__attendance_absent
         self.table = self.__attendance_table
+        self.attendance_bar = self.__attendance_bar
 
 
 # Attendance Home

@@ -15,10 +15,7 @@
             <div class="one-third column">
                 <h4>Attendance</h4>
                 <p class="mb-2">{{ report.attendance }}</p>
-                <div class="stat-bar mb-2">
-                    <span class="success" style="width: {{ report.present }}%;"></span>
-                    <span class="danger" style="width: {{ report.absent }}%;"></span>
-                </div>
+                <div class="mb-2">{{ report.attendance_bar }}</div>
 
                 <h4>Punctuality</h4>
                 <p>{{ report.punctuality }}</p>
