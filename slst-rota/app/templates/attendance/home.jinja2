@@ -1,21 +1,20 @@
 {% extends "app/base.jinja2" %}
 
-{% block title %}Student Attendance{% endblock %}
+{% block title %}All Students Attendance{% endblock %}
 
 {% block body %}
     <div class="container">
         <div class="row">
             <div class="twelve columns">
                 <h1 class="mt-4">
-                    Student Attendance Overview
+                    All Students Attendance
                 </h1>
             </div>
         </div>
         <div class="row">
-            <div class="two-thirds column">
-                <h4 class="mb-0">Attendance breakdown</h4>
+            <div class="column">
                 {% from "app/macros/table.jinja2" import render_table with context %}
-                {{ render_table(["Student", "Attendance", "Punctuality"], attendance_table) }}
+                {{ render_table(["Student", "Attendance", "Punctuality", ""], attendance_table) }}
             </div>
         </div>
     </div>

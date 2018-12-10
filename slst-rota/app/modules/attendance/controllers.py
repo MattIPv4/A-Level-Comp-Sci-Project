@@ -186,14 +186,27 @@ def home():
         return error
 
     table = []
+    students = User.query.filter_by(auth_level=1, disabled=0).all()
+    for this_student in students:
+        report = StudentReport(this_student.id)
+        table.append([
+            (report.present < 75),
+            [
+                this_student.username,
+                report.attendance_bar + "\n" + report.attendance,
+                report.punctuality,
+                "<a href=\"{}\" class=\"button primary\">View full report</a>".format(
+                    url_for("attendance.student", student_id=this_student.id))
+            ]
+        ])
 
-    return render_template("attendance/home.jinja2", attendance_table=[])
+    return render_template("attendance/home.jinja2", attendance_table=table)
 
 
 # Student overview
 @attendance.route('/student/<int:student_id>', methods=['GET'])
 def student(student_id: int):
-    this_student = User.query.filter_by(id=student_id).first()
+    this_student = User.query.filter_by(auth_level=1, id=student_id).first()
     if not this_student:
         return
         # return redirect(url_for('attendance.home'))
