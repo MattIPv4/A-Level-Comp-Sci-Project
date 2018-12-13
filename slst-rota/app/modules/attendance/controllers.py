@@ -186,9 +186,11 @@ def home():
         return error
 
     table = []
+    session_data = {}
     students = User.query.filter_by(auth_level=1, disabled=0).all()
     for this_student in students:
         report = StudentReport(this_student.id)
+        # Generate table
         table.append([
             (report.present < 75),
             [
@@ -199,6 +201,16 @@ def home():
                     url_for("attendance.student", student_id=this_student.id))
             ]
         ])
+        # Compile session data
+        for assignment in report.breakdown:
+            # Get raw assignment
+            assignment_raw = assignment.assignment
+            # Added to session_data if not there
+            if assignment_raw.session.id not in session_data:
+                session_data[assignment_raw.session.id] = [assignment_raw.session, 0, 0]  # session, present, total
+            # Update with present and total from this assignment
+            session_data[assignment_raw.session.id][1] += assignment.present
+            session_data[assignment_raw.session.id][2] += assignment.total
 
     return render_template("attendance/home.jinja2", attendance_table=table)
 
