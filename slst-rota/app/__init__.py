@@ -1,3 +1,4 @@
+import json  # JSON
 from datetime import datetime  # Datetime
 from typing import Union, Tuple  # Typing
 
@@ -87,7 +88,8 @@ db.create_all()
 def variables() -> dict:
     __a = [
         datetime,
-        auth
+        auth,
+        json
     ]  # Convince pycharm things are used (and stop warnings)
     return dict(**globals())
 

@@ -1,0 +1,18 @@
+<script type="text/javascript">
+{% macro render_chart(id, title, type, data_points) %}
+    const {{ id }}_CanvasJSChart = new CanvasJS.Chart("{{ id }}", {
+        theme: "dark2",
+        animationEnabled: true,
+        title: {
+            text: "{{ title }}"
+        },
+        data: [
+            {
+                type: "{{ type }}",
+                dataPoints: {{ json.dumps(data_points)|safe }}
+            }
+        ]
+    });
+    {{ id }}_CanvasJSChart.render();
+{% endmacro %}
+</script>
