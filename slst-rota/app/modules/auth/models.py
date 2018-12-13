@@ -1,8 +1,8 @@
-from app import db, Base_Model  # DB
+from app import db, BaseModel  # DB
 
 
 # Define a User model
-class User(Base_Model):
+class User(BaseModel):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)

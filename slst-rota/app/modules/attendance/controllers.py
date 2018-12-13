@@ -212,7 +212,13 @@ def home():
             session_data[assignment_raw.session.id][1] += assignment.present
             session_data[assignment_raw.session.id][2] += assignment.total
 
-    return render_template("attendance/home.jinja2", attendance_table=table)
+    # Generate chart
+    chart = []
+    for data in session_data.values():
+        chart.append({"label": "{0.day_frmt} {0.start_time_frmt}-{0.end_time_frmt}".format(data[0]),
+                      "y": data[1] / data[2] * 100})
+
+    return render_template("attendance/home.jinja2", attendance_table=table, session_attendnace=chart)
 
 
 # Student overview

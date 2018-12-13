@@ -3,11 +3,11 @@ from datetime import timedelta, datetime, date  # Times
 from typing import Union, Callable, List, Tuple  # Typing
 from flask import escape  # Escape
 
-from app import db, Base_Model, Utils  # DB
+from app import db, BaseModel, Utils  # DB
 
 
 # Define a Session model
-class Session(Base_Model):
+class Session(BaseModel):
     __tablename__ = 'sessions'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -51,7 +51,7 @@ class Session(Base_Model):
 
 
 # Define an Assignment model
-class Assignment(Base_Model):
+class Assignment(BaseModel):
     __tablename__ = 'assignments'
 
     user_id = db.Column(
@@ -126,7 +126,7 @@ def session_to_rota_view(session: Session, highlight_check: Union[Callable, None
 
 
 # Define an Unavailability model
-class Unavailability(Base_Model):
+class Unavailability(BaseModel):
     __tablename__ = 'unavailabilities'
 
     user_id = db.Column(
@@ -159,7 +159,7 @@ class Unavailability(Base_Model):
 
 
 # Define an Attendance model
-class Attendance(Base_Model):
+class Attendance(BaseModel):
     __tablename__ = 'attendance'
 
     id = db.Column(db.Integer, primary_key=True)

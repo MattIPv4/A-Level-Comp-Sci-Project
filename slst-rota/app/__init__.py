@@ -40,7 +40,7 @@ Session.configure(bind=engine)
 
 
 # Base model for other database tables to inherit
-class Base_Model(db.Model):
+class BaseModel(db.Model):
     __abstract__ = True
 
 
@@ -124,6 +124,10 @@ def index():
     # Student index
     if user and user.auth_level == 1:
         return redirect(url_for("student.home"))
+
+    # Staff index
+    if user and user.auth_level == 2:
+        return redirect(url_for("attendance.home"))
 
     # Normal index
     return render_template("index.jinja2")

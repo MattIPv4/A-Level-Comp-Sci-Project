@@ -5,21 +5,34 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="twelve columns">
+            <div class="eight columns">
+                <h3 class="mt-2">
+                    Attendance per Session (%)
+                </h3>
                 <div id="session_attendance_chart" style="height: 370px; width: 100%;"></div>
             </div>
-        </div>
-        <div class="row">
-            <div class="twelve columns">
-                <h2 class="mt-4">
-                    All Students Attendance
-                </h2>
+            <div class="four columns">
+                <h5 class="mt-4">Quick Access</h5>
+
+                <div class="mt-4">
+                    <a href="{{ url_for("staff.rota") }}" class="button button-primary">Rota Management</a>
+                    <a href="{{ url_for("staff.rota_new") }}" class="button">Create Rota Session</a>
+                </div>
+
+                <div class="mt-4">
+                    <a href="{{ url_for("staff.accounts") }}" class="button button-primary">Account Management</a>
+                    <a href="{{ url_for("staff.new_account") }}" class="button">Create New Account</a>
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="column">
+                <h2 class="mt-4">
+                    All Students Attendance
+                </h2>
                 {% from "app/macros/table.jinja2" import render_table with context %}
                 {{ render_table(["Student", "Attendance", "Punctuality", ""], attendance_table) }}
+                <p>Students with attendance below 75% are highlighted.</p>
             </div>
         </div>
     </div>
@@ -30,7 +43,7 @@
     <script type="text/javascript">
         window.onload = function () {
             {% from "app/macros/chart.jinja2" import render_chart with context %}
-            {{ render_chart("session_attendance_chart", "Test", "column", [{"label": "test", "y": 10}]) }}
-        }
+            {{ render_chart("session_attendance_chart", "", "column", session_attendnace, {"axisY":{"minimum":0,"maximum":100}}) }}
+        };
     </script>
 {% endblock %}
