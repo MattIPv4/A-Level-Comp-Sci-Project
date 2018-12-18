@@ -12,14 +12,21 @@
                 <div id="session_attendance_chart" style="height: 370px; width: 100%;"></div>
             </div>
             <div class="four columns">
-                <h5 class="mt-4">Quick Access</h5>
+                <h5 class="mt-4 mb-0">Welcome to the {{ app.name }}, {{ auth.current_user().username }}</h5>
 
-                <div class="mt-4">
+                <p class="mt-2 mb-0">
+                    This page contains an overview of student attendance for the rota.
+                    Use the buttons below or the navigation bar to access other parts of the system.
+                </p>
+
+                <h5 class="mt-4 mb-0">Quick Access</h5>
+
+                <div class="mt-4 mb-0">
                     <a href="{{ url_for("staff.rota") }}" class="button button-primary">Rota Management</a>
                     <a href="{{ url_for("staff.rota_new") }}" class="button">Create Rota Session</a>
                 </div>
 
-                <div class="mt-4">
+                <div class="mt-2 mb-0">
                     <a href="{{ url_for("staff.accounts") }}" class="button button-primary">Account Management</a>
                     <a href="{{ url_for("staff.new_account") }}" class="button">Create New Account</a>
                 </div>

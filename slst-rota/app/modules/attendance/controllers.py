@@ -2,10 +2,10 @@ import calendar  # Calendar
 
 from flask import Blueprint, redirect, url_for, render_template  # Flask
 
-from app import error_render, Utils  # DB, Errors, Utils
+from app import error_render, Utils, db_session  # DB, Errors, Utils
 from app.modules import auth  # Auth
 from app.modules.auth.models import User  # User
-from app.modules.student.models import Assignment  # Rota Sessions
+from app.modules.student.models import Assignment, Attendance  # Rota Sessions
 
 # Blueprint
 __a = [
@@ -233,5 +233,53 @@ def student(student_id: int):
     if error:
         return error
 
+    # Fetch report
     report = StudentReport(this_student.id)
-    return render_template("attendance/student.jinja2", student=this_student, report=report)
+
+    # Generate table data
+    graph = []
+    for assignment in report.breakdown:
+        pass
+
+    return render_template("attendance/student.jinja2", student=this_student, report=report, graph=graph)
+
+
+# Generate attendance test data based on current assignments
+@attendance.route('/test', methods=['GET'])
+def test():
+    import random
+    students = User.query.filter_by(auth_level=1, disabled=0).all()
+    for this_student in students:
+        report = StudentReport(this_student.id)
+        for assignment in report.breakdown:
+            for att in assignment.attendance:
+                # If has attendance already ignore
+                if not att[1]:
+                    # Decide if should have attended (3/4)
+                    if random.randint(0, 3) != 0:
+                        # Create attendance from session
+                        session = db_session()
+                        att_entry = Attendance.from_session(this_student.id, assignment.assignment.session)
+
+                        # Override today's date with attendance date
+                        att_entry.date = att[0]
+
+                        # Set the in_time, make early/late for 1/4
+                        in_offset = 0
+                        if random.randint(0, 3) == 0:
+                            in_offset = random.randint(-5, 10)
+                        att_entry.in_time = Utils.minutes_date(att[0],
+                                                               assignment.assignment.session.start_time + in_offset)
+                        att_entry.in_time_org = Utils.minutes_date(att[0], assignment.assignment.session.start_time)
+
+                        # Set the out_time, make early/late for 1/4
+                        out_offset = 0
+                        if random.randint(0, 3) == 0:
+                            out_offset = random.randint(-10, 0)
+                        att_entry.out_time = Utils.minutes_date(att[0],
+                                                                assignment.assignment.session.end_time + out_offset)
+                        att_entry.out_time_org = Utils.minutes_date(att[0], assignment.assignment.session.end_time)
+
+                        # Save
+                        session.add(att_entry)
+                        session.commit()

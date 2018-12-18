@@ -67,9 +67,9 @@ class Utils:
                "{}: {}".format(code, Utils.statusMessageData[str(code)]['message'])
 
     @staticmethod
-    def minutes_datetime(datetime: datetime) -> float:
-        mid = datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-        seconds = (datetime - mid).total_seconds()
+    def minutes_datetime(the_datetime: datetime) -> float:
+        mid = the_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        seconds = (the_datetime - mid).total_seconds()
         return seconds / 60
 
     @staticmethod
@@ -80,7 +80,13 @@ class Utils:
     def minutes_today(minutes: float) -> datetime:
         now = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         td = timedelta(minutes=minutes)
-        return (now + td)
+        return now + td
+
+    @staticmethod
+    def minutes_date(the_date: date, minutes: float) -> datetime:
+        the_date = datetime.combine(the_date, datetime.min.time())
+        td = timedelta(minutes=minutes)
+        return the_date + td
 
     @staticmethod
     def date() -> date:
@@ -91,6 +97,6 @@ class Utils:
         return "" if value == 1 else "s"
 
     @staticmethod
-    def log(type: str, *args, **kwargs):
+    def log(log_type: str, *args, **kwargs):
         now = "[{0.hour:02d}:{0.minute:02d}:{0.second:02d}]".format(datetime.now())
-        print("{} [{}]".format(now, type), *args, **kwargs)
+        print("{} [{}]".format(now, log_type), *args, **kwargs)
