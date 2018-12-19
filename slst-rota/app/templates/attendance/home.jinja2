@@ -50,7 +50,7 @@
     <script type="text/javascript">
         window.onload = function () {
             {% from "app/macros/chart.jinja2" import render_chart with context %}
-            {{ render_chart("session_attendance_chart", "", "column", session_attendnace, {"axisY":{"minimum":0,"maximum":100}}) }}
+            {{ render_chart("session_attendance_chart", "", session_attendnace, chart_extras) }}
         };
     </script>
 {% endblock %}

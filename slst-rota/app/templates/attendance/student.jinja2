@@ -12,19 +12,31 @@
             </div>
         </div>
         <div class="row">
-            <div class="one-third column">
+            <div class="five columns">
                 <h4>Attendance</h4>
                 <p class="mb-2">{{ report.attendance }}</p>
                 <div class="mb-2">{{ report.attendance_bar }}</div>
 
                 <h4>Punctuality</h4>
                 <p>{{ report.punctuality }}</p>
+
+                <div id="assignment_diff_chart" class="mt-4" style="height: 370px; width: 100%;"></div>
             </div>
-            <div class="two-thirds column">
+            <div class="seven columns">
                 <h4 class="mb-0">Attendance breakdown</h4>
                 {% from "app/macros/table.jinja2" import render_table with context %}
                 {{ render_table(["Start Time", "End Time", "Attendance", "Punctuality"], report.table) }}
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="/static/canvasjs-2.2/canvasjs.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            {% from "app/macros/chart.jinja2" import render_chart with context %}
+            {{ render_chart("assignment_diff_chart", "", graph) }}
+        };
+    </script>
 {% endblock %}

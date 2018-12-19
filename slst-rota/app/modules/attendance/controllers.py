@@ -218,7 +218,9 @@ def home():
         chart.append({"label": "{0.day_frmt} {0.start_time_frmt}-{0.end_time_frmt}".format(data[0]),
                       "y": data[1] / data[2] * 100})
 
-    return render_template("attendance/home.jinja2", attendance_table=table, session_attendnace=chart)
+    return render_template("attendance/home.jinja2", attendance_table=table,
+                           session_attendnace=[{"type": "column", "dataPoints": chart}],
+                           chart_extras={"axisY": {"minimum": 0, "maximum": 100}})
 
 
 # Student overview
@@ -236,10 +238,22 @@ def student(student_id: int):
     # Fetch report
     report = StudentReport(this_student.id)
 
-    # Generate table data
-    graph = []
+    # Generate graph data
+    graph = [{
+        "type": "scatter",
+        "legendText": "Sign in difference average (minutes)",
+        "dataPoints": []
+    }, {
+        "type": "scatter",
+        "legendText": "Sign out difference average (minutes)",
+        "dataPoints": []
+    }]
     for assignment in report.breakdown:
-        pass
+        label = "{0.day_frmt} {0.start_time_frmt}-{0.end_time_frmt}".format(assignment.assignment.session)
+        # In time diff
+        graph[0]["dataPoints"].append({"label": label, "y": assignment.in_diff_avg})
+        # Out time diff
+        graph[1]["dataPoints"].append({"label": label, "y": assignment.out_diff_avg})
 
     return render_template("attendance/student.jinja2", student=this_student, report=report, graph=graph)
 
