@@ -20,7 +20,9 @@
                 <h4>Punctuality</h4>
                 <p>{{ report.punctuality }}</p>
 
-                <div id="assignment_diff_chart" class="mt-4" style="height: 370px; width: 100%;"></div>
+                <div class="chart mt-4">
+                    <div id="assignment_diff_chart" style="height: 370px; width: 100%;"></div>
+                </div>
             </div>
             <div class="seven columns">
                 <h4 class="mb-0">Attendance breakdown</h4>
@@ -36,7 +38,7 @@
     <script type="text/javascript">
         window.onload = function () {
             {% from "app/macros/chart.jinja2" import render_chart with context %}
-            {{ render_chart("assignment_diff_chart", "", graph) }}
+            {{ render_chart("assignment_diff_chart", "", graph, graph_extra) }}
         };
     </script>
 {% endblock %}

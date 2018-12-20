@@ -220,7 +220,7 @@ def home():
 
     return render_template("attendance/home.jinja2", attendance_table=table,
                            session_attendnace=[{"type": "column", "dataPoints": chart}],
-                           chart_extras={"axisY": {"minimum": 0, "maximum": 100}})
+                           chart_extras={"axisY": {"minimum": 0, "maximum": 100, "suffix": "%"}})
 
 
 # Student overview
@@ -242,10 +242,12 @@ def student(student_id: int):
     graph = [{
         "type": "scatter",
         "legendText": "Sign in difference average (minutes)",
+        "showInLegend": True,
         "dataPoints": []
     }, {
         "type": "scatter",
         "legendText": "Sign out difference average (minutes)",
+        "showInLegend": True,
         "dataPoints": []
     }]
     for assignment in report.breakdown:
@@ -255,7 +257,8 @@ def student(student_id: int):
         # Out time diff
         graph[1]["dataPoints"].append({"label": label, "y": assignment.out_diff_avg})
 
-    return render_template("attendance/student.jinja2", student=this_student, report=report, graph=graph)
+    return render_template("attendance/student.jinja2", student=this_student, report=report, graph=graph,
+                           graph_extra={"axisY": {"title": "Minutes difference (average)", "titleFontSize": 15}})
 
 
 # Generate attendance test data based on current assignments
