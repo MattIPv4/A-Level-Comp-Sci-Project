@@ -13,6 +13,8 @@
     <meta name="description" content="{{ app.name }} - {{ self.title() }} - {{ app.description }}"/>
     <link href="/static/css/main.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous"/>
 
     <!-- Social -->
     <!-- Social: Twitter -->
@@ -51,9 +53,7 @@
 {% include 'app/footer.jinja2' %}
 
 <script src="/static/js/jquery.min.js"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
-        integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
-        crossorigin="anonymous"></script>
 {% block extra_js %}{% endblock %}
+
 </body>
 </html>

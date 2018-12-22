@@ -6,13 +6,15 @@
                 {{ app.name }}
             </a>
 
-            <a class="item" href="{{ url_for('index') }}">Home</a>
+            <a class="item" href="{{ url_for('index') }}">
+                <i class="fas fa-igloo"></i> Home
+            </a>
 
             {% if this_user and this_user.auth_level == 1 %}
                 {# Student #}
                 <span class="dropdown">
                     <a class="droptitle" href="{{ url_for('student.rota') }}">
-                        Rota <i class="fas fa-angle-right"></i>
+                        <i class="fas fa-calendar-alt"></i> Rota <i class="fas fa-angle-right"></i>
                     </a>
                     <span class="drop">
                         <a class="item" href="{{ url_for('student.rota') }}">Personal Rota</a>
@@ -20,13 +22,17 @@
                     </span>
                 </span>
 
-                <a class="item" href="{{ url_for('student.unavailability') }}">Unavailability</a>
-                <a class="item" href="{{ url_for('attendance.student', student_id=this_user.id) }}">Attendance</a>
+                <a class="item" href="{{ url_for('student.unavailability') }}">
+                    <i class="fas fa-comment-alt"></i> Unavailability
+                </a>
+                <a class="item" href="{{ url_for('attendance.student', student_id=this_user.id) }}">
+                    <i class="fas fa-clipboard-list"></i> Attendance
+                </a>
             {% elif this_user and this_user.auth_level == 2 %}
                 {# Staff #}
                 <span class="dropdown">
                     <a class="droptitle" href="{{ url_for('staff.accounts') }}">
-                        Accounts <i class="fas fa-angle-right"></i>
+                        <i class="fas fa-users"></i> Accounts <i class="fas fa-angle-right"></i>
                     </a>
                     <span class="drop">
                         <a class="item" href="{{ url_for('staff.accounts') }}">All Accounts</a>
@@ -36,7 +42,7 @@
 
                 <span class="dropdown">
                     <a class="droptitle" href="{{ url_for('staff.rota') }}">
-                        Rota Management <i class="fas fa-angle-right"></i>
+                        <i class="fas fa-calendar-alt"></i> Rota Management <i class="fas fa-angle-right"></i>
                     </a>
                     <span class="drop">
                         <a class="item" href="{{ url_for('staff.rota') }}">Full Student Rota</a>
@@ -49,9 +55,8 @@
                 {% if this_user %}
                     <span class="dropdown">
                         <a class="droptitle" href="{{ url_for('auth.account') }}">
-                            {{ this_user.username }}
-                            {{ this_user.auth_label }}
-                            <i class="fas fa-angle-right"></i>
+                            <i class="fas fa-user"></i> {{ this_user.username }}
+                            {{ this_user.auth_label }} <i class="fas fa-angle-right"></i>
                         </a>
                         <span class="drop">
                             <a class="item" href="{{ url_for('auth.account') }}">Account</a>
@@ -59,7 +64,9 @@
                         </span>
                     </span>
                 {% else %}
-                    <a class="item" href="{{ url_for('auth.login') }}">Login</a>
+                    <a class="item" href="{{ url_for('auth.login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
                 {% endif %}
             </span>
         </div>

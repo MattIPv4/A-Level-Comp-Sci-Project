@@ -5,13 +5,20 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <h2>
-                Sadly we've encountered an error... {{ error_message }}
-                <br/>
-                <small>{{ error_details }}</small>
-                <br/>
-                <small>{{ error_extra }}</small>
-            </h2>
+            <div class="media">
+                <div class="left">
+                    <h1><i class="fas fa-exclamation-triangle"></i></h1>
+                </div>
+                <div class="main">
+                    <h2>
+                        Sadly we've encountered an error... {{ error_message }}
+                        <br/>
+                        <small>{{ error_details }}</small>
+                        <br/>
+                        <small>{{ error_extra }}</small>
+                    </h2>
+                </div>
+            </div>
 
             <a class="button primary mt-2" href="{{ url_for('index') }}">Head to Safety - Home</a>
         </div>

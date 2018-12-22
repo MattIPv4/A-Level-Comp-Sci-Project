@@ -1,0 +1,25 @@
+.media {
+  display: flex;
+  flex-direction: row;
+
+  .left, .main, .right {
+    padding: .5em;
+  }
+
+  .left {
+    align-self: flex-start;
+    flex-grow: 0;
+    margin-right: .5em;
+  }
+
+  .main {
+    align-self: center;
+    flex-grow: 1;
+  }
+
+  .right {
+    align-self: flex-end;
+    flex-grow: 0;
+    margin-left: .5em;
+  }
+}
