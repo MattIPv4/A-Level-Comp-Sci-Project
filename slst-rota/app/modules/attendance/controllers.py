@@ -197,8 +197,8 @@ def home():
                 this_student.username,
                 report.attendance_bar + "\n" + report.attendance,
                 report.punctuality,
-                "<a href=\"{}\" class=\"button primary\">View full report</a>".format(
-                    url_for("attendance.student", student_id=this_student.id))
+                "<a href=\"{}\" class=\"button primary\"><i class=\"fas fa-lg fa-clipboard-list\"></i> View full report"
+                "</a>".format(url_for("attendance.student", student_id=this_student.id))
             ]
         ])
         # Compile session data

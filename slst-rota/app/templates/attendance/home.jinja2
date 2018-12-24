@@ -25,13 +25,21 @@
                 <h5 class="mt-4 mb-0">Quick Access</h5>
 
                 <div class="mt-4 mb-0">
-                    <a href="{{ url_for("staff.rota") }}" class="button button-primary">Rota Management</a>
-                    <a href="{{ url_for("staff.rota_new") }}" class="button">Create Rota Session</a>
+                    <a href="{{ url_for("staff.rota") }}" class="button button-primary">
+                        <i class="fas fa-lg fa-calendar-alt"></i> Rota Management
+                    </a>
+                    <a href="{{ url_for("staff.rota_new") }}" class="button">
+                        <i class="fas fa-lg fa-calendar-plus"></i> Create Rota Session
+                    </a>
                 </div>
 
                 <div class="mt-2 mb-0">
-                    <a href="{{ url_for("staff.accounts") }}" class="button button-primary">Account Management</a>
-                    <a href="{{ url_for("staff.new_account") }}" class="button">Create New Account</a>
+                    <a href="{{ url_for("staff.accounts") }}" class="button button-primary">
+                        <i class="fas fa-lg fa-users"></i> Account Management
+                    </a>
+                    <a href="{{ url_for("staff.new_account") }}" class="button">
+                        <i class="fas fa-lg fa-user-plus"></i> Create New Account
+                    </a>
                 </div>
             </div>
         </div>
