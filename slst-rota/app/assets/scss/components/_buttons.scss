@@ -26,6 +26,13 @@
     padding: 0 1em;
   }
 
+  &.larger {
+    font-size: 17px; // 13 + x
+    padding: 0 34px; // 30 + x
+    height: 46px; // 38 + (x * 2)
+    line-height: 46px; // 38 + (x * 2)
+  }
+
   &:hover,
   &:focus {
     border-color: darken($white, 30%);

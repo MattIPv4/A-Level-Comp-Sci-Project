@@ -142,7 +142,8 @@ def accounts():
                 item.username,
                 "{} ({})".format(item.auth_label, item.auth_level),
                 "Yes" if item.disabled == 1 else "No",
-                "<a href='{}' class='button'>Edit</a>".format(url_for("auth.account", id=item.id))
+                "<a href='{}' class='button'><i class=\"fas fa-lg fa-user-edit\"></i> Edit</a>".format(
+                    url_for("auth.account", id=item.id))
             ]
         ])
 
@@ -224,10 +225,10 @@ def rota():
                 session.end_time_frmt,
                 ", ".join(
                     [f.user.username for f in session.assignments if not f.removed and not f.user.disabled]) or "None",
-                "<a href='{}' class='button'>Edit Session</a>".format(
-                    url_for("staff.rota_edit_session", id=session.id)) +
-                " &nbsp; <a href='{}' class='button'>Update Assignments</a>".format(
-                    url_for("staff.rota_edit_assignments", id=session.id))
+                "<a href='{}' class='button'><i class=\"fas fa-lg fa-edit\"></i> Edit Session</a>"
+                "".format(url_for("staff.rota_edit_session", id=session.id)) +
+                " &nbsp; <a href='{}' class='button'><i class=\"fas fa-lg fa-users-cog\"></i> Update Assignments</a>"
+                "".format(url_for("staff.rota_edit_assignments", id=session.id))
             ]
         ])
 
