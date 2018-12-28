@@ -148,7 +148,8 @@ def rota():
         rota_data.append(session_to_rota_view(session, lambda a: a.session.day == datetime.today().weekday()))
 
     return render_template("student/rota.jinja2", title="Rota view for {}".format(user.username),
-                           rota_data=rota_data, show_rota_full=True)
+                           rota_data=rota_data, show_rota_full=True,
+                           has_highlighted=bool(sum([f[0] for f in rota_data])))
 
 
 # Full Rota
@@ -172,7 +173,8 @@ def rota_full():
         rota_data.append(session_to_rota_view(session, lambda a: a.user.id == user.id))
 
     return render_template("student/rota.jinja2", title="Full rota view",
-                           rota_data=rota_data, show_rota_full=False)
+                           rota_data=rota_data, show_rota_full=False,
+                           has_highlighted=bool(sum([f[0] for f in rota_data])))
 
 
 # Unavailability
@@ -206,8 +208,8 @@ def unavailability():
                 session.end_time_frmt,
                 "Yes" if user.id in [f.user.id for f in session.unavailabilities] else "No",
                 "Currently assigned, unable to update." if assigned else
-                '<a class="button primary mbt-0" href="{}">Update unavailability</a>'.format(
-                    url_for('student.unavailability_edit', id=session.id))
+                '<a class="button primary mbt-0" href="{}"><i class="fas fa-lg fa-edit"></i> Update unavailability</a>'
+                ''.format(url_for('student.unavailability_edit', id=session.id))
             ]
         ])
 

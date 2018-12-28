@@ -20,8 +20,12 @@
                 {% else %}
                     <h4>No sessions assigned to your user</h4>
                 {% endif %}
-                <a href="{{ url_for("student.rota") }}" class="button primary mt-1">View personal rota</a>
-                <a href="{{ url_for("student.rota_full") }}" class="button mt-1">View full rota</a>
+                <a href="{{ url_for("student.rota") }}" class="button primary mt-1">
+                    <i class="fas fa-lg fa-calendar-day"></i> View personal rota
+                </a>
+                <a href="{{ url_for("student.rota_full") }}" class="button mt-1">
+                    <i class="fas fa-lg fa-calendar-alt"></i> View full rota
+                </a>
             </div>
             <div class="one-third column">
                 {% if session_is_current %}
@@ -47,7 +51,9 @@
                         <p>{{ unavailability_stat }}</p>
                     </div>
                     <div class="one-half column">
-                        <a href="{{ url_for("student.unavailability") }}" class="button mt-1">Manage unavailability</a>
+                        <a href="{{ url_for("student.unavailability") }}" class="button mt-1">
+                            <i class="fas fa-comment-alt"></i> Manage unavailability
+                        </a>
                     </div>
                 </div>
             </div>

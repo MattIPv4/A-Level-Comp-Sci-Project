@@ -1,5 +1,5 @@
-{% macro render_table(headings, data) %}
-    <table class="u-full-width">
+{% macro render_table(headings, data, initial_sort_column = "") %}
+    <table class="u-full-width" data-sort-initial="{{ initial_sort_column }}">
         <thead>
         <tr>
             {% for heading in headings %}
@@ -11,7 +11,11 @@
         {% for item in data %}
             <tr{% if item[0] %} class="highlight"{% endif %}>
                 {% for value in item[1] %}
-                    <td>{{ value }}</td>
+                    {% if value is not string and value is iterable and value|length >= 2 %}
+                        <td data-sort="{{ value[1] }}">{{ value[0] }}</td>
+                    {% else %}
+                        <td>{{ value }}</td>
+                    {% endif %}
                 {% endfor %}
             </tr>
         {% endfor %}

@@ -26,8 +26,18 @@
                     {{ render_field(form.reason, placeholder="Reason") }}
                 </div>
                 <div class="one-third column">
-                    <button type="submit" name="submit" class="button primary mt-4">Update</button>
-                    <br/><a role="button" href="{{ url_for("student.unavailability") }}" class="button mt-4">Cancel</a>
+                    <button type="submit" name="submit" class="button primary mt-4">
+                        <span class="fa-stack fa-1x">
+                            <i class="fas fa-check fa-stack-1x"></i>
+                            <i class="far fa-comment-alt fa-stack-2x"></i>
+                        </span>
+                        Update
+                    </button>
+                    <br/>
+                    <a role="button" href="{{ url_for("student.unavailability") }}" class="button mt-4">
+                        <i class="fas fa-lg fa-arrow-left"></i>
+                        Cancel
+                    </a>
                 </div>
             </div>
         </form>

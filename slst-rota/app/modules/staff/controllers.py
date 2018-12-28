@@ -139,9 +139,9 @@ def accounts():
         all_accounts.append([
             item.id == user.id,
             [
-                item.username,
-                "{} ({})".format(item.auth_label, item.auth_level),
-                "Yes" if item.disabled == 1 else "No",
+                [item.username] * 2,
+                ["{} ({})".format(item.auth_label, item.auth_level), item.auth_level],
+                ["Yes" if item.disabled == 1 else "No", int(item.disabled != 1)],
                 "<a href='{}' class='button'><i class=\"fas fa-lg fa-user-edit\"></i> Edit</a>".format(
                     url_for("auth.account", id=item.id))
             ]

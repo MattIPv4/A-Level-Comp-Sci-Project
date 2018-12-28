@@ -5,16 +5,42 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <h1 class="mt-4">
-                Hi, log in to get started!
-            </h1>
+            <div class="media mt-4">
+                <div class="left">
+                    <h1><i class="fas fa-calendar-alt"></i></h1>
+                </div>
+                <div class="main">
+                    <h1>{{ app.name }} - Welcome</h1>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="two-thirds column">
-
+                <ul>
+                    <li>Provide an easy to use rota system for students on duty in the precinct</li>
+                    <li>Provide an easy management system of the rota system for staff</li>
+                </ul>
+                <ul>
+                    <li>Allow students to indicate days they cannot complete precinct duty</li>
+                    <li>Allow students to sign in and out of their current precinct duty and for this to be tracked</li>
+                    <li>Display an easy to understand timetable of duties for the precinct</li>
+                </ul>
+                <ul>
+                    <li>Allow staff to define the precinct duty sessions for the week</li>
+                    <li>Allow staff to view when students signed in and out</li>
+                    <li>Allow staff to view in-depth analytics regarding student attendance for their duties</li>
+                    <li>Display to staff the attendance levels for individual students on the precinct, the student’s reliability</li>
+                    <li>Display to staff the duration each student stays for their precinct duty, percentage of defined precinct duration</li>
+                </ul>
+                <ul>
+                    <li>Provide an authentication system for staff and students</li>
+                    <li>Allow staff to easily manage student accounts and other staff accounts</li>
+                </ul>
             </div>
             <div class="one-third column">
-
+                <a href="{{ url_for('auth.login') }}" class="button larger primary mt-1">
+                    <i class="fas fa-lg fa-sign-in-alt"></i> Sign in to get started
+                </a>
             </div>
         </div>
     </div>
