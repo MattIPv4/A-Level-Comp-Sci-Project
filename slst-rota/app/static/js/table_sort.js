@@ -62,8 +62,8 @@
             const header_id = id + "-h-" + header_counter.toString();
             header.setAttribute("id", header_id);
             header_counter++;
-            // Save blank data
-            sortable.push([true, header_id, []]); // sortable, id, elements sort data
+            // Save blank data (false immediately if no header text)
+            sortable.push([!!header.textContent.trim().length, header_id, []]); // sortable, id, elements sort data
         });
 
         // Iterate over each row
@@ -127,11 +127,8 @@
     };
 
     const sort = (a, b) => {
-        if (a[0] === b[0]) {
-            return 0;
-        } else {
-            return (a[0] < b[0]) ? -1 : 1;
-        }
+        if (a[0] === b[0]) return 0;
+        return (a[0] < b[0]) ? -1 : 1;
     };
 
     const sort_table = (id, column) => {
