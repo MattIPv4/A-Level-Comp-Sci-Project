@@ -26,7 +26,8 @@
             // Apply correct type
             if (header_counter.toString() === active.toString()) {
                 // Check reversed state
-                if (table.getAttribute("data-sort-reverse") === "0") {
+                const reverse = table.getAttribute("data-sort-reverse");
+                if (reverse.toString() === "0") {
                     icon.classList.add("fa-sort-up");
                 } else {
                     icon.classList.add("fa-sort-down");
@@ -58,7 +59,7 @@
         let header_counter = 0;
         const headers = document.querySelectorAll("table#" + id + " > thead > tr > th");
         headers.forEach((header) => {
-            // Set id
+            // Set header id
             const header_id = id + "-h-" + header_counter.toString();
             header.setAttribute("id", header_id);
             header_counter++;
@@ -102,11 +103,11 @@
             if (!header) return;
 
             // Get index
-            let index = header.getAttribute("id").split("-");
-            index = parseInt(index[index.length - 1]);
+            const header_id = header.getAttribute("id").split("-");
+            const index = parseInt(header_id[header_id.length - 1]);
 
             // Set click event
-            header.onclick = () => {
+            header.onclick = (event) => {
                 event.preventDefault();
                 sort_table(id, index);
             };
@@ -157,13 +158,17 @@
 
         // Set relevant table attrs and reverse if needed
         if (table.getAttribute("data-sort-last") === column.toString()) {
+            // Currently sorted by this column already, check direction
             if (table.getAttribute("data-sort-reverse") === "0") {
+                // Previous sort was normal, so reverse
                 data.reverse();
                 table.setAttribute("data-sort-reverse", "1");
             } else {
+                // Previous sort was reverse, so normal
                 table.setAttribute("data-sort-reverse", "0");
             }
         } else {
+            // New column to sort by
             table.setAttribute("data-sort-last", column.toString());
             table.setAttribute("data-sort-reverse", "0");
         }
@@ -174,12 +179,15 @@
         // Fetch rows in correct order
         let new_rows = [];
         data.forEach((item) => {
+            // Get existing row by id and save
             new_rows.push(document.getElementById(item[1]));
         });
 
-        // Write new rows back
+        // Get the table body and wipe all elements inside
         const tbody = document.querySelector("table#" + id + " > tbody");
-        while (tbody.firstChild) tbody.removeChild(tbody.firstChild); // Wipe old rows
+        while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+
+        // Append new sorted rows back to table
         new_rows.forEach((row) => {
             tbody.appendChild(row);
         });
@@ -191,6 +199,6 @@
         const id = process_table(table);
         // Attempt initial sort
         sort_table(id, document.getElementById(id).getAttribute("data-sort-initial"));
-    })
+    });
 
 })();
