@@ -16,6 +16,12 @@
         {% endwith %}
 
         <div class="row">
+            {% from "app/macros/table.jinja2" import render_table with context %}
+            {{ render_table(["Day", "Start Time", "End Time"],
+            [[False, [session.day_frmt, session.start_time_frmt, session.end_time_frmt]]]) }}
+        </div>
+
+        <div class="row mt-2">
             <div class="two-thirds column">
                 <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
                     {{ form.csrf_token }}

@@ -474,7 +474,7 @@ def rota_edit_assignments(id: int):
     # Render
     return render_template("staff/assignment_edit.jinja2", form=form,
                            assigned=assigned, unassigned=unassigned,
-                           unavailable=unavailable)
+                           unavailable=unavailable, session=session)
 
 
 # Rota edit - automatic assignments
