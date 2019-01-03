@@ -1,5 +1,15 @@
 {% macro render_field(field, placeholder=None) %}
     <label for="{{ field.id }}">{{ placeholder }}</label>
-    {% set css_class = 'u-full-width ' + kwargs.pop('class', '') %}
-    {{ field(class=css_class, placeholder=placeholder, **kwargs) }}
+
+    {% if field.type == "BooleanField" %}
+        <div tabindex="0" class="checkbox{% if not field.data %} unchecked{% endif %}" role="button">
+            <div class="checkbox-inner">
+                <input type="checkbox" id="{{ field.id }}" name="{{ field.id }}" {% if field.data %}checked{% endif %}/>
+                <span></span>
+            </div>
+        </div>
+    {% else %}
+        {% set css_class = 'u-full-width ' + kwargs.pop('class', '') %}
+        {{ field(class=css_class, placeholder=placeholder, **kwargs) }}
+    {% endif %}
 {% endmacro %}
