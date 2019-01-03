@@ -11,7 +11,7 @@
                     All Accounts
                 </h1>
                 {% from "app/macros/table.jinja2" import render_table with context %}
-                {{ render_table(["Username", "Auth Level", "Disabled", ""], accounts) }}
+                {{ render_table(["Username", "Auth Level", "Disabled", ""], accounts, 1) }}
             </div>
             <div class="one-third column mt-4">
                 <h3 class="mt-4">

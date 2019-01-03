@@ -157,25 +157,25 @@ class StudentReport:
             )
 
         # Present/Absence percentages
-        self.__attendance_present = (self.__attendance_present / self.__attendance_total) * 100 \
+        self.attendance_present = (self.__attendance_present / self.__attendance_total) * 100 \
             if self.__attendance_total else 0
-        self.__attendance_absent = (self.__attendance_absent / self.__attendance_total) * 100 \
+        self.attendance_absent = (self.__attendance_absent / self.__attendance_total) * 100 \
             if self.__attendance_total else 0
 
         # Attendance bar
-        self.__attendance_bar = "<div class=\"stat-bar\">" \
+        self.attendance_bar = "<div class=\"stat-bar\">" \
                                 "<span class=\"success\" style=\"width: {}%;\"></span>" \
                                 "<span class=\"danger\" style=\"width: {}%;\"></span>" \
-                                "</div>".format(self.__attendance_present,
-                                                self.__attendance_absent if self.__attendance_total else 0)
+                                "</div>".format(self.attendance_present,
+                                                self.attendance_absent if self.attendance_absent else 0)
 
         # Store into class
         self.attendance = self.__attendance_stat
         self.punctuality = self.__punctuality_stat
+        self.punctuality_in_raw = self.__attendance_in_diff_avg
         self.present = self.__attendance_present
         self.absent = self.__attendance_absent
         self.table = self.__attendance_table
-        self.attendance_bar = self.__attendance_bar
 
 
 # Attendance Home
@@ -194,9 +194,9 @@ def home():
         table.append([
             (report.present < 75),
             [
-                this_student.username,
-                report.attendance_bar + "\n" + report.attendance,
-                report.punctuality,
+                [this_student.username] * 2,
+                [report.attendance_bar + "\n" + report.attendance, report.attendance_present],
+                [report.punctuality, report.punctuality_in_raw],
                 "<a href=\"{}\" class=\"button primary\"><i class=\"fas fa-lg fa-clipboard-list\"></i> View full report"
                 "</a>".format(url_for("attendance.student", student_id=this_student.id))
             ]
@@ -272,8 +272,8 @@ def test():
             for att in assignment.attendance:
                 # If has attendance already ignore
                 if not att[1]:
-                    # Decide if should have attended (3/4)
-                    if random.randint(0, 3) != 0:
+                    # Decide if should have attended (2/3)
+                    if random.randint(0, 2) != 0:
                         # Create attendance from session
                         session = db_session()
                         att_entry = Attendance.from_session(this_student.id, assignment.assignment.session)
@@ -284,7 +284,7 @@ def test():
                         # Set the in_time, make early/late for 1/4
                         in_offset = 0
                         if random.randint(0, 3) == 0:
-                            in_offset = random.randint(-5, 10)
+                            in_offset = random.randint(-5, 15)
                         att_entry.in_time = Utils.minutes_date(att[0],
                                                                assignment.assignment.session.start_time + in_offset)
                         att_entry.in_time_org = Utils.minutes_date(att[0], assignment.assignment.session.start_time)
@@ -292,7 +292,7 @@ def test():
                         # Set the out_time, make early/late for 1/4
                         out_offset = 0
                         if random.randint(0, 3) == 0:
-                            out_offset = random.randint(-10, 0)
+                            out_offset = random.randint(-15, 0)
                         att_entry.out_time = Utils.minutes_date(att[0],
                                                                 assignment.assignment.session.end_time + out_offset)
                         att_entry.out_time_org = Utils.minutes_date(att[0], assignment.assignment.session.end_time)
@@ -300,3 +300,5 @@ def test():
                         # Save
                         session.add(att_entry)
                         session.commit()
+
+    return redirect(url_for('attendance.home'))

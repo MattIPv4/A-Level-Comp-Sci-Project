@@ -49,7 +49,7 @@
                     All Students Attendance
                 </h2>
                 {% from "app/macros/table.jinja2" import render_table with context %}
-                {{ render_table(["Student", "Attendance", "Punctuality", ""], attendance_table) }}
+                {{ render_table(["Student", "Attendance", "Punctuality", ""], attendance_table, 1) }}
                 <p>Students with attendance below 75% are highlighted.</p>
             </div>
         </div>
@@ -57,6 +57,7 @@
 {% endblock %}
 
 {% block extra_js %}
+    <script src="/static/js/table_sort.js"></script>
     <script src="/static/js/canvasjs.min.js"></script>
     <script type="text/javascript">
         window.onload = function () {
