@@ -215,8 +215,12 @@ def home():
     # Generate chart
     chart = []
     for data in session_data.values():
-        chart.append({"label": "{0.day_frmt} {0.start_time_frmt}-{0.end_time_frmt}".format(data[0]),
-                      "y": data[1] / data[2] * 100})
+        value = data[1] / data[2] * 100
+        chart.append({
+            "label": "{0.day_frmt} {0.start_time_frmt}-{0.end_time_frmt}".format(data[0]),
+            "y": value,
+            "toolTipContent": "<span style='\"'color: {{color}};'\"'>{{label}}</span>: {:.2f}%".format(value)
+        })
 
     return render_template("attendance/home.jinja2", attendance_table=table,
                            session_attendnace=[{"type": "column", "dataPoints": chart}],
@@ -253,9 +257,9 @@ def student(student_id: int):
     for assignment in report.breakdown:
         label = "{0.day_frmt} {0.start_time_frmt}-{0.end_time_frmt}".format(assignment.assignment.session)
         # In time diff
-        graph[0]["dataPoints"].append({"label": label, "y": assignment.in_diff_avg})
+        graph[0]["dataPoints"].append({"label": label, "y": assignment.in_diff_avg, "markerSize": 20})
         # Out time diff
-        graph[1]["dataPoints"].append({"label": label, "y": assignment.out_diff_avg})
+        graph[1]["dataPoints"].append({"label": label, "y": assignment.out_diff_avg, "markerSize": 15})
 
     return render_template("attendance/student.jinja2", student=this_student, report=report, graph=graph,
                            graph_extra={"axisY": {"title": "Minutes difference (average)", "titleFontSize": 15}})
