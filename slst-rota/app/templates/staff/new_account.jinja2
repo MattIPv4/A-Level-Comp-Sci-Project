@@ -13,7 +13,7 @@
 
         {% with messages = get_flashed_messages() %}
             {% if messages %}
-                <div>
+                <div class="message-block">
                     {% for message in messages %}
                         {{ message }}<br>
                     {% endfor %}

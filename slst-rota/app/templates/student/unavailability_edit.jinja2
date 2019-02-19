@@ -7,11 +7,11 @@
 
     <div class="container">
         <h1></h1>
-        {% with errors = get_flashed_messages() %}
-            {% if errors %}
-                <div>
-                    {% for error in errors %}
-                        {{ error }}<br>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="message-block">
+                    {% for message in messages %}
+                        {{ message }}<br>
                     {% endfor %}
                 </div>
             {% endif %}

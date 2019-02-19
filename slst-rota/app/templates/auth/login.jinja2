@@ -9,7 +9,7 @@
         <h1>Login to {{ app.name }}</h1>
         {% with messages = get_flashed_messages() %}
             {% if messages %}
-                <div>
+                <div class="message-block">
                     {% for message in messages %}
                         {{ message }}<br>
                     {% endfor %}

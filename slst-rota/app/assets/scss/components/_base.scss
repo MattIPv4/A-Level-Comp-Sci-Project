@@ -137,6 +137,14 @@ input, select, option {
   color: $dark;
 }
 
+// Form messages
+.message-block {
+  padding: 8px 16px;
+  background: $dark;
+  border-radius: $bordersize*2;
+  border: $bordersize solid $primary;
+}
+
 // Stat bar
 .stat-bar {
   display: block;
