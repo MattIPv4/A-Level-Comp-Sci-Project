@@ -256,13 +256,13 @@ def rota_edit_session(id: int):
     if form.validate_on_submit():
 
         # Verify day
-        if form.day.data:
+        if form.day.data is not None and type(form.day.data) is int and -1 < form.day.data < len(calendar.day_name):
 
             # Verify start time
-            if form.start_time.data:
+            if form.start_time.data is not None:
 
                 # Verify end time
-                if form.end_time.data:
+                if form.end_time.data is not None:
 
                     # Verify times
                     if form.start_time.data < form.end_time.data:
@@ -363,7 +363,7 @@ def rota_new():
     if form.validate_on_submit():
 
         # Verify day
-        if form.day.data is not None:
+        if form.day.data is not None and type(form.day.data) is int and -1 < form.day.data < len(calendar.day_name):
 
             # Verify start time
             if form.start_time.data is not None:
