@@ -39,7 +39,7 @@ def login():
 
             return redirect(url_for('index'))
 
-        flash('Wrong email or password')
+        flash('Wrong username or password')
 
     return render_template("auth/login.jinja2", form=form)
 
