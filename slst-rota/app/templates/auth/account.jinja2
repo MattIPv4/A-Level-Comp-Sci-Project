@@ -23,20 +23,20 @@
             {% endif %}
         {% endwith %}
 
-        <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
+        <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form" autocomplete="off">
             {{ form.csrf_token }}
 
             <div class="row">
                 <div class="two-thirds column">
-                    {{ render_field(form.new_password, placeholder="New Password (only to change)") }}
-                    {{ render_field(form.new_password_confirm, placeholder="New Password Confirmation (only to change)") }}
+                    {{ render_field(form.new_password, placeholder="New Password (only to change)", autocomplete="off") }}
+                    {{ render_field(form.new_password_confirm, placeholder="New Password Confirmation (only to change)", autocomplete="off") }}
                     {% if show_old_password %}
-                        {{ render_field(form.old_password, placeholder="Old Password (only to change)") }}
+                        {{ render_field(form.old_password, placeholder="Old Password (only to change)", autocomplete="off") }}
                     {% endif %}
                 </div>
                 <div class="one-third column">
                     {% if show_username %}
-                        {{ render_field(form.username, placeholder="Username") }}
+                        {{ render_field(form.username, placeholder="Username", autocomplete="off") }}
                     {% else %}
                         <input type="hidden" id="{{ form.username.id }}" name="{{ form.username.id }}"
                                value="{{ target.username }}"/>
@@ -44,10 +44,10 @@
                     {% if show_auth_level %}
                         <div class="row">
                             <div class="one-half column">
-                                {{ render_field(form.auth_level, placeholder="Auth Level") }}
+                                {{ render_field(form.auth_level, placeholder="Auth Level", autocomplete="off") }}
                             </div>
                             <div class="one-half column">
-                                {{ render_field(form.disabled, placeholder="Disabled") }}
+                                {{ render_field(form.disabled, placeholder="Disabled", autocomplete="off") }}
                             </div>
                         </div>
                     {% else %}
