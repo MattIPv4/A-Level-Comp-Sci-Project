@@ -131,8 +131,8 @@ class StudentReport:
             if self.__attendance_out_diff else 0
 
         # Default word-y stats
-        self.__attendance_stat = "No attendance records found for your user."
-        self.__punctuality_stat = "No attendance records found for your user."
+        self.__attendance_stat = "No attendance records found."
+        self.__punctuality_stat = "No attendance records found."
 
         # Proper word-y stats if has attendance
         if self.__attendance_total != 0:
