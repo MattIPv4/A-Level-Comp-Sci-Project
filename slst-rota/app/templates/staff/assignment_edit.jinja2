@@ -15,20 +15,24 @@
             {% endif %}
         {% endwith %}
 
-        <div class="row">
-            {% from "app/macros/table.jinja2" import render_table with context %}
-            {{ render_table(["Day", "Start Time", "End Time"],
-            [[False, [session.day_frmt, session.start_time_frmt, session.end_time_frmt]]]) }}
-        </div>
+        <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
+            {{ form.csrf_token }}
+            {{ form.assigned() }}
 
-        <div class="row mt-2">
-            <div class="two-thirds column">
-                <form method="POST" action="{{ request.url }}" accept-charset="UTF-8" role="form">
-                    {{ form.csrf_token }}
-                    {{ form.assigned() }}
-                    <button type="submit" name="submit" class="button primary mr-4">Update</button>
+            <div class="row">
+                <div class="nine columns">
+                    {% from "app/macros/table.jinja2" import render_table with context %}
+                    {{ render_table(["Day", "Start Time", "End Time"],
+                        [[False, [session.day_frmt, session.start_time_frmt, session.end_time_frmt]]]) }}
+                </div>
+                <div class="three columns h-center v-center">
+                    <button type="submit" name="submit" class="button primary mt-2">Update</button>
                     <a role="button" href="{{ url_for("staff.rota") }}" class="button">Cancel</a>
+                </div>
+            </div>
 
+            <div class="row mt-2">
+                <div class="two-thirds column">
                     <div class="row">
                         <div class="one-half column" id="assigned_column">
                             <h4>Assigned Students</h4>
@@ -37,20 +41,21 @@
                             <h4>Unassigned Students</h4>
                         </div>
                     </div>
-                </form>
+                </div>
+                <div class="one-third column">
+                    <h4>Unavailable Students</h4>
+                    {% for unavail in unavailable %}
+                        <div class="card">
+                            {{ unavail.user.username }}
+                            <br/><i class="ml-1">{{ unavail.reason_clean }}</i>
+                        </div>
+                    {% else %}
+                        <p>None</p>
+                    {% endfor %}
+                </div>
             </div>
-            <div class="one-third column">
-                <h4>Unavailable Students</h4>
-                {% for unavail in unavailable %}
-                    <div class="card">
-                        {{ unavail.user.username }}
-                        <br/><i>{{ unavail.reason_clean }}</i>
-                    </div>
-                {% else %}
-                    <p>None</p>
-                {% endfor %}
-            </div>
-        </div>
+
+        </form>
     </div>
 {% endblock %}
 
