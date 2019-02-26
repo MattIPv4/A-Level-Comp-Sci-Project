@@ -215,7 +215,7 @@ def home():
     # Generate chart
     chart = []
     for data in session_data.values():
-        value = data[1] / data[2] * 100
+        value = data[1] / data[2] * 100 if data[2] else 0
         chart.append({
             "label": "{0.day_frmt} {0.start_time_frmt}-{0.end_time_frmt}".format(data[0]),
             "y": value,
