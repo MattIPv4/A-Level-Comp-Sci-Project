@@ -47,14 +47,12 @@
 
                 <h4 class="mt-4 mb-0">Your session unavailability</h4>
                 <div class="row">
-                    <div class="one-half column">
-                        <p>{{ unavailability_stat }}</p>
-                    </div>
-                    <div class="one-half column">
+                    <p>
+                        {{ unavailability_stat }}<br/>
                         <a href="{{ url_for("student.unavailability") }}" class="button mt-1">
                             <i class="fas fa-comment-alt"></i> Manage unavailability
                         </a>
-                    </div>
+                    </p>
                 </div>
             </div>
         </div>
