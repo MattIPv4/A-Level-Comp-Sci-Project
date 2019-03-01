@@ -44,7 +44,7 @@ def next_assignable(total_assigned: Dict[int, list], assigned: List[User], sessi
     next_user = None
 
     # Order users by assignments so far (smallest first)
-    users_sorted = sorted(total_assigned.values(), key=lambda x: x[0])
+    users_sorted = sorted(total_assigned.values(), key=lambda x: (x[0], x[1].username.lower()))
 
     # Loop over users until we find one (least assignments first)
     for user in users_sorted:
