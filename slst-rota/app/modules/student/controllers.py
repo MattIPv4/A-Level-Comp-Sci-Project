@@ -36,7 +36,7 @@ def auth_check():
 
 
 # Quick method to get next/current assignment
-def next_current_assignment(user: User) -> Tuple[Union[Session, None], bool]:
+def next_current_assignment(user: User) -> Tuple[Union[Session, None], bool, bool]:
     # Get session assignments
     data = Session.query.filter_by(archived=False).order_by(Session.day.asc(), Session.start_time.asc()).all()
     data = [f for f in data if user.id in [g.user.id for g in f.assignments if not g.removed]]
@@ -66,7 +66,14 @@ def next_current_assignment(user: User) -> Tuple[Union[Session, None], bool]:
             and next_session.end_time >= Utils.minutes_now():
         session_is_current = True
 
-    return next_session, session_is_current
+    # Check if the next session is soon
+    session_is_soon = False
+    if not session_is_current \
+            and next_session.day == datetime.today().weekday() \
+            and next_session.start_time - 5 <= Utils.minutes_now():
+        session_is_soon = True
+
+    return next_session, session_is_current, session_is_soon
 
 
 # Quick method to get if a user is signed in/out for a session
@@ -97,7 +104,7 @@ def home():
         return error
 
     # Get next session for student
-    next_session, session_is_current = next_current_assignment(user)
+    next_session, session_is_current, session_is_soon = next_current_assignment(user)
 
     # Format for table macro
     next_session_org = next_session
@@ -118,7 +125,8 @@ def home():
     unavailability_stat = "Unavailable {} / {} sessions.<br/>({:.2f}% availability)".format(
         len(data2), len(data), (1 - (len(data2) / len(data))) * 100)
 
-    return render_template("student/index.jinja2", session_is_current=session_is_current, next_session=next_session,
+    return render_template("student/index.jinja2", session_is_current=session_is_current,
+                           session_is_soon=session_is_soon, next_session=next_session,
                            unavailability_stat=unavailability_stat,
                            signed_in_out_session=signed_in_out_session(user, next_session_org))
 
@@ -278,14 +286,14 @@ def attendance_in():
         return error
 
     # Get next session for student
-    next_session, session_is_current = next_current_assignment(user)
+    next_session, session_is_current, session_is_soon = next_current_assignment(user)
 
     # Handle no session
     if not next_session:
         return error_render("No assigned sessions found", "No rota sessions assigned to your user were found")
 
     # Handle no current session (or session further than 5 minutes away)
-    if not session_is_current and (next_session.start_time - Utils.minutes_now()) > 5:
+    if not session_is_current and not session_is_soon:
         return error_render("No current assigned session found", "No rota session assigned to your user that is current"
                                                                  " (now or less than five minutes away) was found")
 
@@ -314,7 +322,7 @@ def attendance_out():
         return error
 
     # Get next session for student
-    next_session, session_is_current = next_current_assignment(user)
+    next_session, session_is_current, session_is_soon = next_current_assignment(user)
 
     # Handle no session
     if not next_session:
@@ -322,7 +330,7 @@ def attendance_out():
                             "No rota sessions assigned to your user were found")
 
     # Handle no current session
-    if not session_is_current:
+    if not session_is_current and not session_is_soon:
         return error_render("No current assigned session found",
                             "No rota session assigned to your user that is current was found")
 

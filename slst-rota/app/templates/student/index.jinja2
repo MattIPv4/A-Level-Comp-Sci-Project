@@ -12,8 +12,9 @@
                 </h1>
 
                 {% if next_session %}
+                    {% set current_next = "<b>current</b>" if session_is_current else "next" %}
                     <h4 class="mb-0">
-                        Your {% if session_is_current %}<b>current</b>{% else %}next{% endif %} rota assignment
+                        Your {{ current_next }} rota assignment
                     </h4>
                     {% from "app/macros/table.jinja2" import render_table with context %}
                     {{ render_table(["Day", "Start Time", "End Time", "Student(s) Assigned"], [next_session]) }}
@@ -28,17 +29,17 @@
                 </a>
             </div>
             <div class="one-third column">
-                {% if session_is_current %}
+                {% if next_session and (session_is_current or session_is_soon) %}
                     {% if not signed_in_out_session[1] %}
-                        <h4 class="mt-4 mb-0">Not signed in for current assignment</h4>
+                        <h4 class="mt-4 mb-0">Not signed in for {{ current_next }} assignment</h4>
                         <a href="{{ url_for("student.attendance_in") }}" class="button success mt-1">Sign in for
-                            current assignment</a>
+                            {{ current_next }} assignment</a>
                     {% elif not signed_in_out_session[2] %}
-                        <h4 class="mt-4 mb-0">Signed in for current assignment</h4>
+                        <h4 class="mt-4 mb-0">Signed in for {{ current_next }} assignment</h4>
                         <a href="{{ url_for("student.attendance_out") }}" class="button danger mt-1">Sign out
-                            from current assignment</a>
+                            from {{ current_next }} assignment</a>
                     {% else %}
-                        <h4 class="mt-4 mb-0">Already signed out from current assignment</h4>
+                        <h4 class="mt-4 mb-0">Already signed out from {{ current_next }} assignment</h4>
                     {% endif %}
                 {% else %}
                     <h4 class="mt-4 mb-0">No current assignment</h4>
