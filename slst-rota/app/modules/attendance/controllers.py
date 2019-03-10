@@ -270,9 +270,12 @@ def student(student_id: int):
 def test():
     import random
     students = User.query.filter_by(auth_level=1, disabled=0).all()
+    # Work over each student in the system
     for this_student in students:
+        # Get report to find all assignments
         report = StudentReport(this_student.id)
         for assignment in report.breakdown:
+            # Loop over each attendance record in assignment
             for att in assignment.attendance:
                 # If has attendance already ignore
                 if not att[1]:
@@ -288,15 +291,18 @@ def test():
                         # Set the in_time, make early/late for 1/4
                         in_offset = 0
                         if random.randint(0, 3) == 0:
-                            in_offset = random.randint(-5, 15)
+                            in_offset = random.randint(-5, min(15, int(
+                                assignment.assignment.session.end_time - assignment.assignment.session.start_time)))
+                        in_offset += random.random() * 2 - 1  # float between -1 and 1
                         att_entry.in_time = Utils.minutes_date(att[0],
                                                                assignment.assignment.session.start_time + in_offset)
                         att_entry.in_time_org = Utils.minutes_date(att[0], assignment.assignment.session.start_time)
 
-                        # Set the out_time, make early/late for 1/4
+                        # Set the out_time, make early sign out for 1/4
                         out_offset = 0
                         if random.randint(0, 3) == 0:
-                            out_offset = random.randint(-15, 0)
+                            out_offset = random.randint(-min(15, int(
+                                assignment.assignment.session.end_time - assignment.assignment.session.start_time)), 0)
                         att_entry.out_time = Utils.minutes_date(att[0],
                                                                 assignment.assignment.session.end_time + out_offset)
                         att_entry.out_time_org = Utils.minutes_date(att[0], assignment.assignment.session.end_time)
