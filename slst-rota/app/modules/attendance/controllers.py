@@ -164,10 +164,10 @@ class StudentReport:
 
         # Attendance bar
         self.attendance_bar = "<div class=\"stat-bar\">" \
-                                "<span class=\"success\" style=\"width: {}%;\"></span>" \
-                                "<span class=\"danger\" style=\"width: {}%;\"></span>" \
-                                "</div>".format(self.attendance_present,
-                                                self.attendance_absent if self.attendance_absent else 0)
+                              "<span class=\"success\" style=\"width: {}%;\"></span>" \
+                              "<span class=\"danger\" style=\"width: {}%;\"></span>" \
+                              "</div>".format(self.attendance_present,
+                                              self.attendance_absent if self.attendance_absent else 0)
 
         # Store into class
         self.attendance = self.__attendance_stat
