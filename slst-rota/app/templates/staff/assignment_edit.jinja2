@@ -95,7 +95,7 @@
             var div = document.createElement("div");
             outer.appendChild(div);
             div.className = "button group";
-            if (unavailable) div.className += " muted";
+            if (!unavailable) div.className += " primary";
 
             // Create span with name in it
             var span = document.createElement("span");

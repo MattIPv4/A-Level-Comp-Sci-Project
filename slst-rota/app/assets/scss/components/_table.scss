@@ -2,6 +2,20 @@
 
 table {
   tr {
+    th, td {
+      border-color: #667;
+    }
+
+    &.subheading {
+      background: lighten($black, 10%);
+
+      th, td {
+        &:first-of-type {
+          padding-left: 12px;
+        }
+      }
+    }
+
     &.highlight {
       color: $primary;
       font-weight: 700;

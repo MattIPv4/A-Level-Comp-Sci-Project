@@ -118,7 +118,8 @@ class StudentReport:
 
             # Table: Day subheadings
             if assignment.session.day != self.__current_day:
-                self.__attendance_table.append([False, [list(calendar.day_name)[assignment.session.day], "", "", ""]])
+                self.__attendance_table.append([
+                    False, [list(calendar.day_name)[assignment.session.day], "", "", ""], True])
                 self.__current_day = assignment.session.day
 
             # Table: Assignment
@@ -257,9 +258,15 @@ def student(student_id: int):
     for assignment in report.breakdown:
         label = "{0.day_frmt} {0.start_time_frmt}-{0.end_time_frmt}".format(assignment.assignment.session)
         # In time diff
-        graph[0]["dataPoints"].append({"label": label, "y": assignment.in_diff_avg, "markerSize": 20})
+        graph[0]["dataPoints"].append({"label": label, "y": assignment.in_diff_avg, "markerSize": 20,
+                                       "toolTipContent": "{{label}}: Signed in {:,.2f} mins {}".format(
+                                           abs(assignment.in_diff_avg),
+                                           "late" if assignment.in_diff_avg > 0 else "early")})
         # Out time diff
-        graph[1]["dataPoints"].append({"label": label, "y": assignment.out_diff_avg, "markerSize": 15})
+        graph[1]["dataPoints"].append({"label": label, "y": -assignment.out_diff_avg, "markerSize": 15,
+                                       "toolTipContent": "{{label}}: Signed out {:,.2f} mins {}".format(
+                                           abs(assignment.out_diff_avg),
+                                           "late" if assignment.out_diff_avg > 0 else "early")})
 
     return render_template("attendance/student.jinja2", student=this_student, report=report, graph=graph,
                            graph_extra={"axisY": {"title": "Minutes difference (average)", "titleFontSize": 15}})

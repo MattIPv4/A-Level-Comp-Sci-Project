@@ -15,13 +15,13 @@
 
 // General button
 .button, button, input[type="button"], input[type="submit"] {
-  border-color: $white;
   box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2);
-  color: $primary;
   font-size: 13px;
   padding: 0 30px;
   transition: all .2s;
   border-radius: $bordersize*2;
+
+  @include button_style($dark, darken($white, 20%));
 
   &.button-square {
     padding: 0 1em;
@@ -36,8 +36,6 @@
 
   &:hover,
   &:focus {
-    border-color: darken($white, 30%);
-    color: $primary;
     text-decoration: none;
   }
 
@@ -110,12 +108,11 @@
 
     a,
     button {
-      color: $primary;
+      color: inherit;
       cursor: pointer;
 
       &:hover,
       &:focus {
-        color: $white;
         text-decoration: none;
       }
     }

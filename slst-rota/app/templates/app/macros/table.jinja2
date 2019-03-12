@@ -9,7 +9,7 @@
         </thead>
         <tbody>
         {% for item in data %}
-            <tr{% if item[0] %} class="highlight"{% endif %}>
+            <tr class="{% if item[0] %}highlight {% endif %}{% if item[2] %}subheading {% endif %}">
                 {% for value in item[1] %}
                     {% if value is not string and value is iterable and value|length >= 2 %}
                         <td data-sort="{{ value[1] }}">{{ value[0] }}</td>

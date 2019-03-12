@@ -149,7 +149,7 @@ def rota():
 
         # Day subheadings
         if session.day != current_day:
-            rota_data.append([False, [list(calendar.day_name)[session.day], "", ""]])
+            rota_data.append([False, [list(calendar.day_name)[session.day], "", ""], True])
             current_day = session.day
 
         # Assignments for day
@@ -174,7 +174,7 @@ def rota_full():
     for session in data:
         # Day subheadings
         if session.day != current_day:
-            rota_data.append([False, [list(calendar.day_name)[session.day], "", ""]])
+            rota_data.append([False, [list(calendar.day_name)[session.day], "", ""], True])
             current_day = session.day
 
         # Assignments for day (highlight ones with current user)
