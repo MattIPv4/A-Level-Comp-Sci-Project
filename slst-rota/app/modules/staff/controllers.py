@@ -1,7 +1,7 @@
 import calendar  # Calendar
 import json  # JSON
 from datetime import datetime  # Datetime
-from typing import List, Union, Dict  # Typing
+from typing import List, Union, Dict, Tuple  # Typing
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash  # Flask
 from werkzeug.security import generate_password_hash  # Passwords
@@ -124,6 +124,25 @@ def generate_assignments(users_per_session: int = 1, force_user: bool = True):
             assignment = Assignment(student.id, session.id)
             dbsession.add(assignment)
             dbsession.commit()
+
+
+# Check if a new session overlaps an existing one
+def check_session_overlap(session) -> Tuple[bool, Union[Session, None]]:
+    sessions = Session.query.filter_by(day=session.day).order_by(Session.day.asc(), Session.start_time.asc()).all()
+    for sess in sessions:
+        # Skip current
+        if session.id == sess.id:
+            continue
+        # Check start overlap
+        if sess.start_time < session.start_time < sess.end_time:
+            return False, sess
+        # Check end overlap
+        if sess.start_time < session.end_time < sess.end_time:
+            return False, sess
+        # Check in between
+        if sess.start_time > session.start_time and sess.end_time < session.end_time:
+            return False, sess
+    return True, None
 
 
 # All accounts
@@ -374,8 +393,6 @@ def rota_new():
                     # Verify times
                     if form.start_time.data < form.end_time.data:
 
-                        dbsession = db_session()
-
                         start_time = datetime.combine(datetime.now().date(), form.start_time.data)
                         start_time = int(Utils.minutes_datetime(start_time))
 
@@ -383,10 +400,17 @@ def rota_new():
                         end_time = int(Utils.minutes_datetime(end_time))
 
                         session = Session(form.day.data, start_time, end_time)
-                        dbsession.add(session)
 
-                        dbsession.commit()
-                        return redirect(url_for('staff.rota'))
+                        check = check_session_overlap(session)
+                        if check[0]:
+                            dbsession = db_session()
+                            dbsession.add(session)
+                            dbsession.commit()
+                            return redirect(url_for('staff.rota'))
+
+                        else:
+                            flash('Session overlapping with existing one: '
+                                  '{0.day_frmt} {0.start_time_frmt}-{0.end_time_frmt}'.format(check[1]))
 
                     else:
                         flash('Start time must be before end time')
