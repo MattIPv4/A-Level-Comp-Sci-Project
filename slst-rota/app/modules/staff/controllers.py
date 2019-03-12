@@ -159,7 +159,7 @@ def accounts():
             item.id == user.id,
             [
                 [item.username] * 2,
-                ["{} ({})".format(item.auth_label, item.auth_level), item.auth_level],
+                [item.auth_label, item.auth_level],
                 ["Yes" if item.disabled == 1 else "No", int(item.disabled != 1)],
                 "<a href='{}' class='button'><i class=\"fas fa-lg fa-user-edit\"></i> Edit</a>".format(
                     url_for("auth.account", id=item.id))
@@ -299,8 +299,15 @@ def rota_edit_session(id: int):
                         session.start_time = start_time
                         session.end_time = end_time
 
-                        dbsession.commit()
-                        return redirect(url_for('staff.rota'))
+                        check = check_session_overlap(session)
+                        if check[0]:
+                            dbsession.commit()
+                            return redirect(url_for('staff.rota'))
+
+                        else:
+                            dbsession.rollback()
+                            flash('Session overlapping with existing one: '
+                                  '{0.day_frmt} {0.start_time_frmt}-{0.end_time_frmt}'.format(check[1]))
 
                     else:
                         flash('Start time must be before end time')
