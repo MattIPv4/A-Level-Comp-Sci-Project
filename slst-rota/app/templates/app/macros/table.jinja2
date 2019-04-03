@@ -1,11 +1,11 @@
 {% macro render_table(headings, data, initial_sort_column = "") %}
     <table class="u-full-width" data-sort-initial="{{ initial_sort_column }}">
         <thead>
-            <tr>
-                {% for heading in headings %}
-                    <th>{{ heading }}</th>
-                {% endfor %}
-            </tr>
+        <tr>
+            {% for heading in headings %}
+                <th>{{ heading }}</th>
+            {% endfor %}
+        </tr>
         </thead>
         <tbody>
         {% for item in data %}
