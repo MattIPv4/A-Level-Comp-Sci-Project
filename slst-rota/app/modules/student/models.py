@@ -1,6 +1,7 @@
 from calendar import day_name  # Days
 from datetime import timedelta, datetime, date  # Times
 from typing import Union, Callable, List, Tuple  # Typing
+
 from flask import escape  # Escape
 
 from app import db, BaseModel, Utils  # DB

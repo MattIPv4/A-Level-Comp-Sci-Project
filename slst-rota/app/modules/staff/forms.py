@@ -3,8 +3,8 @@ import calendar  # Calendar
 from flask_wtf import FlaskForm  # Form
 from wtforms import StringField, PasswordField, SelectField, TimeField, HiddenField, \
     IntegerField, BooleanField  # Form: Elements
-from wtforms.widgets.html5 import NumberInput  # Number input
 from wtforms.validators import DataRequired  # Form: Validation
+from wtforms.widgets.html5 import NumberInput  # Number input
 
 
 # Account (using WTForms)

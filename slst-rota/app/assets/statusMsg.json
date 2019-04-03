@@ -1,254 +1,362 @@
 {
     "100": {
-        "description": "The server has received the request headers, and the client should proceed to send the request body",
+        "description": "The server has received the request headers, and the client should proceed to send the request body.",
         "message": "Continue"
     },
     "101": {
-        "description": "The requester has asked the server to switch protocols",
+        "description": "The requester has asked the server to switch protocols.",
         "message": "Switching Protocols"
     },
+    "102": {
+        "description": "This code indicates that the server has received and is processing the request, but no response is available yet. This prevents the client from timing out and assuming the request was lost.",
+        "message": "Processing"
+    },
     "103": {
-        "description": "Used in the resumable requests proposal to resume aborted PUT or POST requests",
-        "message": "Checkpoint"
+        "description": "Used to return some response headers before final HTTP message.",
+        "message": "Early Hints"
     },
     "1xx": {
-        "description": "",
+        "description": "1xx codes are often interim responses for sharing connection status information. Not intended for final request or response action.",
         "message": "Information"
     },
     "200": {
-        "description": "The request is OK (this is the standard response for successful HTTP requests)",
+        "description": "The request is OK (this is the standard response for successful HTTP requests).",
         "message": "OK"
     },
     "201": {
-        "description": "The request has been fulfilled, and a new resource is created",
+        "description": "The request has been fulfilled, and a new resource is created.",
         "message": "Created"
     },
     "202": {
-        "description": "The request has been accepted for processing, but the processing has not been completed",
+        "description": "The request has been accepted for processing, but the processing has not been completed.",
         "message": "Accepted"
     },
     "203": {
-        "description": "The request has been successfully processed, but is returning information that may be from another source",
+        "description": "The request has been successfully processed, but is returning information that may be from another source.",
         "message": "Non-Authoritative Information"
     },
     "204": {
-        "description": "The request has been successfully processed, but is not returning any content",
+        "description": "The request has been successfully processed, but is not returning any content.",
         "message": "No Content"
     },
     "205": {
-        "description": "The request has been successfully processed, but is not returning any content, and requires that the requester reset the document view",
+        "description": "The request has been successfully processed, but is not returning any content, and requires that the requester reset the document view.",
         "message": "Reset Content"
     },
     "206": {
-        "description": "The server is delivering only part of the resource due to a range header sent by the client",
+        "description": "The server is delivering only part of the resource due to a range header sent by the client.",
         "message": "Partial Content"
     },
+    "207": {
+        "description": "The message body that follows is by default an XML message and can contain a number of separate response codes, depending on how many sub-requests were made.",
+        "message": "Multi-Status"
+    },
+    "208": {
+        "description": "The members of a DAV binding have already been enumerated in a preceding part of the (multistatus) response, and are not being included again.",
+        "message": "Already Reported"
+    },
+    "218": {
+        "description": "Used as a catch-all error condition for allowing response bodies to flow through Apache when ProxyErrorOverride is enabled.",
+        "message": "This is fine (Apache Web Server)"
+    },
+    "226": {
+        "description": "The server has fulfilled a request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance.",
+        "message": "IM Used"
+    },
     "2xx": {
-        "description": "",
+        "description": "2xx codes indicate successful responses usually this means the action requested by the client was received, understood and accepted successfully.",
         "message": "Successful"
     },
     "300": {
-        "description": "A link list. The user can select a link and go to that location. Maximum five addresses",
+        "description": "A link list. The user can select a link and go to that location. Maximum five addresses.",
         "message": "Multiple Choices"
     },
     "301": {
-        "description": "The requested page has moved to a new URL",
+        "description": "The requested page has moved to a new URL.",
         "message": "Moved Permanently"
     },
     "302": {
-        "description": "The requested page has moved temporarily to a new URL",
+        "description": "The requested page has moved temporarily to a new URL.",
         "message": "Found"
     },
     "303": {
-        "description": "The requested page can be found under a different URL",
+        "description": "The requested page can be found under a different URL.",
         "message": "See Other"
     },
     "304": {
-        "description": "Indicates the requested page has not been modified since last requested",
+        "description": "Indicates the requested page has not been modified since last requested.",
         "message": "Not Modified"
     },
     "306": {
-        "description": "-- No longer used --",
+        "description": "No longer used. Originally meant \"Subsequent requests should use the specified proxy.\"",
         "message": "Switch Proxy"
     },
     "307": {
-        "description": "The requested page has moved temporarily to a new URL",
+        "description": "The requested page has moved temporarily to a new URL.",
         "message": "Temporary Redirect"
     },
     "308": {
-        "description": "Used in the resumable requests proposal to resume aborted PUT or POST requests",
+        "description": "Used in the resumable requests proposal to resume aborted PUT or POST requests.",
         "message": "Resume Incomplete"
     },
     "3xx": {
-        "description": "",
+        "description": "3xx codes are a class of responses that suggest the User-Agent must follow another course of action to obtain the complete requested resource.",
         "message": "Redirection"
     },
     "400": {
-        "description": "The request cannot be fulfilled due to bad syntax",
+        "description": "The request cannot be fulfilled due to bad syntax.",
         "message": "Bad Request"
     },
     "401": {
-        "description": "The request was a legal request, but the server is refusing to respond to it. For use when authentication is possible but has failed or not yet been provided",
+        "description": "The request was a legal request, but the server is refusing to respond to it. For use when authentication is possible but has failed or not yet been provided.",
         "message": "Unauthorized"
     },
     "402": {
-        "description": "-- Reserved for future use --",
+        "description": "Not yet implemented by RFC standards, but reserved for future use.",
         "message": "Payment Required"
     },
     "403": {
-        "description": "The request was a legal request, but the server is refusing to respond to it",
+        "description": "The request was a legal request, but the server is refusing to respond to it.",
         "message": "Forbidden"
     },
     "404": {
-        "description": "The requested page could not be found but may be available again in the future",
+        "description": "The requested page could not be found but may be available again in the future.",
         "message": "Not Found"
     },
     "405": {
-        "description": "A request was made of a page using a request method not supported by that page",
+        "description": "A request was made of a page using a request method not supported by that page.",
         "message": "Method Not Allowed"
     },
     "406": {
-        "description": "The server can only generate a response that is not accepted by the client",
+        "description": "The server can only generate a response that is not accepted by the client.",
         "message": "Not Acceptable"
     },
     "407": {
-        "description": "The client must first authenticate itself with the proxy",
+        "description": "The client must first authenticate itself with the proxy.",
         "message": "Proxy Authentication Required"
     },
     "408": {
-        "description": "The server timed out waiting for the request",
+        "description": "The server timed out waiting for the request.",
         "message": "Request Timeout"
     },
     "409": {
-        "description": "The request could not be completed because of a conflict in the request",
+        "description": "The request could not be completed because of a conflict in the request.",
         "message": "Conflict"
     },
     "410": {
-        "description": "The requested page is no longer available",
+        "description": "The requested page is no longer available.",
         "message": "Gone"
     },
     "411": {
-        "description": "The \"Content-Length\" is not defined. The server will not accept the request without it",
+        "description": "The \"Content-Length\" is not defined. The server will not accept the request without it.",
         "message": "Length Required"
     },
     "412": {
-        "description": "The precondition given in the request evaluated to false by the server",
+        "description": "The precondition given in the request evaluated to false by the server.",
         "message": "Precondition Failed"
     },
     "413": {
-        "description": "The server will not accept the request, because the request entity is too large",
+        "description": "The server will not accept the request, because the request entity is too large.",
         "message": "Request Entity Too Large"
     },
     "414": {
-        "description": "The server will not accept the request, because the URL is too long. Occurs when you convert a POST request to a GET request with a long query information",
+        "description": "The server will not accept the request, because the URL is too long. Occurs when you convert a POST request to a GET request with a long query information.",
         "message": "Request-URI Too Long"
     },
     "415": {
-        "description": "The server will not accept the request, because the media type is not supported",
+        "description": "The server will not accept the request, because the media type is not supported.",
         "message": "Unsupported Media Type"
     },
     "416": {
-        "description": "The client has asked for a portion of the file, but the server cannot supply that portion",
+        "description": "The client has asked for a portion of the file, but the server cannot supply that portion.",
         "message": "Requested Range Not Satisfiable"
     },
     "417": {
-        "description": "The server cannot meet the requirements of the Expect request-header field",
+        "description": "The server cannot meet the requirements of the Expect request-header field.",
         "message": "Expectation Failed"
     },
     "418": {
-        "description": "Any attempt to brew coffee with a teapot should result in the error code \"418 I'm a teapot\". The resulting entity body MAY be short and stout",
+        "description": "Any attempt to brew coffee with a teapot should result in the error code \"418 I'm a teapot\". The resulting entity body MAY be short and stout.",
         "message": "I'm a teapot"
     },
+    "419": {
+        "description": "Used by the Laravel Framework when a CSRF Token is missing or expired.",
+        "message": "Page Expired (Laravel Framework)"
+    },
+    "420": {
+        "description": "A deprecated response used by the Spring Framework when a method has failed.",
+        "message": "Method Failure (Spring Framework)"
+    },
     "421": {
-        "description": "The request was directed at a server that is not able to produce a response (for example because a connection reuse)",
+        "description": "The request was directed at a server that is not able to produce a response (for example because a connection reuse).",
         "message": "Misdirected Request"
     },
     "422": {
-        "description": "The request was well-formed but was unable to be followed due to semantic errors",
+        "description": "The request was well-formed but was unable to be followed due to semantic errors.",
         "message": "Unprocessable Entity"
     },
     "423": {
-        "description": "The resource that is being accessed is locked",
+        "description": "The resource that is being accessed is locked.",
         "message": "Locked"
     },
     "424": {
-        "description": "The request failed due to failure of a previous request (e.g., a PROPPATCH)",
+        "description": "The request failed due to failure of a previous request (e.g., a PROPPATCH).",
         "message": "Failed Dependency"
     },
     "426": {
-        "description": "The client should switch to a different protocol such as TLS/1.0, given in the Upgrade header field",
+        "description": "The client should switch to a different protocol such as TLS/1.0, given in the Upgrade header field.",
         "message": "Upgrade Required"
     },
     "428": {
-        "description": "The origin server requires the request to be conditional",
+        "description": "The origin server requires the request to be conditional.",
         "message": "Precondition Required"
     },
     "429": {
-        "description": "The user has sent too many requests in a given amount of time. Intended for use with rate limiting schemes",
+        "description": "The user has sent too many requests in a given amount of time. Intended for use with rate limiting schemes.",
         "message": "Too Many Requests"
     },
     "431": {
-        "description": "The server is unwilling to process the request because either an individual header field, or all the header fields collectively, are too large",
+        "description": "The server is unwilling to process the request because either an individual header field, or all the header fields collectively, are too large.",
         "message": "Request Header Fields Too Large"
     },
+    "440": {
+        "description": "The client's session has expired and must log in again. (IIS)",
+        "message": "Login Time-out"
+    },
+    "444": {
+        "description": "A non-standard status code used to instruct nginx to close the connection without sending a response to the client, most commonly used to deny malicious or malformed requests.",
+        "message": "Connection Closed Without Response"
+    },
+    "449": {
+        "description": "The server cannot honour the request because the user has not provided the required information. (IIS)",
+        "message": "Retry With"
+    },
+    "450": {
+        "description": "The Microsoft extension code indicated when Windows Parental Controls are turned on and are blocking access to the requested webpage.",
+        "message": "Blocked by Windows Parental Controls"
+    },
     "451": {
-        "description": "A server operator has received a legal demand to deny access to a resource or to a set of resources that includes the requested resource",
+        "description": "A server operator has received a legal demand to deny access to a resource or to a set of resources that includes the requested resource.",
         "message": "Unavailable For Legal Reasons"
     },
+    "494": {
+        "description": "Used by nginx to indicate the client sent too large of a request or header line that is too long.",
+        "message": "Request Header Too Large"
+    },
+    "495": {
+        "description": "An expansion of the 400 Bad Request response code, used when the client has provided an invalid client certificate.",
+        "message": "SSL Certificate Error"
+    },
+    "496": {
+        "description": "An expansion of the 400 Bad Request response code, used when a client certificate is required but not provided.",
+        "message": "SSL Certificate Required"
+    },
+    "497": {
+        "description": "An expansion of the 400 Bad Request response code, used when the client has made a HTTP request to a port listening for HTTPS requests.",
+        "message": "HTTP Request Sent to HTTPS Port"
+    },
+    "498": {
+        "description": "Returned by ArcGIS for Server. Code 498 indicates an expired or otherwise invalid token.",
+        "message": "Invalid Token (Esri)"
+    },
+    "499": {
+        "description": "A non-standard status code introduced by nginx for the case when a client closes the connection while nginx is processing the request.",
+        "message": "Client Closed Request"
+    },
     "4xx": {
-        "description": "",
+        "description": "4xx codes generally are error responses specifying an issue at the client\u2019s end. Potentially a network issue.",
         "message": "Client Error"
     },
     "500": {
-        "description": "An error has occured in a server side script, a no more specific message is suitable",
+        "description": "An error has occurred in a server side script, a no more specific message is suitable.",
         "message": "Internal Server Error"
     },
     "501": {
-        "description": "The server either does not recognize the request method, or it lacks the ability to fulfill the request",
+        "description": "The server either does not recognize the request method, or it lacks the ability to fulfill the request.",
         "message": "Not Implemented"
     },
     "502": {
-        "description": "The server was acting as a gateway or proxy and received an invalid response from the upstream server",
+        "description": "The server was acting as a gateway or proxy and received an invalid response from the upstream server.",
         "message": "Bad Gateway"
     },
     "503": {
-        "description": "The server is currently unavailable (overloaded or down)",
+        "description": "The server is currently unavailable (overloaded or down).",
         "message": "Service Unavailable"
     },
     "504": {
-        "description": "The server was acting as a gateway or proxy and did not receive a timely response from the upstream server",
+        "description": "The server was acting as a gateway or proxy and did not receive a timely response from the upstream server.",
         "message": "Gateway Timeout"
     },
     "505": {
-        "description": "The server does not support the HTTP protocol version used in the request",
+        "description": "The server does not support the HTTP protocol version used in the request.",
         "message": "HTTP Version Not Supported"
     },
+    "506": {
+        "description": "Transparent content negotiation for the request results in a circular reference.",
+        "message": "Variant Also Negotiates"
+    },
+    "507": {
+        "description": "The server is unable to store the representation needed to complete the request.",
+        "message": "Insufficient Storage"
+    },
+    "508": {
+        "description": "The server detected an infinite loop while processing the request (sent instead of 208 Already Reported).",
+        "message": "Loop Detected"
+    },
+    "509": {
+        "description": "The server has exceeded the bandwidth specified by the server administrator; this is often used by shared hosting providers to limit the bandwidth of customers.",
+        "message": "Bandwidth Limit Exceeded"
+    },
+    "510": {
+        "description": "Further extensions to the request are required for the server to fulfil it.",
+        "message": "Not Extended"
+    },
     "511": {
-        "description": "The client needs to authenticate to gain network access",
+        "description": "The client needs to authenticate to gain network access.",
         "message": "Network Authentication Required"
     },
-    "5xx": {
-        "description": "",
-        "message": "Server Error"
+    "520": {
+        "description": "The 520 error is used as a \"catch-all response for when the origin server returns something unexpected\", listing connection resets, large headers, and empty or invalid responses as common triggers.",
+        "message": "Unknown Error"
     },
-    "info": {
-        "codeLookup": {
-            "demoURL": "/statusMsg/?code=500",
-            "info": "Use the 'code' variable in the url to lookup and individual code"
-        },
-        "credits": "This site was crafted by Unreal Designs and is powered by UDCDN",
-        "htmlDisplay": {
-            "demoURL": "/statusMsg/?code=404&html",
-            "info": "Add the 'html' variable to your code lookup to get the error displayed in a nice html template"
-        },
-        "invalidCode": "If an invalid code is given, the site will just show the json list of all codes",
-        "lastUpdate": {
-            "date": "20160411",
-            "log": "4xx Codes updated via Wikipedia"
-        },
-        "references": {
-            "W3Schools": "http://www.w3schools.com/tags/ref_httpmessages.asp",
-            "Wikipedia": "https://en.wikipedia.org/wiki/List_of_HTTP_status_codes"
-        }
+    "521": {
+        "description": "The origin server has refused the connection from Cloudflare.",
+        "message": "Web Server Is Down"
+    },
+    "522": {
+        "description": "Cloudflare could not negotiate a TCP handshake with the origin server.",
+        "message": "Connection Timed Out"
+    },
+    "523": {
+        "description": "Cloudflare could not reach the origin server; for example, if the DNS records for the origin server are incorrect.",
+        "message": "Origin Is Unreachable"
+    },
+    "524": {
+        "description": "Cloudflare was able to complete a TCP connection to the origin server, but did not receive a timely HTTP response.",
+        "message": "A Timeout Occurred"
+    },
+    "525": {
+        "description": "Cloudflare could not negotiate a SSL/TLS handshake with the origin server.",
+        "message": "SSL Handshake Failed"
+    },
+    "526": {
+        "description": "Used by Cloudflare and Cloud Foundry's gorouter to indicate failure to validate the SSL/TLS certificate that the origin server presented.",
+        "message": "Invalid SSL Certificate"
+    },
+    "527": {
+        "description": "Error 527 indicates that the request timed out or failed after the WAN connection had been established.",
+        "message": "Railgun Listener to Origin Error"
+    },
+    "530": {
+        "description": "Error 530 indicates that the requested host name could not be resolved on the Cloudflare network to an origin server.",
+        "message": "Origin DNS Error"
+    },
+    "598": {
+        "description": "Used by some HTTP proxies to signal a network read timeout behind the proxy to a client in front of the proxy.",
+        "message": "Network Read Timeout Error"
+    },
+    "5xx": {
+        "description": "5xx error codes indicate that an error or unresolvable request occurred on the server side, whether that is a proxy or the origin host.",
+        "message": "Server Error"
     }
 }

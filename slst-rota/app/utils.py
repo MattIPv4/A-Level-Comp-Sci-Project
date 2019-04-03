@@ -19,7 +19,7 @@ class Utils:
         # Try from the API to get latest (and save locally)
         try:
             Utils.log("Utils.fetch_status_messages", "Attempting to load from API...")
-            resp = requests.get(url="https://cdn.unreal-designs.co.uk/cont/statusMsg/", timeout=5)
+            resp = requests.get(url="https://status.js.org/codes.json", timeout=5)
             data = resp.json()
             if data:
                 Utils.statusMessageData = data

@@ -14,9 +14,16 @@ footer {
     display: flex;
   }
 
-  p { margin-bottom: 0; }
-  a { color: mix($grey, $primary, 35%); }
+  p {
+    margin-bottom: 0;
+  }
+
+  a {
+    color: mix($grey, $primary, 35%);
+  }
 }
 
 // Give last container margin before footer
-body>.container:last-of-type { margin-bottom: .5em; }
+body > .container:last-of-type {
+  margin-bottom: .5em;
+}

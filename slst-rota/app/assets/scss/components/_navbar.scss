@@ -17,7 +17,9 @@ header {
       flex-wrap: wrap;
 
       // Allow a set of items to be on the right
-      .right { margin-left: auto; }
+      .right {
+        margin-left: auto;
+      }
 
       // Standard item
       .item,
@@ -42,7 +44,9 @@ header {
         }
 
         // Give links their hover color
-        &[href]:hover { color: mix($primary, $lightgrey, 75%);  }
+        &[href]:hover {
+          color: mix($primary, $lightgrey, 75%);
+        }
       }
 
       // Support dropdowns
