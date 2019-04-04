@@ -205,16 +205,17 @@ def unavailability():
 
         # Day subheadings
         if session.day != current_day:
-            rota_data.append([False, [list(calendar.day_name)[session.day], "", "", ""]])
+            rota_data.append([False, [list(calendar.day_name)[session.day], "", "", ""], True])
             current_day = session.day
 
         # Sessions
+        unavailable = user.id in [f.user.id for f in session.unavailabilities]
         rota_data.append([
-            False,
+            unavailable,
             [
                 session.start_time_frmt,
                 session.end_time_frmt,
-                "Yes" if user.id in [f.user.id for f in session.unavailabilities] else "No",
+                "Yes" if unavailable else "No",
                 "Currently assigned, unable to update." if assigned else
                 '<a class="button primary mbt-0" href="{}"><i class="fas fa-lg fa-edit"></i> Update unavailability</a>'
                 ''.format(url_for('student.unavailability_edit', id=session.id))
