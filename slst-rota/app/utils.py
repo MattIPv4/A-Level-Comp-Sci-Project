@@ -3,6 +3,7 @@ import os
 from datetime import datetime, timedelta, date
 from typing import Union, Tuple
 
+import pip
 import requests
 
 
@@ -23,7 +24,7 @@ class Utils:
             data = resp.json()
             if data:
                 Utils.statusMessageData = data
-                with open(Utils.absolute_path('assets/statusMsg.json'), 'w') as file:
+                with open(Utils.absolute_path("assets/statusMsg.json"), "w") as file:
                     json.dump(data, file, sort_keys=True, indent=4)
                 Utils.log("Utils.fetch_status_messages", "Loaded from API")
         except Exception as e:
@@ -32,8 +33,8 @@ class Utils:
 
         # If API failed, use latest local copy
         if not Utils.statusMessageData:
-            if os.path.isfile(Utils.absolute_path('assets/statusMsg.json')):
-                with open(Utils.absolute_path('assets/statusMsg.json')) as file:
+            if os.path.isfile(Utils.absolute_path("assets/statusMsg.json")):
+                with open(Utils.absolute_path("assets/statusMsg.json")) as file:
                     Utils.statusMessageData = json.load(file)
                     Utils.log("Utils.fetch_status_messages", "Loaded from local file")
 
@@ -41,7 +42,7 @@ class Utils:
         for key, data in Utils.statusMessageCustomData.items():
             # Create blank data if it doesn't already exist
             if key not in Utils.statusMessageData:
-                Utils.statusMessageData[key] = {'message': '', 'description': ''}
+                Utils.statusMessageData[key] = {"message": "", "description": ""}
             # Loop over the properties provided
             for item, value in data.items():
                 # If valid property, update
@@ -63,8 +64,8 @@ class Utils:
             return None
 
         # Return the data
-        return code, Utils.statusMessageData[str(code)]['message'], Utils.statusMessageData[str(code)]['description'], \
-               "{}: {}".format(code, Utils.statusMessageData[str(code)]['message'])
+        return code, Utils.statusMessageData[str(code)]["message"], Utils.statusMessageData[str(code)]["description"], \
+               "{}: {}".format(code, Utils.statusMessageData[str(code)]["message"])
 
     @staticmethod
     def minutes_datetime(the_datetime: datetime) -> float:
@@ -100,3 +101,10 @@ class Utils:
     def log(log_type: str, *args, **kwargs):
         now = "[{0.hour:02d}:{0.minute:02d}:{0.second:02d}]".format(datetime.now())
         print("{} [{}]".format(now, log_type), *args, **kwargs)
+
+    @staticmethod
+    def install_reqs(reqs_file: str = "requirements.txt"):
+        if hasattr(pip, "main"):
+            pip.main(["install", "-r", reqs_file])
+        else:
+            pip._internal.main(["install", "-r", reqs_file])
