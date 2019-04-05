@@ -16,7 +16,7 @@ class SassWatcher:
 
     def run(self):
         if self.__p is None:
-            self.__p = subprocess.Popen('sass {}'.format(self.args), shell=True, preexec_fn=os.setsid)
+            self.__p = subprocess.Popen('sass {}'.format(self.args), shell=True)
 
     def close(self):
         if self.__p is not None:
