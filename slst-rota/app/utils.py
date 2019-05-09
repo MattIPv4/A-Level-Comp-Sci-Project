@@ -19,22 +19,29 @@ class Utils:
     def fetch_status_messages():
         # Try from the API to get latest (and save locally)
         try:
+            # Log attempt
             Utils.log("Utils.fetch_status_messages", "Attempting to load from API...")
+            # Fetch JSON data
             resp = requests.get(url="https://status.js.org/codes.json", timeout=5)
             data = resp.json()
             if data:
+                # If valid data, store to variable & to file
                 Utils.statusMessageData = data
                 with open(Utils.absolute_path("assets/statusMsg.json"), "w") as file:
                     json.dump(data, file, sort_keys=True, indent=4)
                 Utils.log("Utils.fetch_status_messages", "Loaded from API")
         except Exception as e:
+            # If error gets raised by requests, assume failure and log
             Utils.log("Utils.fetch_status_messages", "Failed to load from API... '{}'".format(str(e)))
             pass
 
         # If API failed, use latest local copy
         if not Utils.statusMessageData:
+            # If the local fallback file exists
             if os.path.isfile(Utils.absolute_path("assets/statusMsg.json")):
+                # Open the file
                 with open(Utils.absolute_path("assets/statusMsg.json")) as file:
+                    # Load JSON contents into variable and log as such
                     Utils.statusMessageData = json.load(file)
                     Utils.log("Utils.fetch_status_messages", "Loaded from local file")
 
